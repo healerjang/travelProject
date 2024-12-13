@@ -1,0 +1,17 @@
+<configuration>
+    <!-- ConsoleAppender: 콘솔에 로그를 출력 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- PatternLayout: 로그 포맷 정의 -->
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %highlight(%-5level) [%thread] %cyan(%logger{36}) - %msg%n
+            </pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- Logger 레벨 정의 -->
+    <root level="info">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>
