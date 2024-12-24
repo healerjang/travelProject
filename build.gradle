@@ -53,6 +53,8 @@ dependencies {
             "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta")
 
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.1'
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '3.4.0'
 }
 
 tasks.named('test') {
