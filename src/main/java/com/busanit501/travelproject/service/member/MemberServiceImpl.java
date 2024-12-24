@@ -33,13 +33,14 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Map<MemberFields, Boolean> registerMember(RegisterDTO registerDTO) {
+    public boolean registerMember(RegisterDTO registerDTO) {
         Map<MemberFields, Boolean> duplicateCheckMap = duplicateCheck(registerDTO);
         if (duplicateCheckMap.values().stream().allMatch(Boolean::booleanValue)) {
             Member member = modelMapper.map(registerDTO, Member.class);
             memberRepository.save(member);
+            return true;
         }
-        return duplicateCheckMap;
+        return false;
     }
 
     @Override
@@ -48,13 +49,10 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Map<MemberFields, Boolean> updateMember(UpdateDTO updateDTO) {
-        Map<MemberFields, Boolean> duplicateCheckMap = duplicateCheck(modelMapper.map(updateDTO, RegisterDTO.class));
-        if (duplicateCheckMap.values().stream().allMatch(Boolean::booleanValue)) {
-            Member member = modelMapper.map(updateDTO, Member.class);
-            memberRepository.save(member);
-        }
-        return duplicateCheckMap;
+    public void updateMember(UpdateDTO updateDTO) {
+        Member member = memberRepository.findById(updateDTO.getMemberNo()).orElseThrow();
+        member.updateMemberData(updateDTO);
+        memberRepository.save(member);
     }
 
     @Override
@@ -72,4 +70,26 @@ public class MemberServiceImpl implements MemberService {
         }
         return ResponseLogin.FALSE;
     }
+
+    @Override
+    public boolean duplicateID(String id) {
+        return !memberRepository.existsByMemberID(id);
+    }
+
+    @Override
+    public boolean duplicateName(String name) {
+        return !memberRepository.existsByMemberName(name);
+    }
+
+    @Override
+    public boolean duplicateEmail(String email) {
+        return !memberRepository.existsByMemberEmail(email);
+    }
+
+    @Override
+    public boolean duplicatePhone(String phone) {
+        return !memberRepository.existsByMemberPhone(phone);
+    }
+
+
 }
