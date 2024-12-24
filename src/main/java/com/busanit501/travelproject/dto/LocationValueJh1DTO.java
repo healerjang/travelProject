@@ -1,4 +1,4 @@
-package com.busanit501.travelproject.service.manager;
+package com.busanit501.travelproject.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

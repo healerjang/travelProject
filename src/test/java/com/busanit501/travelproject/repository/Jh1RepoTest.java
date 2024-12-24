@@ -1,6 +1,6 @@
 package com.busanit501.travelproject.repository;
 
-import com.busanit501.travelproject.service.manager.LocationValueJh1DTO;
+import com.busanit501.travelproject.dto.LocationValueJh1DTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.busanit501.travelproject.controller.manage;
 
 import com.busanit501.travelproject.repository.LocationJh1Repository;
-import com.busanit501.travelproject.service.manager.LocationValueJh1DTO;
+import com.busanit501.travelproject.dto.LocationValueJh1DTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
