@@ -2,6 +2,8 @@ package com.busanit501.travelproject.service.manager;
 
 import com.busanit501.travelproject.domain.Location;
 import com.busanit501.travelproject.domain.Product;
+import com.busanit501.travelproject.dto.LocationValueJh1DTO;
+import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.repository.LocationJh1Repository;
 import com.busanit501.travelproject.repository.ProductJh1Repository;
 import jakarta.transaction.Transactional;

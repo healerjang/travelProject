@@ -11,38 +11,43 @@
 <div class="container" layout:fragment="content">
   <h1>여행상품 등록</h1>
   <section>
-    <div class="input-group mb-2">
-      <label for="productName" class="input-group-text">상품명</label>
-      <input id="productName" type="text" class="form-control" placeholder="상품명">
-    </div>
-    <div class="input-group mb-2">
-      <span class="input-group-text">여행지</span>
-      <input id="travelCountry" type="text" class="form-control" placeholder="국가">
-      <input id="travelCity" type="text" class="form-control" placeholder="도시">
-    </div>
-    <div class="input-group mb-2">
-      <label for="productName" class="input-group-text">여행 일정</label>
-      <div class="form-floating">
-        <input id="startDate" class="form-control" type="date">
-        <label for="startDate">시작일</label>
+    <div class="card">
+      <div class="card-body">
+        <div class="input-group mb-2">
+          <label for="productName" class="input-group-text">상품명</label>
+          <input id="productName" type="text" class="form-control" placeholder="상품명">
+        </div>
+        <div class="input-group mb-2">
+          <span class="input-group-text">여행지</span>
+          <input id="travelCountry" type="text" class="form-control" placeholder="국가">
+          <input id="travelCity" type="text" class="form-control" placeholder="도시">
+        </div>
+        <div class="input-group mb-2">
+          <label for="productName" class="input-group-text">여행 일정</label>
+          <div class="form-floating">
+            <input id="startDate" class="form-control" type="date">
+            <label for="startDate">시작일</label>
+          </div>
+          <div class="form-floating">
+            <input id="endDate" class="form-control" type="date">
+            <label for="endDate">종료일</label>
+          </div>
+        </div>
+        <div class="input-group mb-2">
+          <label for="opening" class="input-group-text">최대 좌석 수</label>
+          <input type="number" id="opening" class="form-control" placeholder="좌석 수">
+        </div>
+        <div class="input-group mb-2">
+          <label for="imageUpload" class="input-group-text">이미지 첨부</label>
+          <input type="file" id="imageUpload" class="form-control" accept="image/*" placeholder="이미지를 업로드하세요">
+        </div>
+        <input type="hidden" id="imagePath" name="imagePath">
+        <div class="input-group mb-2">
+          <span class="input-group-text">상세설명</span>
+          <textarea class="form-control" placeholder="상세설명" style="height: 400px"></textarea>
+        </div>
+        <button class="btn btn-primary">등록하기</button>
       </div>
-      <div class="form-floating">
-        <input id="endDate" class="form-control" type="date">
-        <label for="endDate">종료일</label>
-      </div>
-    </div>
-    <div class="input-group mb-2">
-      <label for="opening" class="input-group-text">최대 좌석 수</label>
-      <input type="number" id="opening" class="form-control" placeholder="좌석 수">
-    </div>
-    <div class="input-group mb-2">
-      <label for="imageUpload" class="input-group-text">이미지 첨부</label>
-      <input type="file" id="imageUpload" class="form-control" accept="image/*" placeholder="이미지를 업로드하세요">
-    </div>
-    <input type="hidden" id="imagePath" name="imagePath">
-    <div class="input-group mb-2">
-      <span class="input-group-text">상세설명</span>
-      <textarea class="form-control" placeholder="상세설명"></textarea>
     </div>
   </section>
 </div>
