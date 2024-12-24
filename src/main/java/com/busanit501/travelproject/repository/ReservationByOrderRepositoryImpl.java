@@ -4,7 +4,9 @@ import com.busanit501.travelproject.domain.QMember;
 import com.busanit501.travelproject.domain.QReservation;
 import com.busanit501.travelproject.domain.Reservation;
 import com.busanit501.travelproject.domain.common.ReservationOrder;
+import com.busanit501.travelproject.dto.ReservationDTO;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -21,7 +23,7 @@ public class ReservationByOrderRepositoryImpl extends QuerydslRepositorySupport 
     public ReservationByOrderRepositoryImpl() {super(Reservation.class);}
 
     @Override
-    public Page<Reservation> selectReservationUser(Long memberNo, ReservationOrder reservationOrder, Pageable pageable) {
+    public Page<ReservationDTO> selectReservationUser(Long memberNo, ReservationOrder reservationOrder, Pageable pageable) {
         QReservation reservation = QReservation.reservation;
         JPQLQuery<Reservation> query = from(reservation);
         BooleanBuilder booleanBuilder = new BooleanBuilder();
@@ -29,23 +31,37 @@ public class ReservationByOrderRepositoryImpl extends QuerydslRepositorySupport 
         booleanBuilder.and(reservation.reservationOrder.eq(reservationOrder));
         query.where(booleanBuilder);
         query.orderBy(reservation.reservationNo.desc());
-        this.getQuerydsl().applyPagination(pageable, query);
-        List<Reservation> reservationList = query.fetch();
-        long total = query.fetchCount();
+        JPQLQuery<ReservationDTO> dtoQuery = query.select(Projections.bean(ReservationDTO.class,
+                reservation.reservationNo,
+                reservation.product.productNo,
+                reservation.member.memberNo,
+                reservation.reservationOrder
+                //regDate, modDate 생략
+        ));
+        this.getQuerydsl().applyPagination(pageable, dtoQuery);
+        List<ReservationDTO> reservationList = dtoQuery.fetch();
+        long total = dtoQuery.fetchCount();
         return new PageImpl<>(reservationList, pageable, total);
     }
 
     @Override
-    public Page<Reservation> selectReservationAdmin(Long productNo, Pageable pageable) {
+    public Page<ReservationDTO> selectReservationAdmin(Long productNo, Pageable pageable) {
         QReservation reservation = QReservation.reservation;
         JPQLQuery<Reservation> query = from(reservation);
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         booleanBuilder.and(reservation.product.productNo.eq(productNo));
         query.where(booleanBuilder);
         query.orderBy(reservation.reservationNo.desc());
-        this.getQuerydsl().applyPagination(pageable, query);
-        List<Reservation> reservationList = query.fetch();
-        long total = query.fetchCount();
+        JPQLQuery<ReservationDTO> dtoQuery = query.select(Projections.bean(ReservationDTO.class,
+                reservation.reservationNo,
+                reservation.product.productNo,
+                reservation.member.memberNo,
+                reservation.reservationOrder
+                //regDate, modDate 생략
+        ));
+        this.getQuerydsl().applyPagination(pageable, dtoQuery);
+        List<ReservationDTO> reservationList = dtoQuery.fetch();
+        long total = dtoQuery.fetchCount();
         return new PageImpl<>(reservationList, pageable, total);
     }
 }

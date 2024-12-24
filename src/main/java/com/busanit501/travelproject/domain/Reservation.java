@@ -23,4 +23,9 @@ public class Reservation extends BaseEntity{
     @Enumerated(EnumType.STRING)
     @Column(name = "reservation_status", nullable = false)
     private ReservationOrder reservationOrder;
+
+    public void forMapper(Member member, Product product) {
+        this.member = member;
+        this.product = product;
+    }
 }
