@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/bootstrap_temporary_jh1.html}">
+<head>
+  <meta charset="UTF-8">
+  <title>여행상품 등록</title>
+</head>
+
+<div layout:fragment="content">
+  <div class="modal fade" id="registerLocationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">여행 지역 등록하기</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="registerLocCountry" class="form-label">국가</label>
+            <input type="text" class="form-control" id="registerLocCountry">
+          </div>
+          <div class="mb-3">
+            <label for="registerLocCity" class="form-label">지역</label>
+            <input type="text" class="form-control" id="registerLocCity">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+          <button id="registerLocationButton" type="button" class="btn btn-primary">등록</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <h1>여행상품 등록</h1>
+    <section>
+      <div class="card">
+        <div class="card-body">
+          <div class="input-group mb-2">
+            <label for="productName" class="input-group-text">상품명</label>
+            <input id="productName" type="text" class="form-control" placeholder="상품명">
+          </div>
+          <div class="input-group mb-2">
+            <span class="input-group-text">여행지</span>
+            <button class="btn btn-outline-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#registerLocationModal">여행지 추가</button>
+<!--            <input id="travelCountry" type="text" class="form-control" placeholder="국가">-->
+<!--            <input id="travelCity" type="text" class="form-control" placeholder="도시">-->
+            <div class="form-floating">
+              <select class="form-select" id="travelCountry">
+                <option selected>국가를 선택하세요</option>
+                <option disabled>-----------------</option>
+              </select>
+              <label for="travelCountry" class="form-label">국가</label>
+            </div>
+            <div class="form-floating">
+              <select class="form-select" id="travelCity">
+                <option selected>도시를 선택하세요</option>
+                <option disabled>-----------------</option>
+              </select>
+              <label for="travelCity" class="form-label">도시</label>
+            </div>
+          </div>
+          <div class="input-group mb-2">
+            <label for="productName" class="input-group-text">여행 일정</label>
+            <div class="form-floating">
+              <input id="startDate" class="form-control" type="date">
+              <label for="startDate">시작일</label>
+            </div>
+            <div class="form-floating">
+              <input id="endDate" class="form-control" type="date">
+              <label for="endDate">종료일</label>
+            </div>
+          </div>
+          <div class="input-group mb-2">
+            <label for="opening" class="input-group-text">최대 좌석 수</label>
+            <input type="number" id="opening" class="form-control" placeholder="좌석 수">
+          </div>
+          <div class="input-group mb-2">
+            <label for="imageUpload" class="input-group-text">이미지 첨부</label>
+            <input type="file" id="imageUpload" class="form-control" accept="image/*" placeholder="이미지를 업로드하세요">
+          </div>
+          <input type="hidden" id="imagePath" name="imagePath">
+          <div class="input-group mb-2">
+            <span class="input-group-text">상세설명</span>
+            <textarea class="form-control" placeholder="상세설명" style="height: 400px"></textarea>
+          </div>
+          <button class="btn btn-primary">등록하기</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<th:block layout:fragment="scripts">
+  <script th:inline="javascript">
+    /** @type {HTMLSelectElement} */
+    const countrySelect = document.getElementById("travelCountry");
+
+    /** @type {HTMLSelectElement} */
+    const citySelect = document.getElementById("travelCity");
+
+    let locations = [];
+    let locStructure = [];
+
+    function optEl(text, value = undefined) {
+      const el = document.createElement("option");
+      el.textContent = text;
+      if (value) el.value = value;
+      return el
+    }
+
+    function clearSelect(el) {
+      const top = el.querySelector('option[selected]').innerText;
+      el.innerHTML = `<option selected>${top}</option><option disabled>-------------</option>`
+    }
+
+    function addLocation(countryName, cityName, locationNo) {
+      const countryObj = locStructure.find(loc => loc.name === countryName);
+      if (countryObj) {
+        countryObj.children.push({ name: cityName, locationNo })
+        if (countrySelect.selectedOptions[0].text === countryName) {
+          citySelect.add(optEl(cityName, locationNo));
+        }
+      } else {
+        locStructure.push({
+          name: countryName,
+          children: [ { name: cityName, locationNo } ]
+        })
+        countrySelect.add(optEl(countryName));
+      }
+    }
+
+    async function loadLocations() {
+      const response = await axios.get("/api/location/list")
+      const { data } = response
+      locations = data
+      for (const location of locations) {
+        addLocation(location.country, location.city, location.locationNo)
+      }
+    }
+
+    async function registerLocation(country, city) {
+      const response = await axios.post("/api/location", { country, city })
+      const { data : { locationNo }} = response
+      addLocation(country, city, locationNo)
+    }
+
+    function updateCitySelect(countryName) {
+      const country = locStructure.find(loc => loc.name === countryName)
+      clearSelect(citySelect)
+      if (country) {
+        for (const city of country.children) {
+          citySelect.add(optEl(city.name, city.locationNo))
+        }
+      }
+    }
+
+    countrySelect.addEventListener("change", e => {
+      const countryName = countrySelect.selectedOptions[0].text
+      updateCitySelect(countryName)
+    })
+
+    const regCountry = document.getElementById("registerLocCountry")
+    const regCity = document.getElementById("registerLocCity")
+
+    document.getElementById("registerLocationButton").addEventListener("click", () => {
+
+      registerLocation(regCountry.value, regCity.value)
+      .then(response => {
+        regCountry.value = ''
+        regCity.value = ''
+      })
+    })
+
+    loadLocations()
+  </script>
+</th:block>
+</html>
