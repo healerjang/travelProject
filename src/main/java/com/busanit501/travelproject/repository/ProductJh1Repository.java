@@ -4,6 +4,8 @@ import com.busanit501.travelproject.domain.Location;
 import com.busanit501.travelproject.domain.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProductJh1Repository extends JpaRepository<Product, Long> {
+import java.util.List;
 
+public interface ProductJh1Repository extends JpaRepository<Product, Long> {
+  Product findProductByProductNo(Long productNo);
 }
