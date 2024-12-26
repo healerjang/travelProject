@@ -1,8 +1,9 @@
 package com.busanit501.travelproject.controller.manage;
 
 import com.busanit501.travelproject.dto.ProductJh1DTO;
-import com.busanit501.travelproject.repository.LocationJh1Repository;
 import com.busanit501.travelproject.dto.LocationValueJh1DTO;
+import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
+import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
 import com.busanit501.travelproject.service.manager.ManagerJh1Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,11 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
-public class Jh1RestController {
+public class AdminJh1RestController {
 
   private final ManagerJh1Service managerService;
 
@@ -35,6 +35,14 @@ public class Jh1RestController {
   public ResponseEntity<ProductJh1DTO> getProductById(@PathVariable("productNo") Long productNo) {
     ProductJh1DTO productDTO = managerService.getProductTmp(productNo);
     return ResponseEntity.ok().body(productDTO);
+  }
+
+  @GetMapping("/api/product/list")
+  public ResponseEntity<HcbPageResponseDTO<ProductJh1DTO>> getProductList(
+    HcbPageRequestDTO requestDTO
+  ) {
+    HcbPageResponseDTO<ProductJh1DTO> pageResponseDTO = managerService.listProducts(requestDTO);
+    return ResponseEntity.ok().body(pageResponseDTO);
   }
 
   @PostMapping("/api/product")
