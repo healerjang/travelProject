@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @Log4j2
@@ -64,9 +65,18 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public ResponseLogin login(LoginDTO loginDTO) {
-        if (memberRepository.existsByMemberIDAndMemberPassword(loginDTO.getMemberID(), loginDTO.getMemberPassword())) {
-            if (adminList.contains(loginDTO.getMemberID())) return ResponseLogin.ADMIN;
-            else return ResponseLogin.USER;
+        MemberDTO memberDTO = modelMapper.map(memberRepository.findByMemberIDAndMemberPassword(loginDTO.getMemberID(), loginDTO.getMemberPassword()), MemberDTO.class);
+
+        if (memberDTO != null) {
+            ResponseLogin responseLogin;
+            if (adminList.contains(loginDTO.getMemberID())) responseLogin = ResponseLogin.ADMIN;
+            else responseLogin = ResponseLogin.USER;
+
+            memberDTO.setMemberUUID(UUID.randomUUID().toString());
+            responseLogin.setMemberDTO(memberDTO);
+
+            memberRepository.save(modelMapper.map(memberDTO, Member.class));
+            return responseLogin;
         }
         return ResponseLogin.FALSE;
     }
@@ -89,6 +99,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public boolean duplicatePhone(String phone) {
         return !memberRepository.existsByMemberPhone(phone);
+    }
+
+    @Override
+    public MemberDTO checkMemberUUID(Long memberNo, String memberUUID) {
+        return modelMapper.map(memberRepository.findByMemberNoAndMemberUUID(memberNo, memberUUID), MemberDTO.class);
     }
 
 
