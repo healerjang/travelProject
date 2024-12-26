@@ -70,4 +70,10 @@ public class ReservationRestController {
         Long result = reservationService.deleteReservation(reservationNo);
         return Map.of("reservationNo", result);
     }
+
+    @DeleteMapping("/delete/now/{reservationNo}")
+    public Map<String,Long> deleteNow(@PathVariable Long reservationNo) {
+        Long result = reservationService.deleteReservationNow(reservationNo);
+        return Map.of("reservationNo", result);
+    }
 }

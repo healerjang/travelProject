@@ -14,12 +14,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
 @Service
 @Log4j2
 @RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
-    private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
     private final ProductJh1Repository productJh1Repository;
 
@@ -48,7 +50,14 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Long deleteReservation(Long reservationNo) {
-        Reservation result = reservationRepository.findById(reservationNo).orElseThrow();
+        Reservation reservation = reservationRepository.findById(reservationNo).orElseThrow();
+        reservation.changeOrder(ReservationOrder.CANCELLED);
+        return reservation.getReservationNo();
+    }
+
+    @Override
+    public Long deleteReservationNow(Long reservationNo) {
+        reservationRepository.deleteById(reservationNo);
         return reservationNo;
     }
 
