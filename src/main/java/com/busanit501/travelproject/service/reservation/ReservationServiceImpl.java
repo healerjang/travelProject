@@ -28,7 +28,7 @@ public class ReservationServiceImpl implements ReservationService {
     public Long registerReservation(ReservationDTO reservationDTO) {
         Reservation reservation = Reservation.builder()
                 .member(memberRepository.findByMemberNo(reservationDTO.getMemberNo()))
-                .product(productJh1Repository.findByProductNo(reservationDTO.getProductNo()))
+                .product(productJh1Repository.findProductByProductNo(reservationDTO.getProductNo()))
                 .reservationOrder(reservationDTO.getReservationOrder())
                 .build();
         Reservation result = reservationRepository.save(reservation);
@@ -40,7 +40,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = Reservation.builder()
                 .reservationNo(reservationDTO.getReservationNo())
                 .member(memberRepository.findByMemberNo(reservationDTO.getMemberNo()))
-                .product(productJh1Repository.findByProductNo(reservationDTO.getProductNo()))
+                .product(productJh1Repository.findProductByProductNo(reservationDTO.getProductNo()))
                 .reservationOrder(reservationDTO.getReservationOrder())
                 .build();
         Reservation result = reservationRepository.save(reservation);
