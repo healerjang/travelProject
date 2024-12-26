@@ -1,10 +1,16 @@
 package com.busanit501.travelproject.controller;
 
+import com.busanit501.travelproject.annotation.member.Member;
 import com.busanit501.travelproject.dto.member.LoginDTO;
+import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.member.RegisterDTO;
+import com.busanit501.travelproject.dto.util.CookieDTO;
 import com.busanit501.travelproject.service.member.MemberFields;
 import com.busanit501.travelproject.service.member.MemberService;
 import com.busanit501.travelproject.service.member.ResponseLogin;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -23,43 +29,60 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/register")
-    public void register(String error, Model model) {model.addAttribute("error", error);}
+    public String register(String error, Model model) {
+        model.addAttribute("error", error);
+        return "/member/login";
+    }
 
     @PostMapping("/register")
     public String register(RegisterDTO registerDTO, Model model) {
-        final String[] error = {""};
+       String error = "";
         if (memberService.registerMember(registerDTO)) {
             Map<MemberFields, Boolean> duplicateCheckMap = memberService.duplicateCheck(registerDTO);
             if (duplicateCheckMap.isEmpty()) {
-                error[0] = ("data is empty");
-                model.addAttribute("error", error[0]);
+                error = "data is empty";
+                model.addAttribute("error", error);
                 log.error("MemberController postMapping register error check to input data 'registerDTO'.");
                 return "/member/register";
             }
-            duplicateCheckMap.entrySet().stream()
-                    .filter(entry -> !entry.getValue())
-                    .forEach(entry -> error[0] += "  duplicate " + entry.getKey());
-            model.addAttribute("error", error[0]);
+            duplicateCheckMap.forEach((key, value) -> model.addAttribute(key.toString(),
+                    value ? key : "duplicate" + key));
             return "/member/register";
         }
         return "/member/login";
     }
     @GetMapping("/login")
-    public void login(String error, Model model) {model.addAttribute("error", error);}
+    public void login(String error, Model model) {
+        model.addAttribute("error", error);
+        model.addAttribute("login", "login");
+    }
 
     // 해당 코드에서 시큐리티, 쿠키 등으로 사용자의 권한을 유지하는 로직 개발 예정.
     @PostMapping("/login")
-    public String login(LoginDTO loginDTO, Model model) {
-        if (memberService.login(loginDTO) == ResponseLogin.FALSE) {
+    public String login(LoginDTO loginDTO, Model model, HttpServletRequest request, HttpServletResponse response) {
+        ResponseLogin responseLogin = memberService.login(loginDTO);
+
+        if (responseLogin == ResponseLogin.FALSE) {
             model.addAttribute("error", "login failed");
             return "/member/login";
         }
+
+        Cookie memberNoCookie = CookieDTO.memberNoCookie(request);
+        Cookie UUIDCookie = CookieDTO.getUUIDCookie(request);
+        MemberDTO memberDTO = responseLogin.getMemberDTO();
+
+        CookieDTO.setCookie(memberNoCookie, String.valueOf(memberDTO.getMemberNo()));
+        CookieDTO.setCookie(UUIDCookie, memberDTO.getMemberUUID());
+
+        response.addCookie(memberNoCookie);
+        response.addCookie(UUIDCookie);
         return "/mainPage";
     }
 
     // 이후 쿠키나 시큐리티에서 memberNo를 받은 뒤 사용자의 정보를 보여주는 로직 개발 예정.
+    @Member
     @GetMapping("/myPage")
-    public void myPage(Model model, String error) {
+    public void myPage(Model model, String error, HttpServletRequest request) {
         model.addAttribute("error", error);
     }
 
