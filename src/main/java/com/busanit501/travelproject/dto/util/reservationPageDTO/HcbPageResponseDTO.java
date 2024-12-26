@@ -1,4 +1,4 @@
-package com.busanit501.travelproject.dto.util;
+package com.busanit501.travelproject.dto.util.reservationPageDTO;
 
 import lombok.Builder;
 import lombok.Data;

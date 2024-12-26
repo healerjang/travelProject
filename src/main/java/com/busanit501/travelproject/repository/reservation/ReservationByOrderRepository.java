@@ -1,8 +1,7 @@
-package com.busanit501.travelproject.repository;
+package com.busanit501.travelproject.repository.reservation;
 
-import com.busanit501.travelproject.domain.Reservation;
 import com.busanit501.travelproject.domain.common.ReservationOrder;
-import com.busanit501.travelproject.dto.ReservationDTO;
+import com.busanit501.travelproject.dto.reservation.ReservationDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;

@@ -1,5 +1,6 @@
-package com.busanit501.travelproject.dto.util;
+package com.busanit501.travelproject.dto.util.reservationPageDTO;
 
+import com.busanit501.travelproject.dto.util.PageRequestDTO;
 import lombok.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

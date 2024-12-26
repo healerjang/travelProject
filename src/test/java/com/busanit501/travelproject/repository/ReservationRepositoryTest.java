@@ -4,6 +4,7 @@ import com.busanit501.travelproject.domain.Member;
 import com.busanit501.travelproject.domain.Product;
 import com.busanit501.travelproject.domain.Reservation;
 import com.busanit501.travelproject.domain.common.ReservationOrder;
+import com.busanit501.travelproject.repository.reservation.ReservationRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

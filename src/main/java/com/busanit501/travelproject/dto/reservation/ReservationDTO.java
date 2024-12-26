@@ -1,9 +1,6 @@
-package com.busanit501.travelproject.dto;
+package com.busanit501.travelproject.dto.reservation;
 
-import com.busanit501.travelproject.domain.Member;
-import com.busanit501.travelproject.domain.Product;
 import com.busanit501.travelproject.domain.common.ReservationOrder;
-import jakarta.persistence.*;
 import lombok.*;
 
 @Data
