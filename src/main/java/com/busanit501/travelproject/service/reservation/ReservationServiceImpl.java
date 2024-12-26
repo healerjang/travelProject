@@ -1,6 +1,5 @@
 package com.busanit501.travelproject.service.reservation;
 
-import com.busanit501.travelproject.domain.Product;
 import com.busanit501.travelproject.domain.Reservation;
 import com.busanit501.travelproject.domain.common.ReservationOrder;
 import com.busanit501.travelproject.dto.reservation.ReservationDTO;
@@ -28,7 +27,7 @@ public class ReservationServiceImpl implements ReservationService {
     public Long registerReservation(ReservationDTO reservationDTO) {
         Reservation reservation = Reservation.builder()
                 .member(memberRepository.findByMemberNo(reservationDTO.getMemberNo()))
-                .product(productJh1Repository.findProductByProductNo(reservationDTO.getProductNo()))
+                .product(productJh1Repository.findProductByProductNo(reservationDTO.getProductNo()).orElseThrow())
                 .reservationOrder(reservationDTO.getReservationOrder())
                 .build();
         Reservation result = reservationRepository.save(reservation);
@@ -40,7 +39,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = Reservation.builder()
                 .reservationNo(reservationDTO.getReservationNo())
                 .member(memberRepository.findByMemberNo(reservationDTO.getMemberNo()))
-                .product(productJh1Repository.findProductByProductNo(reservationDTO.getProductNo()))
+                .product(productJh1Repository.findProductByProductNo(reservationDTO.getProductNo()).orElseThrow())
                 .reservationOrder(reservationDTO.getReservationOrder())
                 .build();
         Reservation result = reservationRepository.save(reservation);
@@ -49,7 +48,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Long deleteReservation(Long reservationNo) {
-        reservationRepository.deleteById(reservationNo);
+        Reservation result = reservationRepository.findById(reservationNo).orElseThrow();
         return reservationNo;
     }
 

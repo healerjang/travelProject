@@ -16,13 +16,4 @@ public interface ReservationService {
     Long deleteReservation(Long reservationNo);
     HcbPageResponseDTO<ReservationDTO> getReservationUser(Long memberNo, ReservationOrder reservationOrder, HcbPageRequestDTO hcbPageRequestDTO);
     HcbPageResponseDTO<ReservationDTO> getReservationAdmin(Long productNo, HcbPageRequestDTO hcbPageRequestDTO);
-    default ReservationDTO entityToDto (Reservation reservation) {
-        ReservationDTO reservationDTO = ReservationDTO.builder()
-                .reservationNo(reservation.getReservationNo())
-                .memberNo(reservation.getMember().getMemberNo())
-                .productNo(reservation.getProduct().getProductNo())
-                .ReservationOrder(reservation.getReservationOrder())
-                .build();
-        return reservationDTO;
-    }
 }
