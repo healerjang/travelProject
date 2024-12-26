@@ -1,4 +1,4 @@
-package com.busanit501.travelproject.repository;
+package com.busanit501.travelproject.repository.reservation;
 
 import com.busanit501.travelproject.domain.Reservation;
 import com.busanit501.travelproject.domain.common.ReservationOrder;
