@@ -1,9 +1,11 @@
-package com.busanit501.travelproject.service.manager;
+package com.busanit501.travelproject.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Builder
