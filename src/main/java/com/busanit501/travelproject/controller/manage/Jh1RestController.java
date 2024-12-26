@@ -31,16 +31,16 @@ public class Jh1RestController {
     return ResponseEntity.ok().body(Map.of("success", true, "locationNo", locationNo));
   }
 
-  @GetMapping("/api/test/product/1")
-  public ResponseEntity<ProductJh1DTO> dtoJsonTest() {
-    ProductJh1DTO dto = managerService.getProductTmp(1L);
-    return ResponseEntity.ok().body(dto);
-  }
-
   @GetMapping("/api/product/{productNo}")
   public ResponseEntity<ProductJh1DTO> getProductById(@PathVariable("productNo") Long productNo) {
     ProductJh1DTO productDTO = managerService.getProductTmp(productNo);
     return ResponseEntity.ok().body(productDTO);
+  }
+
+  @PostMapping("/api/product")
+  public ResponseEntity<Map<String, Object>> registerProduct(@RequestBody ProductJh1DTO dto) {
+    Long productNo = managerService.registerProduct(dto);
+    return ResponseEntity.ok().body(Map.of("success", true, "productNo", productNo));
   }
 
 }
