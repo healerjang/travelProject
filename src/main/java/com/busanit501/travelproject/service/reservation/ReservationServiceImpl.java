@@ -1,10 +1,12 @@
 package com.busanit501.travelproject.service.reservation;
 
+import com.busanit501.travelproject.domain.Product;
 import com.busanit501.travelproject.domain.Reservation;
 import com.busanit501.travelproject.domain.common.ReservationOrder;
 import com.busanit501.travelproject.dto.reservation.ReservationDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
+import com.busanit501.travelproject.repository.ProductJh1Repository;
 import com.busanit501.travelproject.repository.member.MemberRepository;
 import com.busanit501.travelproject.repository.reservation.ReservationRepository;
 import lombok.RequiredArgsConstructor;
