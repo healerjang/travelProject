@@ -1,6 +1,8 @@
 package com.busanit501.travelproject.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Entity
@@ -20,4 +22,7 @@ public class FreeBoard extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "member_no", nullable = false)
     private Member member;
+
+    public void changeTitleContent(@NotEmpty @Size(min = 3, max = 100) String title, @NotEmpty String content) {
+    }
 }
