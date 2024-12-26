@@ -21,6 +21,6 @@ public class Reservation extends BaseEntity{
     @JoinColumn(name = "product_no", nullable = false)
     private Product product;
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ReservationOrder order;
+    @Column(name = "reservation_status", nullable = false)
+    private ReservationOrder reservationOrder;
 }
