@@ -4,10 +4,15 @@ import com.busanit501.travelproject.domain.Location;
 import com.busanit501.travelproject.domain.Product;
 import com.busanit501.travelproject.dto.LocationValueJh1DTO;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
+import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
+import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
 import com.busanit501.travelproject.repository.LocationJh1Repository;
 import com.busanit501.travelproject.repository.ProductJh1Repository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,18 +70,17 @@ public class ManagerJh1ServiceImpl implements ManagerJh1Service {
   @Override
   public ProductJh1DTO getProductTmp(Long id) {
     Product product = prepo.findById(id).orElseThrow();
-    ProductJh1DTO dto = ProductJh1DTO.builder()
-      .productNo(product.getProductNo())
-      .name(product.getName())
-      .description(product.getDescription())
-      .price(product.getPrice())
-      .locationNo(product.getLocation().getLocationNo())
-      .startDate(product.getStartDate())
-      .endDate(product.getEndDate())
-      .capacity(product.getCapacity())
-      .imagePath(product.getImagePath())
+    return productEntityToDTO(product);
+  }
+
+  @Override
+  public HcbPageResponseDTO<ProductJh1DTO> listProducts(HcbPageRequestDTO requestDTO) {
+    Page<Product> products = prepo.findAll(PageRequest.of(requestDTO.getPage() - 1, requestDTO.getSize(), Sort.by("startDate")));
+    return HcbPageResponseDTO.<ProductJh1DTO>builder()
+      .dtoList(products.stream().map(this::productEntityToDTO).toList())
+      .total((int) products.getTotalElements())
+      .hcbPageRequestDTO(HcbPageRequestDTO.builder().page(requestDTO.getPage()).size(requestDTO.getSize()).pageSize(requestDTO.getPageSize()).build())
       .build();
-    return dto;
   }
 
 }
