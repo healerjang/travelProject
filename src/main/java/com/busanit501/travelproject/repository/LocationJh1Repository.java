@@ -9,7 +9,4 @@ import java.util.List;
 
 public interface LocationJh1Repository extends JpaRepository<Location, Long> {
 
-  @Query("select new com.busanit501.travelproject.service.manager.LocationValueJh1DTO(loc.locationNo, loc.country, loc.city)  from Location loc")
-  List<LocationValueJh1DTO> listLocationsOnly();
-
 }

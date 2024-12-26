@@ -14,4 +14,6 @@ public interface ManagerJh1Service {
 
   @Transactional
   Long registerProduct(ProductJh1DTO dto);
+
+  ProductJh1DTO getProductTmp(Long id);
 }

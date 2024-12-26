@@ -62,4 +62,21 @@ public class ManagerJh1ServiceImpl implements ManagerJh1Service {
     return result.getProductNo();
   }
 
+  @Override
+  public ProductJh1DTO getProductTmp(Long id) {
+    Product product = prepo.findById(id).orElseThrow();
+    ProductJh1DTO dto = ProductJh1DTO.builder()
+      .productNo(product.getProductNo())
+      .name(product.getName())
+      .description(product.getDescription())
+      .price(product.getPrice())
+      .locationNo(product.getLocation().getLocationNo())
+      .startDate(product.getStartDate())
+      .endDate(product.getEndDate())
+      .capacity(product.getCapacity())
+      .imagePath(product.getImagePath())
+      .build();
+    return dto;
+  }
+
 }
