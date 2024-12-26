@@ -19,6 +19,7 @@ public class MemberDTO {
     private String memberEmail;
     private String memberPhone;
     private int memberPoint;
+    private String memberUUID;
     private LocalDateTime regDate;
     private LocalDateTime modDate;
 }
