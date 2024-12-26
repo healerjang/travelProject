@@ -10,24 +10,24 @@
 <div class="container right-panel-active">
     <!-- Sign Up -->
     <div class="container__form container--signup">
-        <form action="/member/login" method="post" class="form" id="form1">
-            <input type="text" placeholder="ID" class="input" />
-            <input type="password" placeholder="Password" class="input" />
-            <input type="email" placeholder="Email" class="input" />
-            <input type="text" placeholder="UserName" class="input" />
-            <input type="text" placeholder="Phone" class="input" />
-            <button class="btn">Sign Up</button>
+        <form action="/member/register" method="post" class="form" id="form1">
+            <input type="text" th:placeholder="${ID == null ? 'ID' : ID}" class="input" name="memberID" />
+            <input type="password" placeholder="Password" class="input" name="memberPassword" />
+            <input type="email" th:placeholder="${EMAIL == null ? 'Email' : EMAIL}" class="input" name="memberEmail" />
+            <input type="text" th:placeholder="${NAME == null ? 'UserName' : NAME}" class="input" name="memberName" />
+            <input type="text" th:placeholder="${PHONE == null ? 'phone' : PHONE}" class="input" name="memberPhone" />
+            <input type="submit" class="btn"/>
         </form>
     </div>
 
     <!-- Sign In -->
     <div class="container__form container--signin">
-        <form action="#" class="form" id="form2">
-            <h2 class="form__title">Sign In</h2>
-            <input type="email" placeholder="Email" class="input" />
-            <input type="password" placeholder="Password" class="input" />
+        <form action="/member/login" method="post" class="form" id="form2">
+            <h2 class="form__title" th:text="${error == null ? 'Sign in' : error}"></h2>
+            <input type="text" placeholder="id" name="memberID" class="input" />
+            <input type="password" placeholder="Password" name="memberPassword" class="input" />
             <a href="#" class="link">Forgot your password?</a>
-            <button class="btn">Sign In</button>
+            <input type="submit" class="btn"/>
         </form>
     </div>
 
