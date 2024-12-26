@@ -2,7 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/bootstrap_admin_jh1.html}">
+      layout:decorate="~{layout/bootstrap_temporary_jh1.html}">
 <head>
   <meta charset="UTF-8">
   <title>여행상품 관리</title>
@@ -13,7 +13,7 @@
       <h1>여행상품 관리</h1>
     </div>
     <div class="container">
-      <table class="table table-hover mb-3">
+      <table class="table table-hover">
         <thead>
           <tr class="text-center">
             <th>No.</th>
@@ -27,9 +27,6 @@
         </thead>
         <tbody id="tbody"></tbody>
       </table>
-      <div class="mb-3">
-        <a class="btn btn-primary" th:href="@{/admin/product/register}">여행상품 등록하기</a>
-      </div>
     </div>
   </div>
   <th:block layout:fragment="scripts">
@@ -71,9 +68,7 @@
           <td>${periodExpression(productDTO.until)}</td>
         `
 
-        const anchor = tr.querySelector(".ProductName a")
-        anchor.textContent = productDTO.name
-        anchor.href = `/admin/product/edit/${productDTO.productNo}`
+        tr.querySelector(".ProductName a").textContent = productDTO.name
         tr.querySelector(".Location").textContent = productDTO.locationNo
 
 
