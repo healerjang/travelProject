@@ -1,5 +1,6 @@
 package com.busanit501.travelproject.domain;
 
+import com.busanit501.travelproject.dto.member.UpdateDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,4 +35,12 @@ public class Member extends BaseEntity {
     private Set<FreeBoard> freeBoards;
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Reply> replies;
+
+    public void updateMemberData(UpdateDTO updateDTO) {
+        this.memberID = updateDTO.getMemberID();
+        this.memberPassword = updateDTO.getMemberPassword();
+        this.memberName = updateDTO.getMemberName();
+        this.memberEmail = updateDTO.getMemberEmail();
+        this.memberPhone = updateDTO.getMemberPhone();
+    }
 }
