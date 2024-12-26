@@ -27,6 +27,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String memberPhone;
     private int memberPoint;
+    private String memberUUID;
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Reservation> reservations;
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
