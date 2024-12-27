@@ -1,4 +1,4 @@
-package com.busanit501.travelproject.service.manager;
+package com.busanit501.travelproject.service.admin;
 
 import com.busanit501.travelproject.domain.Product;
 import com.busanit501.travelproject.dto.LocationValueJh1DTO;
@@ -9,7 +9,7 @@ import jakarta.transaction.Transactional;
 
 import java.util.List;
 
-public interface ManagerJh1Service {
+public interface AdminJh1Service {
   @Transactional
   List<LocationValueJh1DTO> getLocationsOnly();
 
