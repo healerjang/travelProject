@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
@@ -34,9 +34,9 @@ public class ProductJh1DTO {
   private List<Object> reviews;
 
   @JsonProperty("until")
-  public Period getUntil() {
+  public long getUntil() {
     LocalDate today = LocalDate.now();
-    Period until = today.until(startDate);
-    return until;
+//    Period until = today.until(startDate);
+    return today.until(startDate, ChronoUnit.DAYS);
   }
 }
