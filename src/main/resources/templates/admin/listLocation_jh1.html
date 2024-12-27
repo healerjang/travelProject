@@ -25,45 +25,48 @@
   </div>
   <div class="container">
     <div id="locationsPlaceholder"></div>
-    <div class="mb-3">
-      <a class="btn btn-primary">여행지 등록하기</a>
-      <a class="btn btn-secondary" th:href="@{/admin/product/list}">여행상품 관리</a>
-    </div>
-
     <form id="locationRegisterForm">
-      <div class="row">
+      <div class="row mb-3">
         <div class="col">
           <div class="form-floating">
-            <input class="form-control" type="text" name="country" id="countryName" placeholder="국가">
-            <label for="countryName" class="form-label">국가</label>
+            <input class="form-control" type="text" name="country" id="countryNameInput" placeholder="국가">
+            <label for="countryNameInput" class="form-label">국가</label>
           </div>
         </div>
         <div class="col">
           <div class="form-floating">
-            <input class="form-control" type="text" name="city" id="cityName" placeholder="국가">
-            <label for="cityName" class="form-label">도시</label>
+            <input class="form-control" type="text" name="city" id="cityNameInput" placeholder="국가">
+            <label for="cityNameInput" class="form-label">도시</label>
           </div>
         </div>
       </div>
     </form>
+    <div class="mb-3">
+      <a class="btn btn-primary">여행지 등록하기</a>
+      <a class="btn btn-secondary" th:href="@{/admin/product/list}">여행상품 관리</a>
+    </div>
   </div>
 
 </div>
 <th:block layout:fragment="scripts">
+  <script th:src="@{/script/admin/admin-common.js}"></script>
   <script th:inline="javascript">
     const locationsPlaceholder = document.getElementById('locationsPlaceholder');
     const locStructure = []
+
+    const countryNameInput = document.getElementById('countryNameInput');
+    const cityNameInput = document.getElementById('cityNameInput');
 
     function countryEl(country, cities) {
       const el = document.createElement('div')
       el.classList.add('row', 'm-2')
       el.innerHTML = `
-          <div class="col-2 fw-bold countryName"></div>
+          <div class="col-2 fw-bold country-name"></div>
           <div class="col-8">
             <div class="row cities"></div>
           </div>
         `
-      const countryNameEl = el.querySelector('.countryName');
+      const countryNameEl = el.querySelector('.country-name');
       countryNameEl.setAttribute("name", country)
       countryNameEl.textContent = country;
 
@@ -76,6 +79,16 @@
       }
       return el
     }
+
+    const formEl = document.getElementById('locationRegisterForm');
+    formEl.addEventListener('submit', e => {
+      e.preventDefault();
+      registerLocation(countryNameInput.value, cityNameInput.value).then(response => {
+        console.log(response);
+        countryNameInput.value = '';
+        cityNameInput.value = '';
+      })
+    });
 
     (async () => {
       const response = await axios.get("/api/location/list");
