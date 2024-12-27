@@ -1,10 +1,9 @@
 package com.busanit501.travelproject.aspect.member;
 
+import com.busanit501.travelproject.context.MemberContext;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.util.CookieDTO;
-import com.busanit501.travelproject.exception.member.UnauthorizedException;
 import com.busanit501.travelproject.service.member.MemberService;
-import com.busanit501.travelproject.context.MemberContext;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -32,12 +31,9 @@ public class MemberAspect {
 
         String hashUUID = CookieDTO.getUUIDCookie(request).getValue();
         String memberNo = CookieDTO.memberNoCookie(request).getValue();
+        MemberDTO memberDTO = null;
 
-        if (hashUUID.isEmpty() || memberNo.isEmpty()) throw new UnauthorizedException("No valid hashUUID and memberNo found in cookies.");
-
-        MemberDTO memberDTO = memberService.checkMemberUUID(Long.valueOf(memberNo), hashUUID);
-
-        if (memberDTO == null) {throw new UnauthorizedException("Invalid Member");}
+        if (!hashUUID.isEmpty() || memberNo.isEmpty()) memberDTO =memberService.checkMemberUUID(Long.valueOf(memberNo), hashUUID);
 
         MemberContext.setMember(memberDTO);
         try { return joinPoint.proceed();}
