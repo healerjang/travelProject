@@ -36,19 +36,21 @@ public class MemberController {
 
     @PostMapping("/register")
     public String register(RegisterDTO registerDTO, Model model) {
-       String error = "";
-        if (memberService.registerMember(registerDTO)) {
+       String error;
+        if (!memberService.registerMember(registerDTO)) {
             Map<MemberFields, Boolean> duplicateCheckMap = memberService.duplicateCheck(registerDTO);
             if (duplicateCheckMap.isEmpty()) {
                 error = "data is empty";
                 model.addAttribute("error", error);
                 log.error("MemberController postMapping register error check to input data 'registerDTO'.");
-                return "/member/register";
+                return "/member/login";
             }
+            log.info("MemberController register duplicateCheckMap.key : {}", duplicateCheckMap);
             duplicateCheckMap.forEach((key, value) -> model.addAttribute(key.toString(),
                     value ? key : "duplicate" + key));
-            return "/member/register";
+            return "/member/login";
         }
+        model.addAttribute("login", "login");
         return "/member/login";
     }
     @GetMapping("/login")
@@ -64,6 +66,7 @@ public class MemberController {
 
         if (responseLogin == ResponseLogin.FALSE) {
             model.addAttribute("error", "login failed");
+            model.addAttribute("login", "login");
             return "/member/login";
         }
 
@@ -76,7 +79,7 @@ public class MemberController {
 
         response.addCookie(memberNoCookie);
         response.addCookie(UUIDCookie);
-        return "/mainPage";
+        return "redirect:/mainPage";
     }
 
     // 이후 쿠키나 시큐리티에서 memberNo를 받은 뒤 사용자의 정보를 보여주는 로직 개발 예정.
