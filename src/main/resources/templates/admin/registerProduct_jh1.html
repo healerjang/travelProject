@@ -95,6 +95,7 @@
   </div>
 </div>
 <th:block layout:fragment="scripts">
+  <script th:src="@{/script/admin/admin-common.js}"></script>
   <script th:inline="javascript">
     /** @type {HTMLSelectElement} */
     const countrySelect = document.getElementById("travelCountry");
@@ -108,19 +109,6 @@
     const regCountry = document.getElementById("registerLocCountry")
     const regCity = document.getElementById("registerLocCity")
 
-    /** option 엘리먼트를 만든다 */
-    function optEl(text, value = undefined) {
-      const el = document.createElement("option");
-      el.textContent = text;
-      if (value) el.value = value;
-      return el
-    }
-
-    /** select 엘리먼트의 내용물을 초기화한다. */
-    function clearSelect(el) {
-      const top = el.querySelector('option[selected]').innerText;
-      el.innerHTML = `<option selected>${top}</option><option disabled>-------------</option>`
-    }
 
     /** 국가 선택 > 도시 선택 구조에 맞도록 select 엘리먼트에 여행지 option을 추가한다. */
     function addLocation(countryName, cityName, locationNo) {
@@ -149,13 +137,6 @@
       }
     }
 
-    /** 여행지를 추가하고, 성공했을 경우 select 엘리먼트도 업데이트한다. */
-    async function registerLocation(country, city) {
-      const response = await axios.post("/api/location", { country, city })
-      const { data : { locationNo }} = response
-      addLocation(country, city, locationNo)
-    }
-
     /** 국가를 선택했을 때, 해당 국가에 속해 있는 등록된 여행지 도시가 select에 나타나도록 한다. */
     function updateCitySelect(countryName) {
       const country = locStructure.find(loc => loc.name === countryName)
@@ -177,6 +158,7 @@
     document.getElementById("registerLocationButton").addEventListener("click", () => {
       registerLocation(regCountry.value, regCity.value)
       .then(response => {
+        addLocation(regCountry.value, regCity.value, response.data.locationNo)
         regCountry.value = ''
         regCity.value = ''
       })
