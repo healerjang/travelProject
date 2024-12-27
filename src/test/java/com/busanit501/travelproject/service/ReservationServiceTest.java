@@ -31,10 +31,10 @@ public class ReservationServiceTest {
     @Test
     public void updTest() {
         ReservationDTO reservationDTO = ReservationDTO.builder()
-                .reservationNo(54L)
+                .reservationNo(53L)
                 .productNo(2L)
                 .memberNo(1L)
-                .ReservationOrder(ReservationOrder.COMPLETED)
+                .ReservationOrder(ReservationOrder.CANCELLED)
                 .build();
         Long result = reservationService.updateReservation(reservationDTO);
     }
