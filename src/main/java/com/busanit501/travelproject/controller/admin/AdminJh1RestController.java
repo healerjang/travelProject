@@ -4,7 +4,7 @@ import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.LocationValueJh1DTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
-import com.busanit501.travelproject.service.manager.ManagerJh1Service;
+import com.busanit501.travelproject.service.admin.AdminJh1Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AdminJh1RestController {
 
-  private final ManagerJh1Service managerService;
+  private final AdminJh1Service managerService;
 
   @GetMapping("/api/location/list")
   public ResponseEntity<List<LocationValueJh1DTO>> getLocationList() {

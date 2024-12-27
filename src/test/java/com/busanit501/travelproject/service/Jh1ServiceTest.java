@@ -1,7 +1,7 @@
 package com.busanit501.travelproject.service;
 
 import com.busanit501.travelproject.dto.LocationValueJh1DTO;
-import com.busanit501.travelproject.service.manager.ManagerJh1Service;
+import com.busanit501.travelproject.service.admin.AdminJh1Service;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import java.util.List;
 public class Jh1ServiceTest {
 
   @Autowired
-  private ManagerJh1Service service;
+  private AdminJh1Service service;
 
   @Test
   public void registerLocationTest() {

@@ -1,4 +1,4 @@
-package com.busanit501.travelproject.service.manager;
+package com.busanit501.travelproject.service.admin;
 
 import com.busanit501.travelproject.domain.Location;
 import com.busanit501.travelproject.domain.Product;
@@ -20,7 +20,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class ManagerJh1ServiceImpl implements ManagerJh1Service {
+public class AdminJh1ServiceImpl implements AdminJh1Service {
 
   private final LocationJh1Repository lrepo;
   private final ProductJh1Repository prepo;
