@@ -103,7 +103,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberDTO checkMemberUUID(Long memberNo, String memberUUID) {
-        return modelMapper.map(memberRepository.findByMemberNoAndMemberUUID(memberNo, memberUUID), MemberDTO.class);
+        Member member = memberRepository.findByMemberNoAndMemberUUID(memberNo, memberUUID);
+        if (member == null) return null;
+        return modelMapper.map(member, MemberDTO.class);
     }
 
 
