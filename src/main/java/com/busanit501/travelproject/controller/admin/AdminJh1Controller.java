@@ -1,4 +1,4 @@
-package com.busanit501.travelproject.controller.manage;
+package com.busanit501.travelproject.controller.admin;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
