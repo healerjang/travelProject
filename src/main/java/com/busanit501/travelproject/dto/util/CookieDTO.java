@@ -11,7 +11,10 @@ public class CookieDTO{
     private Cookie cookie;
 
     public CookieDTO(HttpServletRequest request, String name){
-        cookie = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals(name)).findFirst().orElse(null);
+        Cookie[] cookies = request.getCookies();
+        cookie = Arrays.stream(cookies != null ? cookies : new Cookie[0])
+                .filter(c -> c.getName().equals(name))
+                .findFirst().orElse(null);
         if(cookie == null) cookie = new Cookie(name, "");
     }
 
