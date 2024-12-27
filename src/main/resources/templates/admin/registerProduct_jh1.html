@@ -72,8 +72,12 @@
             </div>
           </div>
           <div class="input-group mb-2">
-            <label for="opening" class="input-group-text">최대 좌석 수</label>
-            <input type="number" id="opening" class="form-control" placeholder="좌석 수">
+            <label for="productPrice" class="input-group-text">상품가격</label>
+            <input type="number" id="productPrice" class="form-control" placeholder="상품가격">
+          </div>
+          <div class="input-group mb-2">
+            <label for="productCapacity" class="input-group-text">최대 좌석 수</label>
+            <input type="number" id="productCapacity" class="form-control" placeholder="좌석 수">
           </div>
           <div class="input-group mb-2">
             <label for="imageUpload" class="input-group-text">이미지 첨부</label>
@@ -82,9 +86,9 @@
           <input type="hidden" id="imagePath" name="imagePath">
           <div class="input-group mb-2">
             <span class="input-group-text">상세설명</span>
-            <textarea class="form-control" placeholder="상세설명" style="height: 400px"></textarea>
+            <textarea id="productDescription" class="form-control" placeholder="상세설명" style="height: 400px"></textarea>
           </div>
-          <button class="btn btn-primary">등록하기</button>
+          <button id="registerProductButton" class="btn btn-primary">등록하기</button>
         </div>
       </div>
     </section>
@@ -101,6 +105,10 @@
     let locations = [];
     let locStructure = [];
 
+    const regCountry = document.getElementById("registerLocCountry")
+    const regCity = document.getElementById("registerLocCity")
+
+    /** option 엘리먼트를 만든다 */
     function optEl(text, value = undefined) {
       const el = document.createElement("option");
       el.textContent = text;
@@ -108,11 +116,13 @@
       return el
     }
 
+    /** select 엘리먼트의 내용물을 초기화한다. */
     function clearSelect(el) {
       const top = el.querySelector('option[selected]').innerText;
       el.innerHTML = `<option selected>${top}</option><option disabled>-------------</option>`
     }
 
+    /** 국가 선택 > 도시 선택 구조에 맞도록 select 엘리먼트에 여행지 option을 추가한다. */
     function addLocation(countryName, cityName, locationNo) {
       const countryObj = locStructure.find(loc => loc.name === countryName);
       if (countryObj) {
@@ -125,10 +135,11 @@
           name: countryName,
           children: [ { name: cityName, locationNo } ]
         })
-        countrySelect.add(optEl(countryName));
+        countrySelect.add(optEl(countryName, countryName));
       }
     }
 
+    /** 서버에서 여행지 목록을 불러와서 select 엘리먼트를 초기화한다. */
     async function loadLocations() {
       const response = await axios.get("/api/location/list")
       const { data } = response
@@ -138,12 +149,14 @@
       }
     }
 
+    /** 여행지를 추가하고, 성공했을 경우 select 엘리먼트도 업데이트한다. */
     async function registerLocation(country, city) {
       const response = await axios.post("/api/location", { country, city })
       const { data : { locationNo }} = response
       addLocation(country, city, locationNo)
     }
 
+    /** 국가를 선택했을 때, 해당 국가에 속해 있는 등록된 여행지 도시가 select에 나타나도록 한다. */
     function updateCitySelect(countryName) {
       const country = locStructure.find(loc => loc.name === countryName)
       clearSelect(citySelect)
@@ -154,16 +167,14 @@
       }
     }
 
+    /* 국가를 선택했을 때, 해당 국가에 속해 있는 등록된 여행지 도시가 select에 나타나도록 실제로 이벤트 리스너를 등록함 */
     countrySelect.addEventListener("change", e => {
       const countryName = countrySelect.selectedOptions[0].text
       updateCitySelect(countryName)
     })
 
-    const regCountry = document.getElementById("registerLocCountry")
-    const regCity = document.getElementById("registerLocCity")
-
+    /* 여행상품 등록 페이지 내에서 빠르게 여행지 등록을 하는 기능 */
     document.getElementById("registerLocationButton").addEventListener("click", () => {
-
       registerLocation(regCountry.value, regCity.value)
       .then(response => {
         regCountry.value = ''
@@ -171,7 +182,36 @@
       })
     })
 
-    loadLocations()
+
+
+    loadLocations().then(() => {
+
+      const productDTO = /*[[${productDTO}]]*/ null;
+      if (productDTO != null) {
+
+        function assignInputValue(id, val) {
+          const input = document.getElementById(id);
+          input.value = val;
+        }
+
+        assignInputValue("productName", productDTO.name)
+        assignInputValue("productDescription", productDTO.description)
+        assignInputValue("productPrice", productDTO.price)
+        assignInputValue("startDate", productDTO.startDate)
+        assignInputValue("endDate", productDTO.endDate)
+        assignInputValue("productCapacity", productDTO.capacity)
+
+        const knownLocation = locations.find(loc => loc.locationNo === productDTO.locationNo)
+        countrySelect.value = knownLocation.country
+        updateCitySelect(knownLocation.country)
+        citySelect.value = knownLocation.locationNo
+      }
+
+    })
+
+
+
+
   </script>
 </th:block>
 </html>

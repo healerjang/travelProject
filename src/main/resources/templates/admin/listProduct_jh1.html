@@ -13,7 +13,7 @@
       <h1>여행상품 관리</h1>
     </div>
     <div class="container">
-      <table class="table table-hover">
+      <table class="table table-hover mb-3">
         <thead>
           <tr class="text-center">
             <th>No.</th>
@@ -27,6 +27,10 @@
         </thead>
         <tbody id="tbody"></tbody>
       </table>
+      <div class="mb-3">
+        <a class="btn btn-primary" th:href="@{/admin/product/register}">여행상품 등록하기</a>
+        <a class="btn btn-secondary" th:href="@{/admin/location/list}">여행지 관리</a>
+      </div>
     </div>
   </div>
   <th:block layout:fragment="scripts">
@@ -68,7 +72,9 @@
           <td>${periodExpression(productDTO.until)}</td>
         `
 
-        tr.querySelector(".ProductName a").textContent = productDTO.name
+        const anchor = tr.querySelector(".ProductName a")
+        anchor.textContent = productDTO.name
+        anchor.href = `/admin/product/edit/${productDTO.productNo}`
         tr.querySelector(".Location").textContent = productDTO.locationNo
 
 
