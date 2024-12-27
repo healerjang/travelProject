@@ -1,4 +1,4 @@
-package com.busanit501.travelproject.controller.manage;
+package com.busanit501.travelproject.controller.admin;
 
 import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.LocationValueJh1DTO;
