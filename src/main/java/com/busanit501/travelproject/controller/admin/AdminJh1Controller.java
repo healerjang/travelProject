@@ -8,30 +8,36 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/admin")
 public class AdminJh1Controller {
 
   private final AdminJh1Service adminService;
 
-  @GetMapping("/admin/product/register")
+  @GetMapping("/product/register")
   public String registerProduct() {
     return "admin/registerProduct_jh1";
   }
 
-  @GetMapping("/admin/product/edit/{productNo}")
+  @GetMapping("/product/edit/{productNo}")
   public String editProduct(@PathVariable("productNo") @ModelAttribute("productNo") Long productNo, Model model) {
     ProductJh1DTO productDTO = adminService.getProductTmp(productNo);
     model.addAttribute("productDTO", productDTO);
     return "admin/registerProduct_jh1";
   }
 
-  @GetMapping("/admin/product/list")
+  @GetMapping("/product/list")
   public String listProduct() {
     return "admin/listProduct_jh1";
   }
 
-  @GetMapping("/admin/location/list")
+  @GetMapping("/location/list")
   public String listLocation() { return "admin/listLocation_jh1"; }
+
+  @GetMapping("/member/list")
+  public String listMembers() { return "admin/listMembers_jh1"; }
+
 }

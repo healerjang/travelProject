@@ -1,8 +1,11 @@
 package com.busanit501.travelproject.service.admin;
 
+import com.busanit501.travelproject.domain.Member;
 import com.busanit501.travelproject.domain.Product;
-import com.busanit501.travelproject.dto.LocationValueJh1DTO;
-import com.busanit501.travelproject.dto.ProductJh1DTO;
+import com.busanit501.travelproject.dto.*;
+import com.busanit501.travelproject.dto.member.MemberDTO;
+import com.busanit501.travelproject.dto.member.MemberFullDTO;
+import com.busanit501.travelproject.dto.reservation.ReservationDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
 import jakarta.transaction.Transactional;
@@ -10,17 +13,6 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 
 public interface AdminJh1Service {
-  @Transactional
-  List<LocationValueJh1DTO> getLocationsOnly();
-
-  Long registerLocation(LocationValueJh1DTO dto);
-
-  @Transactional
-  Long registerProduct(ProductJh1DTO dto);
-
-  ProductJh1DTO getProductTmp(Long id);
-
-  HcbPageResponseDTO<ProductJh1DTO> listProducts(HcbPageRequestDTO requestDTO);
 
   default ProductJh1DTO productEntityToDTO(Product product) {
     return ProductJh1DTO.builder()
@@ -36,4 +28,87 @@ public interface AdminJh1Service {
       .build();
   }
 
+  default MemberDTO memberEntityToDTO(Member member) {
+    return MemberDTO.builder()
+      .memberNo(member.getMemberNo())
+      .memberID(member.getMemberID())
+      .memberName(member.getMemberName())
+      .memberEmail(member.getMemberEmail())
+      .memberPhone(member.getMemberPhone())
+      .memberPoint(member.getMemberPoint())
+      .memberUUID(member.getMemberUUID())
+      .regDate(member.getRegDate())
+      .modDate(member.getModDate())
+      .build();
+  }
+
+  default MemberFullDTO memberEntityToFullDTO(Member member) {
+    List<ReservationDTO> reservationList = member.getReservations().stream().map(
+      r -> ReservationDTO.builder()
+        .reservationNo(r.getReservationNo())
+        .memberNo(member.getMemberNo())
+        .productNo(r.getProduct().getProductNo())
+        .build()
+    ).toList();
+
+    List<ReviewJh1DTO> reviewList = member.getReviews().stream().map(
+      r -> ReviewJh1DTO.builder()
+        .reviewNo(r.getReviewNo())
+        .reviewContent(r.getReviewContent())
+        .rating(r.getRating())
+        .productNo(r.getProduct().getProductNo())
+        .memberNo(member.getMemberNo())
+        .build()
+    ).toList();
+
+    List<FreeBoardJh1DTO> freeBoardList = member.getFreeBoards().stream().map(
+        fb -> FreeBoardJh1DTO.builder()
+          .freeBoardNo(fb.getFreeBoardNo())
+          .title(fb.getTitle())
+          .content(fb.getContent())
+          .memberNo(member.getMemberNo())
+          .build()
+      ).toList();
+
+    List<ReplyJh1DTO> replyList = member.getReplies().stream().map(
+      re -> ReplyJh1DTO.builder()
+        .replyNo(re.getReplyNo())
+        .content(re.getContent())
+        .memberNo(member.getMemberNo())
+        .build()
+    ).toList();
+
+    return MemberFullDTO.builder()
+      .memberNo(member.getMemberNo())
+      .memberID(member.getMemberID())
+      .memberName(member.getMemberName())
+      .memberEmail(member.getMemberEmail())
+      .memberPhone(member.getMemberPhone())
+      .memberPoint(member.getMemberPoint())
+      .memberUUID(member.getMemberUUID())
+      .regDate(member.getRegDate())
+      .modDate(member.getModDate())
+      .reservations(reservationList)
+      .reviews(reviewList)
+      .freeBoards(freeBoardList)
+      .replies(replyList)
+      .build();
+  }
+
+  @Transactional
+  List<LocationValueJh1DTO> getLocationsOnly();
+
+  Long registerLocation(LocationValueJh1DTO dto);
+
+  @Transactional
+  Long registerProduct(ProductJh1DTO dto);
+
+  ProductJh1DTO getProductTmp(Long id);
+
+  HcbPageResponseDTO<ProductJh1DTO> listProducts(HcbPageRequestDTO requestDTO);
+
+
+  HcbPageResponseDTO<MemberDTO> listMembers(HcbPageRequestDTO requestDTO);
+
+  MemberFullDTO getMemberFullSupport(long memberNo);
 }
