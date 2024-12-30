@@ -1,12 +1,16 @@
 package com.busanit501.travelproject.service;
 
 import com.busanit501.travelproject.dto.LocationValueJh1DTO;
+import com.busanit501.travelproject.dto.member.MemberDTO;
+import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
+import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
 import com.busanit501.travelproject.service.admin.AdminJh1Service;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -44,5 +48,11 @@ public class Jh1ServiceTest {
       .build();
     Long pno = service.registerProduct(dto);
     log.info(pno);
+  }
+
+  @Test
+  public void memberListTest() {
+    HcbPageResponseDTO<MemberDTO> response = service.listMembers(HcbPageRequestDTO.builder().page(1).size(10).pageSize(10).build());
+    log.info("response: {}", response);
   }
 }
