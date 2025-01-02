@@ -1,21 +1,28 @@
 package com.busanit501.travelproject.service.reservation;
 
+import com.busanit501.travelproject.domain.Product;
 import com.busanit501.travelproject.domain.Reservation;
 import com.busanit501.travelproject.domain.common.ReservationOrder;
+import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.reservation.ReservationDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
 import com.busanit501.travelproject.repository.ProductJh1Repository;
 import com.busanit501.travelproject.repository.member.MemberRepository;
 import com.busanit501.travelproject.repository.reservation.ReservationRepository;
+import com.busanit501.travelproject.service.admin.AdminJh1Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -24,6 +31,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final MemberRepository memberRepository;
     private final ProductJh1Repository productJh1Repository;
+    private final AdminJh1Service adminJh1Service;
 
     @Override
     public Long registerReservation(ReservationDTO reservationDTO) {
@@ -81,5 +89,16 @@ public class ReservationServiceImpl implements ReservationService {
                 .hcbPageRequestDTO(hcbPageRequestDTO)
                 .total((int) result.getTotalElements())
                 .build();
+    }
+
+    @Override
+    public List<ProductJh1DTO> getBestProducts() {
+        List<Long> result = reservationRepository.bestReservationProducts();
+        List<ProductJh1DTO> dtoList = result.stream().map(productNo -> {
+            Product ett = productJh1Repository.findProductByProductNo(productNo).orElseThrow();
+            ProductJh1DTO dto = adminJh1Service.productEntityToDTO(ett);
+            return dto;
+        }).collect(Collectors.toList());
+        return dtoList;
     }
 }
