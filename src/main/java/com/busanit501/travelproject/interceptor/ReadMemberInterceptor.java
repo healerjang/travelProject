@@ -7,19 +7,15 @@ import com.busanit501.travelproject.dto.util.CookieDTO;
 import com.busanit501.travelproject.service.member.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
+@RequiredArgsConstructor
 public class ReadMemberInterceptor implements HandlerInterceptor {
     private final MemberService memberService;
-
-    @Autowired
-    public ReadMemberInterceptor(MemberService memberService) {
-        this.memberService = memberService;
-    }
 
     @Override
     public boolean preHandle(HttpServletRequest request,
