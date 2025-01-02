@@ -2,6 +2,7 @@ package com.busanit501.travelproject.controller.reservation;
 
 import com.busanit501.travelproject.annotation.member.Member;
 import com.busanit501.travelproject.domain.common.ReservationOrder;
+import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.reservation.ReservationDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
@@ -15,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -75,5 +77,10 @@ public class ReservationRestController {
     public Map<String,Long> deleteNow(@PathVariable Long reservationNo) {
         Long result = reservationService.deleteReservationNow(reservationNo);
         return Map.of("reservationNo", result);
+    }
+
+    @GetMapping("/best")
+    public List<ProductJh1DTO> bestProduct() {
+        return reservationService.getBestProducts();
     }
 }
