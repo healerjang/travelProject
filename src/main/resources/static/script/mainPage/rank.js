@@ -36,7 +36,6 @@ function moveToRightRankImageBoxes() {
     if (canMoveToRightRankImageBoxes < 7) {
         for (const rankImageBox of rankImageBoxes) {
             const leftPosition = parseFloat(rankImageBox.style.left) - (margin + rankImageBoxWidth);
-            console.log(leftPosition)
             rankImageBox.style.left = `${leftPosition}px`;
         }
         canMoveToRightRankImageBoxes ++;
@@ -48,7 +47,6 @@ function moveToLeftRankImageBoxes() {
     if (canMoveToLeftRankImageBoxes > 0) {
         for (const rankImageBox of rankImageBoxes) {
             const leftPosition = parseFloat(rankImageBox.style.left) + (margin + rankImageBoxWidth);
-            console.log(leftPosition)
             rankImageBox.style.left = `${leftPosition}px`;
         }
         canMoveToRightRankImageBoxes --;

@@ -12,8 +12,19 @@ const locationTagContainer = document.querySelector('.locationTagContainer');
 const countryImages = searchLocationContainer.querySelectorAll('.countryImageBox');
 let selectLocationTag = null;
 const now = new Date();
-const dateTypeYearNow = now.getFullYear();
-const dateTypeMonthNow = now.getMonth() + 1;
+let dateTypeYearNow = now.getFullYear();
+let dateTypeMonthNow = now.getMonth() + 1;
+const selectStart = { current: null };
+const selectEnd = { current: null };
+let startMonthUpdateValue = 0;
+let endMonthUpdateValue = 0;
+const startContainLeftImage = searchStartContainer.querySelector('.monthTextContainerLeftArrow');
+const startContainRightImage = searchStartContainer.querySelector('.monthTextContainerRightArrow');
+const endContainLeftImage = searchEndContainer.querySelector('.monthTextContainerLeftArrow');
+const endContainRightImage = searchEndContainer.querySelector('.monthTextContainerRightArrow');
+let startContainSetting = false;
+let endContainSetting = false;
+const searchImageIcon = document.querySelector('.searchIconBox').querySelector('img');
 const locationMap = new Map([
     ["한국", [
         "서울", "부산", "제주", "인천", "경주",
@@ -71,13 +82,53 @@ searchStart.addEventListener('click', (e) => {
     if (viewSearch != null) viewSearch.style.display = 'none';
     searchStartContainer.style.display = 'flex';
     viewSearch = searchStartContainer;
+    if (!startContainSetting) {
+        addDateNum(searchStartContainer, dateTypeYearNow, dateTypeMonthNow, selectStart);
+        startContainSetting = true;
+    }
     scrollDown()
 })
 searchEnd.addEventListener('click', (e) => {
     if (viewSearch != null) viewSearch.style.display = 'none';
     searchEndContainer.style.display = 'flex';
     viewSearch = searchEndContainer;
+    if (!endContainSetting) {
+        addDateNum(searchEndContainer, dateTypeYearNow, dateTypeMonthNow, selectEnd);
+        endContainSetting = true;
+    }
     scrollDown()
+})
+
+startContainLeftImage.addEventListener('click', (e) => {
+    if (startMonthUpdateValue > 0) {
+        startMonthUpdateValue--;
+        const dateTypeYear = Math.trunc(startMonthUpdateValue / 12)
+        const dateTypeMonth = startMonthUpdateValue % 12;
+        addDateNum(searchStartContainer, dateTypeYearNow + dateTypeYear, dateTypeMonthNow + dateTypeMonth, selectStart)
+    }
+})
+
+startContainRightImage.addEventListener('click', (e) => {
+    startMonthUpdateValue ++;
+    const dateTypeYear = Math.trunc(startMonthUpdateValue / 12)
+    const dateTypeMonth = startMonthUpdateValue % 12;
+    addDateNum(searchStartContainer, dateTypeYearNow + dateTypeYear, dateTypeMonthNow + dateTypeMonth, selectStart)
+})
+
+endContainLeftImage.addEventListener('click', (e) => {
+    if (endMonthUpdateValue > 0) {
+        endMonthUpdateValue--;
+        const dateTypeYear = Math.trunc(endMonthUpdateValue / 12)
+        const dateTypeMonth = endMonthUpdateValue % 12;
+        addDateNum(searchEndContainer, dateTypeYearNow + dateTypeYear, dateTypeMonthNow + dateTypeMonth, selectEnd)
+    }
+})
+
+endContainRightImage.addEventListener('click', (e) => {
+    endMonthUpdateValue++;
+    const dateTypeYear = Math.trunc(endMonthUpdateValue / 12)
+    const dateTypeMonth = endMonthUpdateValue % 12;
+    addDateNum(searchEndContainer, dateTypeYearNow + dateTypeYear, dateTypeMonthNow + dateTypeMonth, selectEnd)
 })
 
 function scrollDown() {
@@ -86,24 +137,45 @@ function scrollDown() {
     })
 }
 
-function addDateNum(searchDateContainer, dateTypeYearNow, dateTypeMonthNow) {
+function addDateNum(searchDateContainer, dateTypeYear, dateTypeMonth, selectDate) {
     const monthTextContainer = searchDateContainer.querySelector('.monthTextContainer');
     const dateContainer = searchDateContainer.querySelector('.dateContainer');
-    const maxDaysInMonth = getMaxDaysInMonth(dateTypeYearNow, dateTypeMonthNow);
-    const dayOfWeek = getDayOfWeek(dateTypeYearNow, dateTypeMonthNow)
-    monthTextContainer.innerText = `${dateTypeYearNow}년 ${dateTypeMonthNow}월`;
+    const maxDaysInMonth = getMaxDaysInMonth(dateTypeYear, dateTypeMonth);
+    const dayOfWeek = getDayOfWeek(dateTypeYear, dateTypeMonth)
+    monthTextContainer.querySelector('.monthText').innerText = `${dateTypeYear}년 ${dateTypeMonth}월`;
+    const setDateTextNum = dateContainer.querySelectorAll('.dateNumBox');
 
-    for (const i of dayOfWeek) {
+    for (const item of setDateTextNum) {
+        dateContainer.removeChild(item);
+    }
 
+    for (let i = 0; i < dayOfWeek; i++) {
+        addDateTextBox('', dateContainer, selectDate, dateTypeYear, dateTypeMonth);
+    }
+    for (let i = 1; i <= maxDaysInMonth; i++) {
+        addDateTextBox(i, dateContainer, selectDate, dateTypeYear, dateTypeMonth);
     }
 }
 
-function addDateTextBox(text, dateContainer) {
-    const dateTextBox = document.createElement('.dateTextBox');
-    dateTextBox.innerText = text;
-    dateTextBox.addEventListener('click', (e)=> {
-
+function addDateTextBox(text, dateContainer, selectDateObj, dateTypeYear, dateTypeMonth) {
+    const dateNumBox = document.createElement('div');
+    dateNumBox.classList.add('dateNumBox')
+    dateNumBox.innerText = text;
+    dateNumBox.addEventListener('click', (e)=> {
+        if (text !== '') {
+            if (selectDateObj.current != null) {
+                selectDateObj.current.style.backgroundColor = 'white';
+                selectDateObj.current.style.color = 'black';
+            }
+            dateNumBox.year = dateTypeYear;
+            dateNumBox.month = dateTypeMonth;
+            dateNumBox.day = parseInt(text);
+            selectDateObj.current = dateNumBox;
+            selectDateObj.current.style.backgroundColor = '#333333';
+            selectDateObj.current.style.color = 'white';
+        }
     })
+    dateContainer.appendChild(dateNumBox);
 }
 
 function getMaxDaysInMonth(year, month) {
@@ -114,6 +186,35 @@ function getDayOfWeek(year, month, day = 1) {
     const date = new Date(year, month, day);
     return date.getDay();
 }
+
+searchImageIcon.addEventListener('click', (e)=> {
+    if (searchValidCheck()) {
+        console.log(selectLocationTag.innerText);
+        console.log(`${selectStart.current.year}년 ${selectStart.current.month}월 ${selectStart.current.day}일`)
+        console.log(`${selectEnd.current.year}년 ${selectEnd.current.month}월 ${selectEnd.current.day}일`)
+    }
+    else searchError('출발일은 도착일보다 빨라야합니다.')
+})
+
+function searchValidCheck() {
+    if (selectStart != null && selectEnd != null) {
+        let startNum = selectStart.current.year * 365;
+        let endNum = selectEnd.current.year * 365;
+        startNum += selectStart.current.month * 30;
+        endNum += selectEnd.current.month * 30;
+        startNum += selectStart.current.day;
+        endNum += selectEnd.current.day;
+        console.log(startNum, endNum)
+        if (startNum > endNum) return false;
+    }
+    return true;
+}
+
+function searchError(error) {
+    alert(error);
+}
+
+// 작업 중
 
 function setImageHeight(target, sourceElement) {
     const sourceHeight = sourceElement.offsetHeight;
