@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/css/login.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container right-panel-active">
+    <!-- Sign Up -->
+    <div class="container__form container--signup">
+        <form action="/member/register" method="post" class="form" id="form1">
+            <input type="text" th:placeholder="${ID == null ? 'ID' : ID}" class="input" name="memberID" />
+            <input type="password" placeholder="Password" class="input" name="memberPassword" />
+            <input type="email" th:placeholder="${EMAIL == null ? 'Email' : EMAIL}" class="input" name="memberEmail" />
+            <input type="text" th:placeholder="${NAME == null ? 'UserName' : NAME}" class="input" name="memberName" />
+            <input type="text" th:placeholder="${PHONE == null ? 'phone' : PHONE}" class="input" name="memberPhone" />
+            <input type="submit" class="btn"/>
+        </form>
+    </div>
+
+    <!-- Sign In -->
+    <div class="container__form container--signin">
+        <form action="/member/login" method="post" class="form" id="form2">
+            <h2 class="form__title" th:text="${error == null ? 'Sign in' : error}"></h2>
+            <input type="text" placeholder="id" name="memberID" class="input" />
+            <input type="password" placeholder="Password" name="memberPassword" class="input" />
+            <a href="#" class="link">Forgot your password?</a>
+            <input type="submit" class="btn"/>
+        </form>
+    </div>
+
+    <!-- Overlay -->
+    <div class="container__overlay">
+        <div class="overlay">
+            <div class="overlay__panel overlay--left">
+                <button class="btn" id="signIn">Sign In</button>
+            </div>
+            <div class="overlay__panel overlay--right">
+                <button class="btn" id="signUp">Sign Up</button>
+            </div>
+        </div>
+    </div>
+    <script src="/script/login.js" th:inline="javascript"></script>
+</div>
+</body>
+<script th:inline="javascript">
+    const login = [[${login}]]
+    if (login == "login") container.classList.remove("right-panel-active");
+</script>
+</html>
