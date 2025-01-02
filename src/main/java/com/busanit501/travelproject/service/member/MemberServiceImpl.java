@@ -36,7 +36,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public boolean registerMember(RegisterDTO registerDTO) {
         Map<MemberFields, Boolean> duplicateCheckMap = duplicateCheck(registerDTO);
-        if (duplicateCheckMap.values().stream().allMatch(Boolean::booleanValue)) {
+        if (!duplicateCheckMap.isEmpty() && duplicateCheckMap.values().stream().allMatch(Boolean::booleanValue)) {
             Member member = modelMapper.map(registerDTO, Member.class);
             memberRepository.save(member);
             return true;
@@ -65,20 +65,19 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public ResponseLogin login(LoginDTO loginDTO) {
-        MemberDTO memberDTO = modelMapper.map(memberRepository.findByMemberIDAndMemberPassword(loginDTO.getMemberID(), loginDTO.getMemberPassword()), MemberDTO.class);
+        Member member = memberRepository.findByMemberIDAndMemberPassword(loginDTO.getMemberID(), loginDTO.getMemberPassword());
+        if (member == null) return ResponseLogin.FALSE;
 
-        if (memberDTO != null) {
-            ResponseLogin responseLogin;
-            if (adminList.contains(loginDTO.getMemberID())) responseLogin = ResponseLogin.ADMIN;
-            else responseLogin = ResponseLogin.USER;
+        MemberDTO memberDTO = modelMapper.map(member, MemberDTO.class);
+        ResponseLogin responseLogin;
+        if (adminList.contains(loginDTO.getMemberID())) responseLogin = ResponseLogin.ADMIN;
+        else responseLogin = ResponseLogin.USER;
 
-            memberDTO.setMemberUUID(UUID.randomUUID().toString());
-            responseLogin.setMemberDTO(memberDTO);
+        memberDTO.setMemberUUID(UUID.randomUUID().toString());
+        responseLogin.setMemberDTO(memberDTO);
 
-            memberRepository.save(modelMapper.map(memberDTO, Member.class));
-            return responseLogin;
-        }
-        return ResponseLogin.FALSE;
+        memberRepository.save(modelMapper.map(memberDTO, Member.class));
+        return responseLogin;
     }
 
     @Override
@@ -103,7 +102,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberDTO checkMemberUUID(Long memberNo, String memberUUID) {
-        return modelMapper.map(memberRepository.findByMemberNoAndMemberUUID(memberNo, memberUUID), MemberDTO.class);
+        Member member = memberRepository.findByMemberNoAndMemberUUID(memberNo, memberUUID);
+        if (member == null) return null;
+        return modelMapper.map(member, MemberDTO.class);
     }
 
 

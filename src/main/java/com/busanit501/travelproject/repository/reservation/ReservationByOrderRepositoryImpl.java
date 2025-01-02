@@ -1,9 +1,11 @@
 package com.busanit501.travelproject.repository.reservation;
 
+import com.busanit501.travelproject.domain.Product;
 import com.busanit501.travelproject.domain.QMember;
 import com.busanit501.travelproject.domain.QReservation;
 import com.busanit501.travelproject.domain.Reservation;
 import com.busanit501.travelproject.domain.common.ReservationOrder;
+import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.reservation.ReservationDTO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
@@ -14,11 +16,16 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Log4j2
 public class ReservationByOrderRepositoryImpl extends QuerydslRepositorySupport implements ReservationByOrderRepository {
-    public ReservationByOrderRepositoryImpl() {super(Reservation.class);}
+    public ReservationByOrderRepositoryImpl() {
+        super(Reservation.class);
+    }
 
     @Override
     public Page<ReservationDTO> selectReservationUser(Long memberNo, ReservationOrder reservationOrder, Pageable pageable) {
@@ -61,5 +68,17 @@ public class ReservationByOrderRepositoryImpl extends QuerydslRepositorySupport 
         List<ReservationDTO> reservationList = dtoQuery.fetch();
         long total = dtoQuery.fetchCount();
         return new PageImpl<>(reservationList, pageable, total);
+    }
+
+    @Override
+    public List<Long> bestReservationProducts() {
+        QReservation reservation = QReservation.reservation;
+        JPQLQuery<Reservation> query = from(reservation);
+        List<Long> result = query.select(reservation.product.productNo)
+                .groupBy(reservation.product.productNo)
+                .orderBy(reservation.product.productNo.count().desc())
+                .limit(10).fetch();
+        log.info(result + "레포 확인");
+        return result;
     }
 }

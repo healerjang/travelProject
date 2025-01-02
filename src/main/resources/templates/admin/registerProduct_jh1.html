@@ -2,10 +2,10 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/bootstrap_temporary_jh1.html}">
+      layout:decorate="~{layout/bootstrap_admin_jh1.html}">
 <head>
   <meta charset="UTF-8">
-  <title>여행상품 등록</title>
+  <title>여행상품 상세관리</title>
 </head>
 
 <div layout:fragment="content">
@@ -34,7 +34,7 @@
     </div>
   </div>
   <div class="container">
-    <h1>여행상품 등록</h1>
+    <h1>여행상품 상세관리</h1>
     <section>
       <div class="card">
         <div class="card-body">
@@ -45,8 +45,6 @@
           <div class="input-group mb-2">
             <span class="input-group-text">여행지</span>
             <button class="btn btn-outline-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#registerLocationModal">여행지 추가</button>
-<!--            <input id="travelCountry" type="text" class="form-control" placeholder="국가">-->
-<!--            <input id="travelCity" type="text" class="form-control" placeholder="도시">-->
             <div class="form-floating">
               <select class="form-select" id="travelCountry">
                 <option selected>국가를 선택하세요</option>
@@ -74,8 +72,12 @@
             </div>
           </div>
           <div class="input-group mb-2">
-            <label for="opening" class="input-group-text">최대 좌석 수</label>
-            <input type="number" id="opening" class="form-control" placeholder="좌석 수">
+            <label for="productPrice" class="input-group-text">상품가격</label>
+            <input type="number" id="productPrice" class="form-control" placeholder="상품가격">
+          </div>
+          <div class="input-group mb-2">
+            <label for="productCapacity" class="input-group-text">최대 좌석 수</label>
+            <input type="number" id="productCapacity" class="form-control" placeholder="좌석 수">
           </div>
           <div class="input-group mb-2">
             <label for="imageUpload" class="input-group-text">이미지 첨부</label>
@@ -84,15 +86,16 @@
           <input type="hidden" id="imagePath" name="imagePath">
           <div class="input-group mb-2">
             <span class="input-group-text">상세설명</span>
-            <textarea class="form-control" placeholder="상세설명" style="height: 400px"></textarea>
+            <textarea id="productDescription" class="form-control" placeholder="상세설명" style="height: 400px"></textarea>
           </div>
-          <button class="btn btn-primary">등록하기</button>
+          <button id="registerProductButton" class="btn btn-primary">등록하기</button>
         </div>
       </div>
     </section>
   </div>
 </div>
 <th:block layout:fragment="scripts">
+  <script th:src="@{/script/admin/admin-common.js}"></script>
   <script th:inline="javascript">
     /** @type {HTMLSelectElement} */
     const countrySelect = document.getElementById("travelCountry");
@@ -103,18 +106,11 @@
     let locations = [];
     let locStructure = [];
 
-    function optEl(text, value = undefined) {
-      const el = document.createElement("option");
-      el.textContent = text;
-      if (value) el.value = value;
-      return el
-    }
+    const regCountry = document.getElementById("registerLocCountry")
+    const regCity = document.getElementById("registerLocCity")
 
-    function clearSelect(el) {
-      const top = el.querySelector('option[selected]').innerText;
-      el.innerHTML = `<option selected>${top}</option><option disabled>-------------</option>`
-    }
 
+    /** 국가 선택 > 도시 선택 구조에 맞도록 select 엘리먼트에 여행지 option을 추가한다. */
     function addLocation(countryName, cityName, locationNo) {
       const countryObj = locStructure.find(loc => loc.name === countryName);
       if (countryObj) {
@@ -127,10 +123,11 @@
           name: countryName,
           children: [ { name: cityName, locationNo } ]
         })
-        countrySelect.add(optEl(countryName));
+        countrySelect.add(optEl(countryName, countryName));
       }
     }
 
+    /** 서버에서 여행지 목록을 불러와서 select 엘리먼트를 초기화한다. */
     async function loadLocations() {
       const response = await axios.get("/api/location/list")
       const { data } = response
@@ -140,12 +137,7 @@
       }
     }
 
-    async function registerLocation(country, city) {
-      const response = await axios.post("/api/location", { country, city })
-      const { data : { locationNo }} = response
-      addLocation(country, city, locationNo)
-    }
-
+    /** 국가를 선택했을 때, 해당 국가에 속해 있는 등록된 여행지 도시가 select에 나타나도록 한다. */
     function updateCitySelect(countryName) {
       const country = locStructure.find(loc => loc.name === countryName)
       clearSelect(citySelect)
@@ -156,24 +148,52 @@
       }
     }
 
+    /* 국가를 선택했을 때, 해당 국가에 속해 있는 등록된 여행지 도시가 select에 나타나도록 실제로 이벤트 리스너를 등록함 */
     countrySelect.addEventListener("change", e => {
       const countryName = countrySelect.selectedOptions[0].text
       updateCitySelect(countryName)
     })
 
-    const regCountry = document.getElementById("registerLocCountry")
-    const regCity = document.getElementById("registerLocCity")
-
+    /* 여행상품 등록 페이지 내에서 빠르게 여행지 등록을 하는 기능 */
     document.getElementById("registerLocationButton").addEventListener("click", () => {
-
       registerLocation(regCountry.value, regCity.value)
       .then(response => {
+        addLocation(regCountry.value, regCity.value, response.data.locationNo)
         regCountry.value = ''
         regCity.value = ''
       })
     })
 
-    loadLocations()
+
+
+    loadLocations().then(() => {
+
+      const productDTO = /*[[${productDTO}]]*/ null;
+      if (productDTO != null) {
+
+        function assignInputValue(id, val) {
+          const input = document.getElementById(id);
+          input.value = val;
+        }
+
+        assignInputValue("productName", productDTO.name)
+        assignInputValue("productDescription", productDTO.description)
+        assignInputValue("productPrice", productDTO.price)
+        assignInputValue("startDate", productDTO.startDate)
+        assignInputValue("endDate", productDTO.endDate)
+        assignInputValue("productCapacity", productDTO.capacity)
+
+        const knownLocation = locations.find(loc => loc.locationNo === productDTO.locationNo)
+        countrySelect.value = knownLocation.country
+        updateCitySelect(knownLocation.country)
+        citySelect.value = knownLocation.locationNo
+      }
+
+    })
+
+
+
+
   </script>
 </th:block>
 </html>
