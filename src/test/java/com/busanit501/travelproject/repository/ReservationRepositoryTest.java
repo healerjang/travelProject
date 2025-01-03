@@ -21,7 +21,7 @@ public class ReservationRepositoryTest {
         Reservation result = reservationRepository.save(Reservation.builder()
                 .member(Member.builder().memberNo(1L).build())
                 .product(Product.builder().productNo(1L).build())
-                .order(ReservationOrder.PENDING)
+                .reservationOrder(ReservationOrder.PENDING)
                 .build());
         log.info(result);
     }

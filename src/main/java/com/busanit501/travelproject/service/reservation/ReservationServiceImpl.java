@@ -1,6 +1,5 @@
 package com.busanit501.travelproject.service.reservation;
 
-import com.busanit501.travelproject.domain.Product;
 import com.busanit501.travelproject.domain.Reservation;
 import com.busanit501.travelproject.domain.common.ReservationOrder;
 import com.busanit501.travelproject.dto.reservation.ReservationDTO;
@@ -15,12 +14,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
 @Service
 @Log4j2
 @RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
-    private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
     private final ProductJh1Repository productJh1Repository;
 
@@ -28,7 +29,7 @@ public class ReservationServiceImpl implements ReservationService {
     public Long registerReservation(ReservationDTO reservationDTO) {
         Reservation reservation = Reservation.builder()
                 .member(memberRepository.findByMemberNo(reservationDTO.getMemberNo()))
-                .product(productJh1Repository.findProductByProductNo(reservationDTO.getProductNo()))
+                .product(productJh1Repository.findProductByProductNo(reservationDTO.getProductNo()).orElseThrow())
                 .reservationOrder(reservationDTO.getReservationOrder())
                 .build();
         Reservation result = reservationRepository.save(reservation);
@@ -40,7 +41,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = Reservation.builder()
                 .reservationNo(reservationDTO.getReservationNo())
                 .member(memberRepository.findByMemberNo(reservationDTO.getMemberNo()))
-                .product(productJh1Repository.findProductByProductNo(reservationDTO.getProductNo()))
+                .product(productJh1Repository.findProductByProductNo(reservationDTO.getProductNo()).orElseThrow())
                 .reservationOrder(reservationDTO.getReservationOrder())
                 .build();
         Reservation result = reservationRepository.save(reservation);
@@ -49,6 +50,13 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Long deleteReservation(Long reservationNo) {
+        Reservation reservation = reservationRepository.findById(reservationNo).orElseThrow();
+        reservation.changeOrder(ReservationOrder.CANCELLED);
+        return reservation.getReservationNo();
+    }
+
+    @Override
+    public Long deleteReservationNow(Long reservationNo) {
         reservationRepository.deleteById(reservationNo);
         return reservationNo;
     }

@@ -79,7 +79,7 @@ public class MemberController {
 
         response.addCookie(memberNoCookie);
         response.addCookie(UUIDCookie);
-        return "/mainPage";
+        return "redirect:/mainPage";
     }
 
     // 이후 쿠키나 시큐리티에서 memberNo를 받은 뒤 사용자의 정보를 보여주는 로직 개발 예정.
