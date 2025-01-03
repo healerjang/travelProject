@@ -63,7 +63,7 @@ public class FreeBoardServiceImpl implements com.busanit501.travelproject.servic
     public PageResponseDTO<FreeBoardDTO> list(PageRequestDTO pageRequestDTO) {
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
-        Pageable pageable = pageRequestDTO.getPageable("bno");
+        Pageable pageable = pageRequestDTO.getPageable("freeBoaredNo");
 
         Page<FreeBoard> result = freeBoardRepository.searchAll(types, keyword, pageable);
         // list -> PageResponseDTO 타입으로 변경 필요.
@@ -87,7 +87,7 @@ public class FreeBoardServiceImpl implements com.busanit501.travelproject.servic
 
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
-        Pageable pageable = pageRequestDTO.getPageable("bno");
+        Pageable pageable = pageRequestDTO.getPageable("freeBoardNo");
 
         // 수정1
         Page<FreeBoardListReplyCountDTO> result = freeBoardRepository.searchWithReplyCount(types,keyword,pageable);
