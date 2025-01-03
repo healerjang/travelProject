@@ -18,12 +18,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Log4j2
 @RequestMapping("/free_board")
 @RequiredArgsConstructor
-// http://localhost:8080/food, 시작하겠다.
+
 public class FreeBoardController {
     private final FreeBoardService freeBoardService;
-    // http://localhost:8080/food/list
+
     @GetMapping("/list")
-    public void list(PageRequestDTO pageRequestDTO, Model model ) { // 서버 -> 화면으로 전달
+    public String list(PageRequestDTO pageRequestDTO, Model model ) { // 서버 -> 화면으로 전달
         // 서비스 이용해서, 데이터베이스 목록 페이징 처리해서 가져오기.
         // 앞단 화면에서, 검색어:keyword 내용, 페이징 내용(page = 1) 담아서 전달.
         //        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
@@ -31,6 +31,8 @@ public class FreeBoardController {
         PageResponseDTO<FreeBoardListReplyCountDTO> responseDTO = freeBoardService.listWithReplyCount(pageRequestDTO);
         log.info("pageRequestDTO 의 getLink 조사 : " + pageRequestDTO.getLink());
         model.addAttribute("responseDTO", responseDTO);
+
+        return "freeboard/list";
     }
 
     //등록 작업, 1) 등록화면 2) 로직처리

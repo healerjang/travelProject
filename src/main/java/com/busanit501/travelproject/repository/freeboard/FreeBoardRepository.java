@@ -17,7 +17,7 @@ public interface FreeBoardRepository extends JpaRepository<FreeBoard, Long> , Fr
     // 하지만, 우리는 기본 탑재된 쿼리 메소드를 활용할 예정.
 
     //쿼리스트링 ,방법1
-    Page<FreeBoard> findByTitleContainingOrderByBnoDesc(String title, Pageable pageable);
+    Page<FreeBoard> findByTitleContainingOrderByFreeBoardNoDesc(String title, Pageable pageable);
 
     //@Query , 방법2 전달. JPQL 문법으로, 작성하고, dialect 방언,
     // 모든 디비(마리아다비, 오라클, 마이SQL, PostGre 관계형 디비)에 적용이 됨.
