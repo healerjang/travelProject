@@ -3,11 +3,10 @@ package com.busanit501.travelproject.controller.admin;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.member.MemberFullDTO;
-import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
-import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
+import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
+import com.busanit501.travelproject.dto.util.PageResponseJh1DTO;
 import com.busanit501.travelproject.service.admin.AdminJh1Service;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +34,9 @@ public class AdminJh1Controller {
   }
 
   @GetMapping("/product/list")
-  public String listProduct() {
+  public String listProduct(
+    @ModelAttribute("requestDTO") PageRequestJh1DTO pageRequestJh1DTO
+  ) {
     return "admin/listProduct_jh1";
   }
 
@@ -46,10 +47,10 @@ public class AdminJh1Controller {
 
   @GetMapping("/member/list")
   public String listMembers(
-    HcbPageRequestDTO pageRequestDTO,
+    PageRequestJh1DTO pageRequestDTO,
     Model model
   ) {
-    HcbPageResponseDTO<MemberDTO> membersDTO = adminService.listMembers(pageRequestDTO);
+    PageResponseJh1DTO<MemberDTO> membersDTO = adminService.listMembers(pageRequestDTO);
 
     model.addAttribute("membersDTO", membersDTO);
     return "admin/listMembers_jh1";

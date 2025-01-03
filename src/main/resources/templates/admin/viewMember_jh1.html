@@ -2,18 +2,20 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/bootstrap_admin_jh1.html}">
+      layout:decorate="~{layout/travel_admin_aside_jh1.html}">
 <head>
   <meta charset="UTF-8">
   <title>회원정보</title>
 </head>
 <body>
 <div layout:fragment="content">
-  <div class="jumbotron text-center">
+  <div class="text-center">
     <h1>회원정보</h1>
   </div>
   <div class="container">
-
+    <div class="py-4">
+      <div class="display-1" th:text="${memberDTO.memberName}"></div>
+    </div>
   </div>
 </div>
 </body>

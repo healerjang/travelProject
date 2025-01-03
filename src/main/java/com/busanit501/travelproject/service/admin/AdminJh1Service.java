@@ -6,8 +6,8 @@ import com.busanit501.travelproject.dto.*;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.member.MemberFullDTO;
 import com.busanit501.travelproject.dto.reservation.ReservationDTO;
-import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
-import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
+import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
+import com.busanit501.travelproject.dto.util.PageResponseJh1DTO;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
@@ -105,10 +105,9 @@ public interface AdminJh1Service {
 
   ProductJh1DTO getProductTmp(Long id);
 
-  HcbPageResponseDTO<ProductJh1DTO> listProducts(HcbPageRequestDTO requestDTO);
+  PageResponseJh1DTO<ProductJh1DTO> listProducts(PageRequestJh1DTO requestDTO);
 
-
-  HcbPageResponseDTO<MemberDTO> listMembers(HcbPageRequestDTO requestDTO);
+  PageResponseJh1DTO<MemberDTO> listMembers(PageRequestJh1DTO requestDTO);
 
   MemberFullDTO getMemberFullSupport(long memberNo);
 }

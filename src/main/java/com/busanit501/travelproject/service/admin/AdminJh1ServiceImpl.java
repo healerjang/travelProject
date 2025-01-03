@@ -7,8 +7,8 @@ import com.busanit501.travelproject.dto.LocationValueJh1DTO;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.member.MemberFullDTO;
-import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
-import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
+import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
+import com.busanit501.travelproject.dto.util.PageResponseJh1DTO;
 import com.busanit501.travelproject.repository.LocationJh1Repository;
 import com.busanit501.travelproject.repository.ProductJh1Repository;
 import com.busanit501.travelproject.repository.member.MemberRepository;
@@ -79,23 +79,23 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
   }
 
   @Override
-  public HcbPageResponseDTO<ProductJh1DTO> listProducts(HcbPageRequestDTO requestDTO) {
+  public PageResponseJh1DTO<ProductJh1DTO> listProducts(PageRequestJh1DTO requestDTO) {
     Page<Product> products = productRepo.findAll(PageRequest.of(requestDTO.getPage() - 1, requestDTO.getSize(), Sort.by("startDate")));
-    return HcbPageResponseDTO.<ProductJh1DTO>builder()
+    return PageResponseJh1DTO.<ProductJh1DTO>builder()
       .dtoList(products.stream().map(this::productEntityToDTO).toList())
       .total((int) products.getTotalElements())
-      .hcbPageRequestDTO(HcbPageRequestDTO.builder().page(requestDTO.getPage()).size(requestDTO.getSize()).pageSize(requestDTO.getPageSize()).build())
+      .pageRequestDTO(requestDTO)
       .build();
   }
 
 
   @Override
-  public HcbPageResponseDTO<MemberDTO> listMembers(HcbPageRequestDTO requestDTO) {
+  public PageResponseJh1DTO<MemberDTO> listMembers(PageRequestJh1DTO requestDTO) {
     Page<Member> members = memberRepo.findAll(PageRequest.of(requestDTO.getPage() - 1, requestDTO.getSize()));
-    return HcbPageResponseDTO.<MemberDTO>builder()
+    return PageResponseJh1DTO.<MemberDTO>builder()
       .dtoList(members.stream().map(this::memberEntityToDTO).toList())
       .total((int) members.getTotalElements())
-      .hcbPageRequestDTO(HcbPageRequestDTO.builder().page(requestDTO.getPage()).size(requestDTO.getSize()).pageSize(requestDTO.getPageSize()).build())
+      .pageRequestDTO(requestDTO)
       .build();
   }
 

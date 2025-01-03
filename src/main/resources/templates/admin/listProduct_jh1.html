@@ -2,14 +2,14 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/bootstrap_admin_jh1.html}">
+      layout:decorate="~{layout/travel_admin_aside_jh1.html}">
 <head>
   <meta charset="UTF-8">
   <title>여행상품 관리</title>
 </head>
 <body>
   <div layout:fragment="content">
-    <div class="jumbotron text-center">
+    <div class="py-2">
       <h1>여행상품 관리</h1>
     </div>
     <div class="container">
@@ -31,8 +31,10 @@
         <a class="btn btn-primary" th:href="@{/admin/product/register}">여행상품 등록하기</a>
       </div>
     </div>
+    <nav id="PaginationHere"></nav>
   </div>
   <th:block layout:fragment="scripts">
+    <script th:src="@{/script/pagination.js}"></script>
     <script th:inline="javascript">
       const tbody = document.querySelector('#tbody');
       function periodExpression(days) {
@@ -88,6 +90,8 @@
 
       (async () => {
         const data = await getAllProducts()
+        document.getElementById("PaginationHere")
+          .append(createPagination(data.start, data.end, data.page, '/admin/product/list', data.size));
         const dtoList = data.dtoList
         for (const product of dtoList) {
           tbody.appendChild(productEl(product))

@@ -2,6 +2,8 @@ package com.busanit501.travelproject.controller.admin;
 
 import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.LocationValueJh1DTO;
+import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
+import com.busanit501.travelproject.dto.util.PageResponseJh1DTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
 import com.busanit501.travelproject.service.admin.AdminJh1Service;
@@ -38,10 +40,10 @@ public class AdminJh1RestController {
   }
 
   @GetMapping("/api/product/list")
-  public ResponseEntity<HcbPageResponseDTO<ProductJh1DTO>> getProductList(
-    HcbPageRequestDTO requestDTO
+  public ResponseEntity<PageResponseJh1DTO<ProductJh1DTO>> getProductList(
+    PageRequestJh1DTO requestDTO
   ) {
-    HcbPageResponseDTO<ProductJh1DTO> pageResponseDTO = managerService.listProducts(requestDTO);
+    PageResponseJh1DTO<ProductJh1DTO> pageResponseDTO = managerService.listProducts(requestDTO);
     return ResponseEntity.ok().body(pageResponseDTO);
   }
 

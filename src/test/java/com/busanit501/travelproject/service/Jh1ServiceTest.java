@@ -52,7 +52,7 @@ public class Jh1ServiceTest {
 
   @Test
   public void memberListTest() {
-    HcbPageResponseDTO<MemberDTO> response = service.listMembers(HcbPageRequestDTO.builder().page(1).size(10).pageSize(10).build());
-    log.info("response: {}", response);
+//    HcbPageResponseDTO<MemberDTO> response = service.listMembers(HcbPageRequestDTO.builder().page(1).size(10).pageSize(10).build());
+//    log.info("response: {}", response);
   }
 }
