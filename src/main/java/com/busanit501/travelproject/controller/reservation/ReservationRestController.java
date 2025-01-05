@@ -26,17 +26,17 @@ import java.util.Map;
 public class ReservationRestController {
     private final ReservationService reservationService;
 
-    @GetMapping("/userReservation")
+    @GetMapping("/userReservation/{reservationOrder}")
     @Member
     public HcbPageResponseDTO<ReservationDTO> getUserReservation(
-            HttpServletRequest request,
-            @Valid @CookieValue(value = "memberNoCookie", required = false) Long memberNo,
-            BindingResult bindingResult, RedirectAttributes redirectAttributes,
-            ReservationOrder reservationOrder, HcbPageRequestDTO pageRequestDTO) throws BindException {
-        if (bindingResult.hasErrors()) {
-            throw new BindException(bindingResult);
-        }
-        return reservationService.getReservationUser(memberNo, reservationOrder, pageRequestDTO);
+            @CookieValue(value = "memberNoCookie", required = false) String memberNoCookie,
+            HttpServletRequest request, RedirectAttributes redirectAttributes,
+            @PathVariable ReservationOrder reservationOrder, HcbPageRequestDTO pageRequestDTO) throws BindException {
+        Long memberNo = memberNoCookie != null ? Long.parseLong(memberNoCookie) : null;
+        log.info(memberNo + "쿠키로 들어오는 멤버넘버확인");
+        HcbPageResponseDTO<ReservationDTO> result = reservationService.getReservationUser(memberNo, reservationOrder, pageRequestDTO);
+        log.info(result + "멤버 넘버로 조회한 결과 확인");
+        return result;
     }
     //아직 어드민 어소리티 관련 확인 필요
     @GetMapping("/adminReservation/{productNo}")
