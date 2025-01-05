@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -21,11 +22,12 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/cart")
 public class CartController {
     private final AdminJh1Service adminJh1Service;
     private static final String CART_COOKIE_NAME = "cart";
 
-    @GetMapping("/addToCart/{productNo}")
+    @GetMapping("/add/{productNo}")
     public void addToCart(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable Long productNo) {
         Optional<Cookie> optionalCookie = Arrays.stream(httpServletRequest.getCookies())
                 .filter(cookie -> CART_COOKIE_NAME.equals(cookie.getName()))
@@ -37,19 +39,19 @@ public class CartController {
             httpServletResponse.addCookie(newCartCookie);
         } else {
             String existValue = optionalCookie.get().getValue();
-            String[] values = existValue.split(",");
+            String[] values = existValue.split("-");
             if (Arrays.asList(values).contains(productNo.toString())) {
                 return;
             }
             Cookie cartCookie = optionalCookie.get();
-            cartCookie.setValue(existValue + "," + productNo.toString());
+            cartCookie.setValue(existValue + "-" + productNo.toString());
             cartCookie.setPath("/");
             cartCookie.setMaxAge(60 * 60 * 2);
             httpServletResponse.addCookie(cartCookie);
         }
     }
 
-    @GetMapping("/readCart")
+    @GetMapping("/read")
     public HcbPageResponseDTO<ProductJh1DTO> readCart(HttpServletRequest httpServletRequest) {
         HcbPageRequestDTO pageRequestDTO = new HcbPageRequestDTO();
         List<ProductJh1DTO> dtoList = new ArrayList<>();
@@ -58,7 +60,7 @@ public class CartController {
                 .findFirst();
         if (optionalCookie.isPresent()) {
             String existValue = optionalCookie.get().getValue();
-            String[] productNoArray = existValue.split(",");
+            String[] productNoArray = existValue.split("-");
             for (String productNo : productNoArray) {
                 Long productNoLong = Long.parseLong(productNo);
                 ProductJh1DTO result = adminJh1Service.getProductTmp(productNoLong);
@@ -73,7 +75,7 @@ public class CartController {
         return pageResponseDTO;
     }
 
-    @GetMapping("/delete/{productNo}")
+    @GetMapping("/del/{productNo}")
     public void deleteCart(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable Long productNo) {
         Optional<Cookie> optionalCookie = Arrays.stream(httpServletRequest.getCookies())
                 .filter(cookie -> CART_COOKIE_NAME.equals(cookie.getName()))
@@ -81,8 +83,8 @@ public class CartController {
         if (optionalCookie.isEmpty()) return;
         Cookie cartCookie = optionalCookie.get();
         String existValue = cartCookie.getValue();
-        String[] values = existValue.split(",");
-        existValue = Arrays.stream(values).filter(value -> !value.equals(productNo.toString())).collect(Collectors.joining(","));
+        String[] values = existValue.split("-");
+        existValue = Arrays.stream(values).filter(value -> !value.equals(productNo.toString())).collect(Collectors.joining("-"));
         Cookie updateCookie = new Cookie(CART_COOKIE_NAME, existValue);
         updateCookie.setPath("/");
         updateCookie.setMaxAge(60 * 60 * 2);
