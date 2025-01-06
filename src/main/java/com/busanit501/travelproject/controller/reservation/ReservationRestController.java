@@ -79,6 +79,12 @@ public class ReservationRestController {
         return Map.of("reservationNo", result);
     }
 
+    @PutMapping("/fee/{reservationNo}")
+    public Map<String,Boolean> fee(@PathVariable Long reservationNo) {
+        boolean result = reservationService.feePayment(reservationNo);
+        return Map.of("paymentCompCheck", result);
+    }
+
     @GetMapping("/best")
     public List<ProductJh1DTO> bestProduct() {
         return reservationService.getBestProducts();

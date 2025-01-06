@@ -13,7 +13,24 @@
     <h1>회원 관리</h1>
   </div>
   <div class="container">
-
+    <table class="table">
+      <thead>
+      <tr>
+        <th>No.</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr th:each="member : ${membersDTO.dtoList}">
+          <td th:text="${member.memberNo}"></td>
+          <td><a th:href="@{'/admin/member/view/' + ${member.memberNo}}" th:text="${member.memberName}"></a></td>
+          <td th:text="${member.memberEmail}"></td>
+          <td th:text="${member.memberPhone}"></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 </body>
