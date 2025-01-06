@@ -35,30 +35,40 @@
     const page = /*[[${requestDTO.page}]]*/ 0;
     const size = /*[[${requestDTO.size}]]*/ 0;
 
-    function createMemberMenuItem(no, name, email, phone, points) {
+    function createBoardItem(boardNo, title, memberNo, writer, regDate) {
       const tr = _el('tr');
-      const memberNo = _el('td', no)
-      const memberNameAnchor = _el('a', name)
-      memberNameAnchor.href = '/admin/member/view/' + no;
-      const memberName = _el('td')
-      memberName.append(memberNameAnchor);
-      const memberEmail = _el('td', email);
-      const memberPhone = _el('td', phone);
-      const memberPoints  = _el('td', points);
-      tr.append(memberNo, memberName, memberEmail, memberPhone, memberPoints);
+
+      const boardNoTd = _el('td', boardNo)
+
+      const boardTitleLink = _el('a', title);
+      boardTitleLink.href = '/admin/freeBoard/view/' + boardNo
+
+      const boardTitle = _el('td');
+      boardTitle.append(boardTitleLink);
+
+      const memberLink = _el('a', writer)
+      memberLink.href = '/admin/member/view/' + memberNo;
+      const memberTd = _el('td')
+      memberTd.append(memberLink);
+
+      const regDateTd = _el('td', regDate);
+
+      tr.append(boardNoTd, boardTitle, memberTd, regDateTd);
       return tr;
     }
 
     (async() => {
-      const response = await axios.get('/api/freeBoard/list?'+`page=${page}&size=${size}`);
-      // const { data } = response;
-      // const tbody = document.querySelector('table.table').tBodies[0]
-      // for (const member of data.dtoList) {
-      //   tbody.appendChild(createMemberMenuItem(member.memberNo, member.memberName, member.memberEmail, member.memberPhone, member.memberPoint));
-      // }
-      // document.querySelector('#PaginationHere').appendChild(
-      //   createPagination(data.start, data.end, page, '/admin/member/list', size)
-      // );
+      const response = await axios.get('/api/freeBoard/list'+`?page=${page}&size=${size}`);
+      const { data } = response;
+      const tbody = document.querySelector('table.table').tBodies[0]
+      for (const freeBoard of data.dtoList) {
+        tbody.append(
+          createBoardItem(freeBoard.freeBoardNo, freeBoard.title, freeBoard.memberNo, freeBoard.memberName, freeBoard.regDate)
+        )
+      }
+      document.querySelector('#PaginationHere').appendChild(
+        createPagination(data.start, data.end, page, '/admin/freeBoard/list', size)
+      );
     })()
   </script>
 </th:block>

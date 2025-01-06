@@ -1,5 +1,6 @@
 package com.busanit501.travelproject.service.admin;
 
+import com.busanit501.travelproject.domain.FreeBoard;
 import com.busanit501.travelproject.domain.Member;
 import com.busanit501.travelproject.domain.Product;
 import com.busanit501.travelproject.dto.*;
@@ -92,6 +93,18 @@ public interface AdminJh1Service {
       .reviews(reviewList)
       .freeBoards(freeBoardList)
       .replies(replyList)
+      .build();
+  }
+
+  default FreeBoardJh1DTO boardToDTO(FreeBoard fb) {
+    return FreeBoardJh1DTO.builder()
+      .freeBoardNo(fb.getFreeBoardNo())
+      .title(fb.getTitle())
+      .content(fb.getContent())
+      .regDate(fb.getRegDate())
+      .modDate(fb.getModDate())
+      .memberNo(fb.getMember().getMemberNo())
+      .memberName(fb.getMember().getMemberName())
       .build();
   }
 

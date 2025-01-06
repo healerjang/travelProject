@@ -13,6 +13,7 @@ import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
 import com.busanit501.travelproject.dto.util.PageResponseJh1DTO;
 import com.busanit501.travelproject.repository.LocationJh1Repository;
 import com.busanit501.travelproject.repository.ProductJh1Repository;
+import com.busanit501.travelproject.repository.freeboard.FreeBoardRepository;
 import com.busanit501.travelproject.repository.member.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
   private final LocationJh1Repository locationRepo;
   private final ProductJh1Repository productRepo;
   private final MemberRepository memberRepo;
+  private final FreeBoardRepository freeBoardRepo;
 
   @Override
   public List<LocationValueJh1DTO> getLocationsOnly() {
@@ -114,9 +116,15 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
     memberRepo.save(member);
   }
 
+  @Transactional
   @Override
   public PageResponseJh1DTO<FreeBoardJh1DTO> getFreeBoardList(PageRequestJh1DTO requestDTO) {
-    return null;
+    Page<FreeBoard> boards = freeBoardRepo.findAll(PageRequest.of(requestDTO.getPage() - 1, requestDTO.getSize()));
+    return PageResponseJh1DTO.<FreeBoardJh1DTO>builder()
+      .dtoList(boards.stream().map(this::boardToDTO).toList())
+      .total((int) boards.getTotalElements())
+      .pageRequestDTO(requestDTO)
+      .build();
   }
 
 }

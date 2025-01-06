@@ -1,5 +1,6 @@
 package com.busanit501.travelproject.controller.admin;
 
+import com.busanit501.travelproject.dto.FreeBoardJh1DTO;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.LocationValueJh1DTO;
 import com.busanit501.travelproject.dto.member.MemberAddPointDTO;
@@ -63,5 +64,15 @@ public class AdminJh1RestController {
   public ResponseEntity<Map<String, Object>> givePoint(@RequestBody MemberAddPointDTO dto) {
     adminService.givePointTo(dto.getMemberNo(), dto.getAmount());
     return ResponseEntity.ok().body(Map.of("success", true));
+  }
+
+
+
+  @GetMapping("/api/freeBoard/list")
+  public ResponseEntity<PageResponseJh1DTO<FreeBoardJh1DTO>> listBoards(
+    PageRequestJh1DTO requestDTO
+  ) {
+    PageResponseJh1DTO<FreeBoardJh1DTO> freeBoardList = adminService.getFreeBoardList(requestDTO);
+    return ResponseEntity.ok().body(freeBoardList);
   }
 }
