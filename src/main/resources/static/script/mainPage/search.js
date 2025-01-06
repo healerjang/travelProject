@@ -1,5 +1,3 @@
-const searchImageBoxes = [];
-const searchImageContainer = document.querySelector('.searchImageContainer');
 const searchLocation = document.getElementById('searchLocation');
 const searchStart = document.getElementById('searchStart');
 const searchEnd = document.getElementById('searchEnd');
@@ -214,23 +212,6 @@ function searchError(error) {
     alert(error);
 }
 
-// 작업 중
-
-function setImageHeight(target, sourceElement) {
-    const sourceHeight = sourceElement.offsetHeight;
-    target.style.height = sourceHeight + "px";
-    searchImageBoxes.push(target);
-}
-
-function addSearchImage(num, sourceElement) {
-    for (let i = 0; i < num; i++) {
-        const searchImageBox = document.createElement('div');
-        searchImageBox.classList.add("searchImageBox");
-        searchImageBox.innerText = "searchImage"
-        setImageHeight(searchImageBox, sourceElement)
-        searchImageContainer.appendChild(searchImageBox);
-    }
-}
 
 
 
