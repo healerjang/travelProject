@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/travel_admin_aside_jh1.html}">
+<head>
+  <meta charset="UTF-8">
+  <title>여행상품 관리</title>
+</head>
+<body>
+  <div layout:fragment="content">
+    <div class="py-2">
+      <h1>여행상품 관리</h1>
+    </div>
+    <div class="container">
+      <table class="table table-hover mb-3">
+        <thead>
+          <tr class="text-center">
+            <th>No.</th>
+            <th>이름</th>
+            <th>여행지</th>
+            <th>가격</th>
+            <th>출발일</th>
+            <th>도착일</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div class="mb-3">
+        <a class="btn btn-primary" th:href="@{/admin/product/register}">여행상품 등록하기</a>
+      </div>
+    </div>
+    <nav id="PaginationHere"></nav>
+  </div>
+  <th:block layout:fragment="scripts">
+    <script th:src="@{/script/pagination.js}"></script>
+    <script th:inline="javascript">
+      const tbody = document.querySelector('#tbody');
+      function periodExpression(days) {
+        const sign = Math.sign(days);
+        days = Math.abs(days);
+        const chunks = []
+
+        if (days > 0 && days < 30) {
+          chunks.push(`${days}일`)
+        } else {
+          const years = Math.floor(days / 365);
+          const rY = days % 365;
+
+          const months = Math.floor(rY / 30);
+          if (years > 0) chunks.push(`${years}년`)
+          if (months > 0) chunks.push(`${months}개월`)
+        }
+
+        if (sign > 0) chunks.push("남음")
+        else if (sign < 0) chunks.push("지남")
+        else chunks.push("오늘")
+
+        return chunks.join(" ")
+      }
+
+      function productEl(productDTO) {
+        const tr = document.createElement('tr')
+
+        tr.innerHTML = `
+          <td>${productDTO.productNo}</td>
+          <td class="ProductName"><a></a></td>
+          <td class="Location"></td>
+          <td>${productDTO.price}</td>
+          <td>${productDTO.startDate}</td>
+          <td>${productDTO.endDate}</td>
+          <td>${periodExpression(productDTO.until)}</td>
+        `
+
+        const anchor = tr.querySelector(".ProductName a")
+        anchor.textContent = productDTO.name
+        anchor.href = `/admin/product/edit/${productDTO.productNo}`
+        tr.querySelector(".Location").textContent = productDTO.locationNo
+
+
+
+        return tr
+      }
+
+      async function getAllProducts(page = 1, size = 20, paginationPageCount = 10) {
+        const response = await axios.get(`/api/product/list?page=${page}&size=${size}&pageSize=${paginationPageCount}`);
+        return await response.data
+      }
+
+      (async () => {
+        const data = await getAllProducts()
+        document.getElementById("PaginationHere")
+          .append(createPagination(data.start, data.end, data.page, '/admin/product/list', data.size));
+        const dtoList = data.dtoList
+        for (const product of dtoList) {
+          tbody.appendChild(productEl(product))
+        }
+      })()
+    </script>
+  </th:block>
+</body>
+</html>

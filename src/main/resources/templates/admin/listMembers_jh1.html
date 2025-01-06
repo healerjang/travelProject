@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/travel_admin_aside_jh1.html}">
+<head>
+  <meta charset="UTF-8">
+  <title>회원관리</title>
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="jumbotron text-center">
+    <h1>회원 관리</h1>
+  </div>
+  <div class="container">
+    <table class="table">
+      <thead>
+      <tr>
+        <th>No.</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Points</th>
+      </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <nav id="PaginationHere"></nav>
+  </div>
+</div>
+<th:block layout:fragment="scripts">
+  <script th:src="@{/script/pagination.js}"></script>
+  <script th:inline="javascript">
+
+    const page = /*[[${requestDTO.page}]]*/ 0;
+    const size = /*[[${requestDTO.size}]]*/ 0;
+
+    function _el (tagName, text = undefined) {
+      const el = document.createElement(tagName);
+      if (text != undefined) el.appendChild(document.createTextNode(text));
+      return el;
+    }
+
+    function createMemberMenuItem(no, name, email, phone, points) {
+      const tr = _el('tr');
+      const memberNo = _el('td', no)
+      const memberNameAnchor = _el('a', name)
+      memberNameAnchor.href = '/admin/member/view/' + no;
+      const memberName = _el('td')
+      memberName.append(memberNameAnchor);
+      const memberEmail = _el('td', email);
+      const memberPhone = _el('td', phone);
+      const memberPoints  = _el('td', points);
+      tr.append(memberNo, memberName, memberEmail, memberPhone, memberPoints);
+      return tr;
+    }
+
+    (async() => {
+      const response = await axios.get('/api/member/list?'+`page=${page}&size=${size}`);
+      const { data } = response;
+      const tbody = document.querySelector('table.table').tBodies[0]
+      for (const member of data.dtoList) {
+        tbody.appendChild(createMemberMenuItem(member.memberNo, member.memberName, member.memberEmail, member.memberPhone, member.memberPoint));
+      }
+      document.querySelector('#PaginationHere').appendChild(
+        createPagination(data.start, data.end, page, '/admin/member/list', size)
+      );
+    })()
+  </script>
+</th:block>
+</body>
+</html>
