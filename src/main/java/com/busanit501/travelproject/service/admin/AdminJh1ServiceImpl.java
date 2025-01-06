@@ -1,8 +1,10 @@
 package com.busanit501.travelproject.service.admin;
 
+import com.busanit501.travelproject.domain.FreeBoard;
 import com.busanit501.travelproject.domain.Location;
 import com.busanit501.travelproject.domain.Member;
 import com.busanit501.travelproject.domain.Product;
+import com.busanit501.travelproject.dto.FreeBoardJh1DTO;
 import com.busanit501.travelproject.dto.LocationValueJh1DTO;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.member.MemberDTO;
@@ -110,6 +112,11 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
     Member member = memberRepo.findByMemberNo(memberNo);
     member.addPoint(amount);
     memberRepo.save(member);
+  }
+
+  @Override
+  public PageResponseJh1DTO<FreeBoardJh1DTO> getFreeBoardList(PageRequestJh1DTO requestDTO) {
+    return null;
   }
 
 }

@@ -112,4 +112,6 @@ public interface AdminJh1Service {
   MemberFullDTO getMemberFullSupport(long memberNo);
 
   void givePointTo(long memberNo, int amount);
+
+  PageResponseJh1DTO<FreeBoardJh1DTO> getFreeBoardList(PageRequestJh1DTO requestDTO);
 }

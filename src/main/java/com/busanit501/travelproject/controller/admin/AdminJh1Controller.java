@@ -1,10 +1,8 @@
 package com.busanit501.travelproject.controller.admin;
 
 import com.busanit501.travelproject.dto.ProductJh1DTO;
-import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.member.MemberFullDTO;
 import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
-import com.busanit501.travelproject.dto.util.PageResponseJh1DTO;
 import com.busanit501.travelproject.service.admin.AdminJh1Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -21,6 +19,22 @@ public class AdminJh1Controller {
 
   private final AdminJh1Service adminService;
 
+
+
+  @GetMapping("/location/list")
+  public String listLocation() {
+    return "admin/listLocation_jh1";
+  }
+
+
+
+  @GetMapping("/product/list")
+  public String listProduct(
+    @ModelAttribute("requestDTO") PageRequestJh1DTO pageRequestJh1DTO
+  ) {
+    return "admin/listProduct_jh1";
+  }
+
   @GetMapping("/product/register")
   public String registerProduct() {
     return "admin/registerProduct_jh1";
@@ -33,17 +47,7 @@ public class AdminJh1Controller {
     return "admin/registerProduct_jh1";
   }
 
-  @GetMapping("/product/list")
-  public String listProduct(
-    @ModelAttribute("requestDTO") PageRequestJh1DTO pageRequestJh1DTO
-  ) {
-    return "admin/listProduct_jh1";
-  }
 
-  @GetMapping("/location/list")
-  public String listLocation() {
-    return "admin/listLocation_jh1";
-  }
 
   @GetMapping("/member/list")
   public String listMembers(
@@ -59,4 +63,10 @@ public class AdminJh1Controller {
     return "admin/viewMember_jh1";
   }
 
+  @GetMapping("/freeBoard/list")
+  public String listFreeBoard(
+    @ModelAttribute("requestDTO") PageRequestJh1DTO pageRequestDTO
+  ) {
+    return "admin/listFreeBoard_jh1";
+  }
 }
