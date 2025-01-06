@@ -7,7 +7,7 @@ const searchEndContainer = document.querySelector('.searchEndContainer');
 let viewSearch = null;
 const countryNameContainer = document.querySelector('.countryNameContainer');
 const locationTagContainer = document.querySelector('.locationTagContainer');
-const countryImages = searchLocationContainer.querySelectorAll('.countryImageBox');
+const countryImageContainer = document.querySelector('.countryImageContainer');
 let selectLocationTag = null;
 const now = new Date();
 let dateTypeYearNow = now.getFullYear();
@@ -17,49 +17,58 @@ const selectEnd = { current: null };
 let startContainSetting = false;
 let endContainSetting = false;
 const searchImageIcon = document.querySelector('.searchIconBox').querySelector('img');
-const locationMap = new Map([
-    ["한국", [
-        "서울", "부산", "제주", "인천", "경주",
-        "대구", "대전", "강남", "수원", "안동"
-    ]],
-    ["일본", [
-        "도쿄", "교토", "오사카", "홋카이도", "나라",
-        "히로시마", "후쿠오카", "나고야", "오키나와", "고베"
-    ]],
-    ["중국", [
-        "베이징", "상하이", "시안", "청두", "광저우",
-        "선전", "항저우", "쑤저우", "라싸", "구이린"
-    ]],
-    ["미국", [
-        "뉴욕", "로스앤젤레스", "샌프란시스코", "라스베이거스", "시카고",
-        "마이애미", "워싱턴 D.C.", "시애틀", "올랜도", "보스턴"
-    ]],
-    ["유럽", [
-        "파리", "로마", "바르셀로나", "런던", "암스테르담",
-        "베를린", "프라하", "빈", "베네치아", "부다페스트"
-    ]]
-]);
+const imageContainer = document.querySelector('.imageContainer');
+let startDate = null;
+let endDate = null;
+let locationNo = null;
+let isAddImage = false;
+let page = 1;
 
-for (const countryImage of countryImages) {
-    countryImage.addEventListener('click', (e)=> {
-        locationTagContainer.innerHTML = '';
-        countryNameContainer.innerText = countryImage.id;
-        for (const location of locationMap.get(countryImage.id)) {
-            const locationTag = document.createElement('div')
-            locationTag.classList.add('locationTagBox')
-            locationTag.innerText = location
-            locationTagContainer.appendChild(locationTag);
-
-            locationTag.addEventListener('click', (e)=> {
-                if (selectLocationTag != null) {
-                    selectLocationTag.style.backgroundColor = 'white';
-                    selectLocationTag.style.color = 'black';
-                }
-                selectLocationTag = locationTag;
-                selectLocationTag.style.backgroundColor = '#333333';
-                selectLocationTag.style.color = 'white';
-            })
+document.addEventListener('click', (e)=> {
+    if (!e.target.closest('.searchContainer')) {
+        if (viewSearch != null) {
+            viewSearch.style.display = 'none';
+            viewSearch = null;
         }
+    }
+})
+
+function isImageValid(url, collBack) {
+    const img = new Image();
+    img.onload = () => collBack(true);
+    img.onerror = () => collBack(false);
+    img.src = url;
+}
+
+function addCountryImage(country) {
+    const imagePath = `/images/country/${country}.png`;
+    const countryImageBox = document.createElement("div");
+    countryImageBox.classList.add("countryImageBox");
+    isImageValid(imagePath, (isValid) => {
+        if (isValid) countryImageBox.style.backgroundImage = `url('${imagePath}')`
+        else countryImageBox.style.backgroundImage = `url('/images/noneImage.png')`
+    })
+
+    countryImageBox.name = country;
+    addCountryImageClickListener(countryImageBox);
+    countryImageContainer.appendChild(countryImageBox);
+}
+
+function addCityTag(locationDTO) {
+    const locationTag = document.createElement('div')
+    locationTag.classList.add('locationTagBox')
+    locationTag.innerText = locationDTO.city;
+    locationTag.loactionNo = locationDTO.locationNo;
+    locationTagContainer.appendChild(locationTag);
+
+    locationTag.addEventListener('click', (e)=> {
+        if (selectLocationTag != null) {
+            selectLocationTag.style.backgroundColor = 'white';
+            selectLocationTag.style.color = 'black';
+        }
+        selectLocationTag = locationTag;
+        selectLocationTag.style.backgroundColor = '#333333';
+        selectLocationTag.style.color = 'white';
     })
 }
 
@@ -137,32 +146,91 @@ function getDayOfWeek(year, month, day = 1) {
     return date.getDay();
 }
 
+function isSearch() {
+    return locationNo != null || startDate != null || endDate != null;
+}
+
 searchImageIcon.addEventListener('click', (e)=> {
     if (searchValidCheck()) {
-        console.log(selectLocationTag.innerText);
-        console.log(`${selectStart.current.year}년 ${selectStart.current.month}월 ${selectStart.current.day}일`)
-        console.log(`${selectEnd.current.year}년 ${selectEnd.current.month}월 ${selectEnd.current.day}일`)
+        locationNo = null;
+        startDate = null;
+        endDate = null;
+        page = 1;
+
+        if (selectLocationTag != null) locationNo = selectLocationTag.loactionNo;
+        if (selectStart.current != null) startDate = `${selectStart.current.year}-${String(selectStart.current.month).padStart(2, '0')}-${String(selectStart.current.day).padStart(2, '0')}`;
+        if (selectEnd.current != null) endDate = `${selectEnd.current.year}-${String(selectEnd.current.month).padStart(2, '0')}-${String(selectEnd.current.day).padStart(2, '0')}`;
+
+        printImageContainer(page, 10, locationNo, startDate, endDate)
+        resetSearch();
     }
     else searchError('출발일은 도착일보다 빨라야합니다.')
 })
 
-function searchValidCheck() {
-    if (selectStart != null && selectEnd != null) {
-        let startNum = selectStart.current.year * 365;
-        let endNum = selectEnd.current.year * 365;
-        startNum += selectStart.current.month * 30;
-        endNum += selectEnd.current.month * 30;
-        startNum += selectStart.current.day;
-        endNum += selectEnd.current.day;
-        console.log(startNum, endNum)
-        if (startNum > endNum) return false;
+function resetSearch() {
+    if (viewSearch != null) viewSearch.style.display = 'none';
+    if (selectLocationTag != null) {
+        selectLocationTag.style.backgroundColor = 'white';
+        selectLocationTag.style.color = 'black';
+        selectLocationTag = null;
     }
-    return true;
+    if (selectStart.current != null) {
+        selectStart.current.style.backgroundColor = 'white';
+        selectStart.current.style.color = 'black';
+        selectStart.current = null;
+    }
+    if (selectEnd.current != null) {
+        selectEnd.current.style.backgroundColor = 'white';
+        selectEnd.current.style.color = 'black';
+        selectEnd.current = null;
+    }
+}
+
+function searchValidCheck() {
+    if (selectStart.current == null || selectEnd.current == null) {
+        return true;
+    }
+
+    const startDate = new Date(selectStart.current.year, selectStart.current.month - 1, selectStart.current.day);
+    const endDate = new Date(selectEnd.current.year, selectEnd.current.month - 1, selectEnd.current.day);
+
+    return startDate <= endDate;
+}
+
+function addImage(name, imagePath, productNo) {
+    const imageBox = document.createElement('div');
+    const imageBoxTitle = document.createElement('div');
+    const imageBoxContainer = document.createElement('div');
+    imageBox.classList.add('imageBox');
+    imageBox.style.backgroundImage = `url('${imagePath}')`
+    imageBoxTitle.classList.add('imageBoxTitle');
+    imageBoxTitle.innerText = name;
+    imageBoxContainer.classList.add('imageBoxContainer')
+
+    imageBox.appendChild(imageBoxTitle);
+    imageBoxContainer.appendChild(imageBox);
+    imageContainer.appendChild(imageBoxContainer);
+
+    imageBox.addEventListener('click', (e) => {
+        console.log(productNo);
+    })
 }
 
 function searchError(error) {
     alert(error);
 }
+
+function getContentToScrollDown() {
+    if (!searchTotal || !isAddImage) return false
+    addImageContainer(++page, 10, locationNo, startDate, endDate);
+}
+
+window.addEventListener('scroll', () => {
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight ) {
+        console.log("스크롤이벤트 동작중")
+        getContentToScrollDown();
+    }
+})
 
 
 
