@@ -24,7 +24,7 @@ public class ProductCgwServiceImpl implements ProductCgwService {
 
     @Override
     public PageResponseDTO<ProductDTO> searchProduct(ProductSearchRequestDTO productSearchRequestDTO) {
-        Page<Product> products = productCgwRepository.searchProduct(locationJh1Repository.findById(productSearchRequestDTO.getLocationNo()).orElseThrow(), productSearchRequestDTO.getStartDate(), productSearchRequestDTO.getEndDate(), PageRequest.of(productSearchRequestDTO.getPage(), productSearchRequestDTO.getSize()));
+        Page<Product> products = productCgwRepository.searchProduct(locationJh1Repository.findById(productSearchRequestDTO.getLocationNo()).orElseThrow(), productSearchRequestDTO.getStartDate(), productSearchRequestDTO.getEndDate(), PageRequest.of(productSearchRequestDTO.getPage() - 1, productSearchRequestDTO.getSize()));
         return PageResponseDTO.<ProductDTO>builder()
                 .pageRequestDTO(productSearchRequestDTO)
                 .list(products.getContent().stream().map(product -> modelMapper.map(product, ProductDTO.class)).toList())
