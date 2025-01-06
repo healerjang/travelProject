@@ -2,6 +2,7 @@ package com.busanit501.travelproject.controller.admin;
 
 import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.LocationValueJh1DTO;
+import com.busanit501.travelproject.dto.member.MemberAddPointDTO;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
 import com.busanit501.travelproject.dto.util.PageResponseJh1DTO;
@@ -56,5 +57,11 @@ public class AdminJh1RestController {
   public ResponseEntity<PageResponseJh1DTO<MemberDTO>> listMembers(PageRequestJh1DTO requestDTO) {
     PageResponseJh1DTO<MemberDTO> membersDTO = adminService.listMembers(requestDTO);
     return ResponseEntity.ok().body(membersDTO);
+  }
+
+  @PostMapping("/api/member/givePoint")
+  public ResponseEntity<Map<String, Object>> givePoint(@RequestBody MemberAddPointDTO dto) {
+    adminService.givePointTo(dto.getMemberNo(), dto.getAmount());
+    return ResponseEntity.ok().body(Map.of("success", true));
   }
 }

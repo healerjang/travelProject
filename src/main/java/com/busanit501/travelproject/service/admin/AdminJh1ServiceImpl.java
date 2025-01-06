@@ -105,4 +105,11 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
     return memberEntityToFullDTO(member);
   }
 
+  @Override
+  public void givePointTo(long memberNo, int amount) {
+    Member member = memberRepo.findByMemberNo(memberNo);
+    member.addPoint(amount);
+    memberRepo.save(member);
+  }
+
 }

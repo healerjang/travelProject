@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/travel_admin_aside_jh1.html}"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/travel_admin_aside_jh1.html}">
+      xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>회원정보</title>
@@ -16,7 +16,88 @@
     <div class="py-4">
       <div class="display-1" th:text="${memberDTO.memberName}"></div>
     </div>
+    <div class="list-group mb-3">
+      <div class="list-group-item">
+        <strong>가입일</strong>
+        <span th:text="${memberDTO.regDate}"></span>
+      </div>
+      <div class="list-group-item">
+        <strong>E-mail 주소</strong>
+        <span th:text="${memberDTO.memberEmail}"></span>
+      </div>
+      <div class="list-group-item">
+        <strong>전화번호</strong>
+        <span th:text="${memberDTO.memberPhone}"></span>
+      </div>
+      <div class="list-group-item">
+        <div class="row">
+          <strong class="col-auto">포인트</strong>
+          <span class="col" th:text="${memberDTO.memberPoint}"></span>
+          <span class="col-auto"></span>
+        </div>
+      </div>
+      <div class="list-group-item">
+        <div class="row">
+          <div class="col-auto">
+            <button class="btn btn-primary" id="GivePointButton">포인트 지급</button>
+          </div>
+          <div class="col-auto">
+            <div class="input-group">
+              <label class="input-group-text" for="givePoint">포인트</label>
+              <input class="form-control" id="givePoint" placeholder="지급할 포인트 입력" type="number">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card mb-3">
+      <div class="card-header">여행상품 예약 내역</div>
+      <div class="list-group list-group-flush">
+        <div class="list-group-item" th:each="reservation : ${memberDTO.reservations}"></div>
+      </div>
+    </div>
+    <div class="card mb-3">
+      <div class="card-header">리뷰 목록</div>
+      <div class="list-group list-group-flush">
+        <div class="list-group-item" th:each="review : ${memberDTO.reviews}"></div>
+      </div>
+    </div>
+    <div class="card mb-3">
+      <div class="card-header">작성한 게시글 목록</div>
+      <div class="list-group list-group-flush">
+        <div class="list-group-item" th:each="freeBoard : ${memberDTO.freeBoards}"></div>
+      </div>
+    </div>
+    <div class="card mb-3">
+      <div class="card-header">댓글 목록</div>
+      <div class="list-group list-group-flush">
+        <div class="list-group-item" th:each="reply : ${memberDTO.replies}"></div>
+      </div>
+    </div>
   </div>
 </div>
+<th:block layout:fragment="scripts">
+  <script th:inline="javascript">
+    const memberNo = /*[[${memberDTO.memberNo}]]*/ 0;
+
+    async function givePoint(amount) {
+      const response = await axios.post('/api/member/givePoint', {memberNo, amount})
+      const data = response.data;
+      if (data.success) {
+        window.alert("포인트가 지급되었습니다.")
+        window.location.reload()
+      }
+    }
+
+    document.getElementById('GivePointButton').addEventListener('click', () => {
+      const amount = document.getElementById('givePoint').value;
+      if (Number.isInteger(Number(amount))) givePoint(amount).catch(err => {
+        window.alert(err)
+        console.error(err)
+      })
+      else window.alert("포인트 값이 잘못되었습니다.")
+    })
+  </script>
+</th:block>
 </body>
 </html>

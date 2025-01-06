@@ -48,11 +48,7 @@ public class AdminJh1Controller {
   @GetMapping("/member/list")
   public String listMembers(
     @ModelAttribute("requestDTO") PageRequestJh1DTO pageRequestDTO
-//    Model model
   ) {
-//    PageResponseJh1DTO<MemberDTO> membersDTO = adminService.listMembers(pageRequestDTO);
-
-//    model.addAttribute("membersDTO", membersDTO);
     return "admin/listMembers_jh1";
   }
 

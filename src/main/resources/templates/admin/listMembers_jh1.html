@@ -20,6 +20,7 @@
         <th>Name</th>
         <th>Email</th>
         <th>Phone</th>
+        <th>Points</th>
       </tr>
       </thead>
       <tbody></tbody>
@@ -36,11 +37,11 @@
 
     function _el (tagName, text = undefined) {
       const el = document.createElement(tagName);
-      if (text) el.appendChild(document.createTextNode(text));
+      if (text != undefined) el.appendChild(document.createTextNode(text));
       return el;
     }
 
-    function createMemberMenuItem(no, name, email, phone) {
+    function createMemberMenuItem(no, name, email, phone, points) {
       const tr = _el('tr');
       const memberNo = _el('td', no)
       const memberNameAnchor = _el('a', name)
@@ -49,7 +50,8 @@
       memberName.append(memberNameAnchor);
       const memberEmail = _el('td', email);
       const memberPhone = _el('td', phone);
-      tr.append(memberNo, memberName, memberEmail, memberPhone);
+      const memberPoints  = _el('td', points);
+      tr.append(memberNo, memberName, memberEmail, memberPhone, memberPoints);
       return tr;
     }
 
@@ -58,7 +60,7 @@
       const { data } = response;
       const tbody = document.querySelector('table.table').tBodies[0]
       for (const member of data.dtoList) {
-        tbody.appendChild(createMemberMenuItem(member.memberNo, member.memberName, member.memberEmail, member.memberPhone));
+        tbody.appendChild(createMemberMenuItem(member.memberNo, member.memberName, member.memberEmail, member.memberPhone, member.memberPoint));
       }
       document.querySelector('#PaginationHere').appendChild(
         createPagination(data.start, data.end, page, '/admin/member/list', size)

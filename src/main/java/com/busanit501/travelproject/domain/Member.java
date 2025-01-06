@@ -44,4 +44,13 @@ public class Member extends BaseEntity {
         this.memberEmail = updateDTO.getMemberEmail();
         this.memberPhone = updateDTO.getMemberPhone();
     }
+
+    /**
+     * 회원에게 포인트를 지급한다.
+     * @author 원종호
+     * */
+    public void addPoint(int point) {
+        this.memberPoint += point;
+    }
+
 }

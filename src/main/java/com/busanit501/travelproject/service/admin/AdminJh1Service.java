@@ -110,4 +110,6 @@ public interface AdminJh1Service {
   PageResponseJh1DTO<MemberDTO> listMembers(PageRequestJh1DTO requestDTO);
 
   MemberFullDTO getMemberFullSupport(long memberNo);
+
+  void givePointTo(long memberNo, int amount);
 }

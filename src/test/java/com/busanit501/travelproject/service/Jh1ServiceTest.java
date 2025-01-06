@@ -55,4 +55,9 @@ public class Jh1ServiceTest {
 //    HcbPageResponseDTO<MemberDTO> response = service.listMembers(HcbPageRequestDTO.builder().page(1).size(10).pageSize(10).build());
 //    log.info("response: {}", response);
   }
+
+  @Test
+  public void givePointTest() {
+    service.givePointTo(1L, 100000);
+  }
 }
