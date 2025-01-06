@@ -60,6 +60,7 @@ public class ReservationServiceImpl implements ReservationService {
     public Long deleteReservation(Long reservationNo) {
         Reservation reservation = reservationRepository.findById(reservationNo).orElseThrow();
         reservation.changeOrder(ReservationOrder.CANCELLED);
+        reservationRepository.save(reservation);
         return reservation.getReservationNo();
     }
 

@@ -18,11 +18,14 @@ public class ReservationRepositoryTest {
 
     @Test
     public void insertReservation() {
-        Reservation result = reservationRepository.save(Reservation.builder()
-                .member(Member.builder().memberNo(1L).build())
-                .product(Product.builder().productNo(1L).build())
-                .reservationOrder(ReservationOrder.PENDING)
-                .build());
-        log.info(result);
+        for (Long i = 1L; i < 4L; i++) {
+            for (int j = 1; j < 11; j++) {
+                Reservation result = reservationRepository.save(Reservation.builder()
+                        .member(Member.builder().memberNo(1L).build())
+                        .product(Product.builder().productNo(i).build())
+                        .reservationOrder(ReservationOrder.PENDING)
+                        .build());
+            }
+        }
     }
 }
