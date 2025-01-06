@@ -20,7 +20,7 @@
   </style>
 </th:block>
 <div layout:fragment="content">
-  <div class="jumbotron text-center">
+  <div class="py-3 text-center">
     <h1>여행지 관리</h1>
   </div>
   <div class="container">
@@ -41,8 +41,7 @@
         </div>
       </div>
       <div class="mb-3">
-        <input type="submit" class="btn btn-primary" value="여행지 등록하기" />
- <!--        <a class="btn btn-primary">여행지 등록하기</a>-->
+        <input type="submit" class="btn btn-primary" value="여행지 등록하기"/>
       </div>
     </form>
   </div>
@@ -91,7 +90,7 @@
         cityNameEl.textContent = cityName;
         citiesEl.appendChild(cityNameEl);
       } else {
-        locationsPlaceholder.append(countryEl(countryName, [ { name : cityName } ]))
+        locationsPlaceholder.append(countryEl(countryName, [{name: cityName}]))
       }
     }
 

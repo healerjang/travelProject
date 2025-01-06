@@ -9,7 +9,7 @@
 </head>
 <body>
 <div layout:fragment="content">
-  <div class="jumbotron text-center">
+  <div class="py-3 text-center">
     <h1>자유게시판 관리</h1>
   </div>
   <div class="container">
@@ -36,30 +36,17 @@
     const size = /*[[${requestDTO.size}]]*/ 0;
 
     function createBoardItem(boardNo, title, memberNo, writer, regDate) {
-      const tr = _el('tr');
-
-      const boardNoTd = _el('td', boardNo)
-
-      const boardTitleLink = _el('a', title);
-      boardTitleLink.href = '/admin/freeBoard/view/' + boardNo
-
-      const boardTitle = _el('td');
-      boardTitle.append(boardTitleLink);
-
-      const memberLink = _el('a', writer)
-      memberLink.href = '/admin/member/view/' + memberNo;
-      const memberTd = _el('td')
-      memberTd.append(memberLink);
-
-      const regDateTd = _el('td', regDate);
-
-      tr.append(boardNoTd, boardTitle, memberTd, regDateTd);
-      return tr;
+      return _el('tr',
+        _el('td', boardNo),
+        _el('td', _el('a', title, a => a.href = '/admin/freeBoard/view/' + boardNo)),
+        _el('td', _el('a', writer, a => a.href = '/admin/member/view/' + memberNo)),
+        _el('td', regDate)
+      );
     }
 
-    (async() => {
-      const response = await axios.get('/api/freeBoard/list'+`?page=${page}&size=${size}`);
-      const { data } = response;
+    (async () => {
+      const response = await axios.get('/api/freeBoard/list' + `?page=${page}&size=${size}`);
+      const {data} = response;
       const tbody = document.querySelector('table.table').tBodies[0]
       for (const freeBoard of data.dtoList) {
         tbody.append(

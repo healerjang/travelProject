@@ -37,15 +37,7 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
   @Override
   public List<LocationValueJh1DTO> getLocationsOnly() {
     List<Location> locations = locationRepo.findAll();
-    List<LocationValueJh1DTO> dtoList = locations.stream().map(loc -> {
-      LocationValueJh1DTO dto = LocationValueJh1DTO.builder()
-        .locationNo(loc.getLocationNo())
-        .country(loc.getCountry())
-        .city(loc.getCity())
-        .build();
-
-      return dto;
-    }).toList();
+    List<LocationValueJh1DTO> dtoList = locations.stream().map(this::locationToDTO).toList();
     return dtoList;
   }
 

@@ -1,6 +1,7 @@
 package com.busanit501.travelproject.service.admin;
 
 import com.busanit501.travelproject.domain.FreeBoard;
+import com.busanit501.travelproject.domain.Location;
 import com.busanit501.travelproject.domain.Member;
 import com.busanit501.travelproject.domain.Product;
 import com.busanit501.travelproject.dto.*;
@@ -15,6 +16,14 @@ import java.util.List;
 
 public interface AdminJh1Service {
 
+  default LocationValueJh1DTO locationToDTO(Location location) {
+    return LocationValueJh1DTO.builder()
+      .locationNo(location.getLocationNo())
+      .city(location.getCity())
+      .country(location.getCountry())
+      .build();
+  }
+
   default ProductJh1DTO productEntityToDTO(Product product) {
     return ProductJh1DTO.builder()
       .productNo(product.getProductNo())
@@ -22,6 +31,7 @@ public interface AdminJh1Service {
       .description(product.getDescription())
       .price(product.getPrice())
       .locationNo(product.getLocation().getLocationNo())
+      .location(locationToDTO(product.getLocation()))
       .startDate(product.getStartDate())
       .endDate(product.getEndDate())
       .capacity(product.getCapacity())

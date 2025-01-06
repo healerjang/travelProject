@@ -9,7 +9,7 @@
 </head>
 <body>
   <div layout:fragment="content">
-    <div class="py-2">
+    <div class="py-3 text-center">
       <h1>여행상품 관리</h1>
     </div>
     <div class="container">
@@ -34,57 +34,25 @@
     <nav id="PaginationHere"></nav>
   </div>
   <th:block layout:fragment="scripts">
+    <script th:src="@{/script/admin/admin-common.js}"></script>
     <script th:src="@{/script/pagination.js}"></script>
     <script th:inline="javascript">
       const tbody = document.querySelector('#tbody');
-      function periodExpression(days) {
-        const sign = Math.sign(days);
-        days = Math.abs(days);
-        const chunks = []
-
-        if (days > 0 && days < 30) {
-          chunks.push(`${days}일`)
-        } else {
-          const years = Math.floor(days / 365);
-          const rY = days % 365;
-
-          const months = Math.floor(rY / 30);
-          if (years > 0) chunks.push(`${years}년`)
-          if (months > 0) chunks.push(`${months}개월`)
-        }
-
-        if (sign > 0) chunks.push("남음")
-        else if (sign < 0) chunks.push("지남")
-        else chunks.push("오늘")
-
-        return chunks.join(" ")
-      }
 
       function productEl(productDTO) {
-        const tr = document.createElement('tr')
-
-        tr.innerHTML = `
-          <td>${productDTO.productNo}</td>
-          <td class="ProductName"><a></a></td>
-          <td class="Location"></td>
-          <td>${productDTO.price}</td>
-          <td>${productDTO.startDate}</td>
-          <td>${productDTO.endDate}</td>
-          <td>${periodExpression(productDTO.until)}</td>
-        `
-
-        const anchor = tr.querySelector(".ProductName a")
-        anchor.textContent = productDTO.name
-        anchor.href = `/admin/product/edit/${productDTO.productNo}`
-        tr.querySelector(".Location").textContent = productDTO.locationNo
-
-
-
-        return tr
+        return _el('tr',
+          _el('td', productDTO.productNo),
+          _el('td', _el('a', productDTO.name, a => a.href = `/admin/product/edit/${productDTO.productNo}`)),
+          _el('td', productDTO.location.country + ' > ' + productDTO.location.city),
+          _el('td', productDTO.price),
+          _el('td', productDTO.startDate),
+          _el('td', productDTO.endDate),
+          _el('td', periodExpression(productDTO.until))
+        )
       }
 
-      async function getAllProducts(page = 1, size = 20, paginationPageCount = 10) {
-        const response = await axios.get(`/api/product/list?page=${page}&size=${size}&pageSize=${paginationPageCount}`);
+      async function getAllProducts(page = 1, size = 20) {
+        const response = await axios.get(`/api/product/list?page=${page}&size=${size}`);
         return await response.data
       }
 
