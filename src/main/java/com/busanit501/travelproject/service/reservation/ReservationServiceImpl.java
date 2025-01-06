@@ -119,8 +119,16 @@ public class ReservationServiceImpl implements ReservationService {
         int memberPoint = member.getMemberPoint();
         int productPrice = productJh1Repository.findProductByProductNo(productNo).orElseThrow().getPrice().intValue();
         if (memberPoint < productPrice) return false;
-        // memberPoint -= productPrice;
-        // memberPoint 를 멤버에 다시 저장
+        member.updateMemberData(UpdateDTO.builder()
+                .memberNo(member.getMemberNo())
+                .memberID(member.getMemberID())
+                .memberPassword(member.getMemberPassword())
+                .memberName(member.getMemberName())
+                .memberEmail(member.getMemberEmail())
+                .memberPhone(member.getMemberPhone())
+                .memberPoints(memberPoint - productPrice)
+                .build());
+        memberRepository.save(member);
         reservation.changeOrder(ReservationOrder.COMPLETED);
         reservationRepository.save(reservation);
         return true;
