@@ -43,6 +43,7 @@ public class Member extends BaseEntity {
         this.memberName = updateDTO.getMemberName();
         this.memberEmail = updateDTO.getMemberEmail();
         this.memberPhone = updateDTO.getMemberPhone();
+        this.memberPoint = updateDTO.getMemberPoints();
     }
 
     /**
