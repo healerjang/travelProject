@@ -1,6 +1,9 @@
 package com.busanit501.travelproject.config;
 
+import com.busanit501.travelproject.domain.Product;
+import com.busanit501.travelproject.dto.productCgw.ProductDTO;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +19,13 @@ public class RootConfig {
                 .setFieldAccessLevel
                         (org.modelmapper.config.Configuration.AccessLevel.PRIVATE)
                 .setMatchingStrategy(MatchingStrategies.STRICT);
+
+        modelMapper.addMappings(new PropertyMap<Product, ProductDTO>() {
+            @Override
+            protected void configure() {
+                map().setLocationNo(source.getLocation().getLocationNo());
+            }
+        });
         return modelMapper;
     }
 }
