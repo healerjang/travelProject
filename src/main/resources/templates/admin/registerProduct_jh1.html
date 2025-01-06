@@ -82,6 +82,9 @@
           <div class="input-group mb-2">
             <label for="imageUpload" class="input-group-text">이미지 첨부</label>
             <input type="file" id="imageUpload" class="form-control" accept="image/*" placeholder="이미지를 업로드하세요">
+            <input type="text" id="countryDst" name="countryDst" placeholder="국가 이름 (영어)" />
+            <input type="text" id="cityDst" name="cityDst" placeholder="도시 이름/키워드 (영어)" />
+            <button id="applyProductImage" class="btn btn-outline-secondary">이미지 적용</button>
           </div>
           <input type="hidden" id="imagePath" name="imagePath">
           <div class="input-group mb-2">
@@ -150,6 +153,19 @@
       }
     }
 
+    async function postImage(file, countryFdst, cityFdst) {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('countryFdst', countryFdst);
+      fd.append('cityFdst', cityFdst);
+
+      const response = await axios.post('/api/image/upload', fd, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+    }
+
     async function registerProduct(productName, productDescription, productPrice, startDate, endDate, productCapacity, locationNo) {
       try {
         const response = await axios.post('/api/product', {
@@ -188,6 +204,7 @@
       })
     })
 
+    /* 여행상품 등록 버튼 클릭 시 여행상품을 실제로 등록한다. */
     document.getElementById("registerProductButton").addEventListener("click", () => {
       if (productDTO == null) {
         // 등록하기
