@@ -21,4 +21,5 @@ public interface ReservationService {
     HcbPageResponseDTO<ReservationDTO> getReservationUser(Long memberNo, ReservationOrder reservationOrder, HcbPageRequestDTO hcbPageRequestDTO);
     HcbPageResponseDTO<ReservationDTO> getReservationAdmin(Long productNo, HcbPageRequestDTO hcbPageRequestDTO);
     List<ProductJh1DTO> getBestProducts();
+    boolean feePayment(Long reservationNo);
 }

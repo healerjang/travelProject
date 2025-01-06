@@ -1,23 +1,20 @@
 package com.busanit501.travelproject.controller.cartPage;
 
+import com.busanit501.travelproject.domain.common.ReservationOrder;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
+import com.busanit501.travelproject.dto.reservation.ReservationDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
 import com.busanit501.travelproject.service.admin.AdminJh1Service;
+import com.busanit501.travelproject.service.reservation.ReservationService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,6 +22,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/cart")
 public class CartController {
     private final AdminJh1Service adminJh1Service;
+    private final ReservationService reservationService;
     private static final String CART_COOKIE_NAME = "cart";
 
     @GetMapping("/add/{productNo}")
@@ -89,5 +87,28 @@ public class CartController {
         updateCookie.setPath("/");
         updateCookie.setMaxAge(60 * 60 * 2);
         httpServletResponse.addCookie(updateCookie);
+    }
+
+    @PostMapping("/makeReservation")
+    public Map<String,Integer> makeReservation(@CookieValue(value = "memberNoCookie", required = false) String memberNoCookie,
+                               HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        List<Long> result = new ArrayList<>();
+        Optional<Cookie> optionalCookie = Arrays.stream(httpServletRequest.getCookies())
+                .filter(cookie -> CART_COOKIE_NAME.equals(cookie.getName()))
+                .findFirst();
+        if (optionalCookie.isEmpty()) return Map.of("reservationNoSize", 0);;
+        Long memberNo = memberNoCookie != null ? Long.parseLong(memberNoCookie) : null;
+        if (memberNo == null) return Map.of("reservationNoSize", 0);;
+        Cookie cartCookie = optionalCookie.get();
+        List<String> productNos = Arrays.asList(cartCookie.getValue().split("-"));
+        productNos.stream().map(Long::parseLong).forEach(productNo -> {
+            ReservationDTO reservationDTO = ReservationDTO.builder()
+                    .memberNo(memberNo)
+                    .productNo(productNo)
+                    .ReservationOrder(ReservationOrder.PENDING)
+                    .build();
+            result.add(reservationService.registerReservation(reservationDTO));
+        });
+        return Map.of("reservationNoSize",result.size());
     }
 }
