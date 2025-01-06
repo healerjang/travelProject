@@ -5,6 +5,7 @@ import com.busanit501.travelproject.domain.FreeBoard;
 import com.busanit501.travelproject.domain.QFreeBoard;
 import com.busanit501.travelproject.domain.QReply;
 import com.busanit501.travelproject.dto.freeboard.FreeBoardListReplyCountDTO;
+import com.busanit501.travelproject.dto.freeboard.FreeBoardReadDTO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
@@ -73,8 +74,6 @@ public class FreeBoardSearchImpl extends QuerydslRepositorySupport
                     case "w":
                         booleanBuilder.or(freeBoard.member.memberID.contains(keyword));
                         break;
-
-
 
 
                 }
@@ -151,6 +150,65 @@ public class FreeBoardSearchImpl extends QuerydslRepositorySupport
 
     }
 
+
+
+    @Override
+    public Page<FreeBoardReadDTO> searchReadWithReplyCount(String[] types, String keyword, Pageable pageable) {
+        QFreeBoard freeBoard = QFreeBoard.freeBoard;
+        QReply reply = QReply.reply;
+        JPQLQuery<FreeBoard> query = from(freeBoard);// select * from
+
+        query.leftJoin(reply).on(reply.freeBoard.freeBoardNo.eq(freeBoard.freeBoardNo));
+
+        query.groupBy(freeBoard.freeBoardNo);
+
+        // 위에서 사용한 검색 조건 , 재사용하기
+        if (types != null && types.length > 0 && keyword != null) {
+            // 여러 조건을 하나의 객체에 담기.
+            BooleanBuilder booleanBuilder = new BooleanBuilder();
+            for (String type : types) {
+                switch (type) {
+                    case "t":
+                        booleanBuilder.or(freeBoard.title.contains(keyword));
+                        break;
+                    case "c":
+                        booleanBuilder.or(freeBoard.content.contains(keyword));
+                        break;
+                    case "w":
+                        booleanBuilder.or(freeBoard.member.memberID.contains(keyword));
+                        break;
+                }
+            }
+
+            query.where(booleanBuilder);
+        }
+
+        query.where(freeBoard.freeBoardNo.gt(0L));
+
+        JPQLQuery<FreeBoardReadDTO> dtoQuery =
+                query.select(Projections.bean(FreeBoardReadDTO.class,
+                        freeBoard.freeBoardNo,
+                        freeBoard.title,
+                        freeBoard.content,
+                        freeBoard.member.memberNo,
+                        freeBoard.member.memberName,
+                        freeBoard.regDate,
+                        freeBoard.modDate,
+                        reply.count().as("replyCount")));
+
+
+        this.getQuerydsl().applyPagination(pageable, dtoQuery);
+
+        List<FreeBoardReadDTO> list = dtoQuery.fetch();
+
+        long total = dtoQuery.fetchCount();
+
+        Page<FreeBoardReadDTO> result = new PageImpl<FreeBoardReadDTO>(list, pageable, total);
+
+        return result;
+
     }
+
+}
 
 

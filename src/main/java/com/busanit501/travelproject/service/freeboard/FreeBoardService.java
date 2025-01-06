@@ -2,10 +2,7 @@ package com.busanit501.travelproject.service.freeboard;
 
 
 import com.busanit501.travelproject.domain.FreeBoard;
-import com.busanit501.travelproject.dto.freeboard.FreeBoardDTO;
-import com.busanit501.travelproject.dto.freeboard.FreeBoardListReplyCountDTO;
-import com.busanit501.travelproject.dto.freeboard.PageRequestDTO;
-import com.busanit501.travelproject.dto.freeboard.PageResponseDTO;
+import com.busanit501.travelproject.dto.freeboard.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Optional;
@@ -19,5 +16,5 @@ public interface FreeBoardService {
     PageResponseDTO<FreeBoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO);
 
 
-
+    PageResponseDTO<FreeBoardReadDTO> listReadWithReplyCount(PageRequestDTO pageRequestDTO);
 }

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FreeBoardDTO {
+public class FreeBoardReadDTO {
     private  Long freeBoardNo;
     @NotEmpty
     @Size(min = 3, max = 100)
@@ -23,8 +23,12 @@ public class FreeBoardDTO {
     @NotEmpty
     private  String content;
 
-//    @NotNull
+    @NotNull
     private long memberNo;
+    private String memberName;
     private LocalDateTime regDate;
     private LocalDateTime modDate;
+
+    private Long replyCount;
+
 }

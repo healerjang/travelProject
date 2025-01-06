@@ -5,10 +5,10 @@
       layout:decorate="~{layout/base.html}"
 >
 <body>
-<div class="container mt-4">
+<div layout:fragment="content" class="container mt-4">
     <h1>Register FreeBoard</h1>
 
-    <form method="post" action="/freeboard/register">
+    <form method="post" action="/free_board/register">
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
             <input type="text" class="form-control" id="title" name="title" required>
@@ -19,10 +19,11 @@
             <textarea class="form-control" id="content" name="content" rows="4" required></textarea>
         </div>
 
-        <div class="mb-3">
-            <label for="member" class="form-label">Writer</label>
-            <input type="text" class="form-control" id="member" name="member" required>
-        </div>
+<!--        <div class="mb-3">-->
+<!--            <label for="memberNo" class="form-label">Member</label>-->
+<!--            <input type="text" class="form-control" id="memberNo" name="memberNo" value="1" required readonly>-->
+<!--&lt;!&ndash;            th : value = ${} << login 된 이름을 가져오게 만들기 value= 1 << 하드코딩 된 부분 &ndash;&gt;-->
+<!--        </div>-->
 
         <button type="submit" class="btn btn-primary">Register</button>
     </form>

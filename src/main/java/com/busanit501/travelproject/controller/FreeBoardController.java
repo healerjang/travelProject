@@ -1,10 +1,10 @@
 package com.busanit501.travelproject.controller;
 
-import com.busanit501.travelproject.dto.freeboard.FreeBoardDTO;
-import com.busanit501.travelproject.dto.freeboard.FreeBoardListReplyCountDTO;
-import com.busanit501.travelproject.dto.freeboard.PageRequestDTO;
-import com.busanit501.travelproject.dto.freeboard.PageResponseDTO;
+import com.busanit501.travelproject.annotation.member.Member;
+import com.busanit501.travelproject.dto.freeboard.*;
+import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.service.freeboard.FreeBoardService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,37 +24,42 @@ public class FreeBoardController {
 
     @GetMapping("/list")
     public String list(PageRequestDTO pageRequestDTO, Model model ) { // 서버 -> 화면으로 전달
-        PageResponseDTO<FreeBoardListReplyCountDTO> responseDTO = freeBoardService.listWithReplyCount(pageRequestDTO);
+        PageResponseDTO<FreeBoardReadDTO> responseDTO = freeBoardService.listReadWithReplyCount(pageRequestDTO);
         log.info("pageRequestDTO 의 getLink 조사 : " + pageRequestDTO.getLink());
         model.addAttribute("responseDTO", responseDTO);
 
-        return "freeboard/list";
+        return "free_board/list";
     }
 
     @GetMapping("/register")
     public void register() {
 
     }
+
+    @Member
     @PostMapping("/register")
-    public String registerPost(@Valid FreeBoardDTO freeBoardDTO,
+    public String registerPost(
+            HttpServletRequest request,
+            MemberDTO memberDTO,
+            @Valid FreeBoardDTO freeBoardDTO,
                                BindingResult bindingResult,
                                RedirectAttributes redirectAttributes) {
-        log.info("FoodController register post 로직처리: ");
-        log.info("FoodController register post  foodDTO : " + freeBoardDTO);
-
+        log.info("Free_BoardController register post 로직처리: ");
+        log.info("Free_BoardController register post  foodDTO : " + freeBoardDTO);
         if (bindingResult.hasErrors()) {
-            log.info("has errors : 유효성 에러가 발생함.");
+            log.info("has errors : 유효성 에러가 발생");
 
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "redirect:/freeboard/list";
+            return "redirect:/free_board/list";
         }
+        freeBoardDTO.setMemberNo(memberDTO.getMemberNo());
         //검사가 통과가 되고, 정상 입력
         Long freeBoardNo = freeBoardService.register(freeBoardDTO);
 
         redirectAttributes.addFlashAttribute("result", freeBoardNo);
         redirectAttributes.addFlashAttribute("resultType", "register");
 
-        return "redirect:/freeboard/list";
+        return "redirect:/free_board/list";
 
     }
 

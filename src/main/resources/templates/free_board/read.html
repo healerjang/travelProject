@@ -18,7 +18,7 @@
                     <h5 class="card-title">
                         Board Read
                     </h5>
-                    <form method="post" action="/board/update">
+                    <form method="post" action="/free_board/update">
                         <div class="mb-3">
                             <label for="title" class="form-control">제목</label>
                             <input type="text" class="form-control" id="title" name="title" placeholder="제목을 입력해주세요"
@@ -31,10 +31,10 @@
                                       readonly>[[${dto.content}]]</textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="writer" class="form-control">작성자</label>
-                            <input type="text" class="form-control" id="writer" name="writer"
+                            <label for="member" class="form-control">작성자</label>
+                            <input type="text" class="form-control" id="member" name="member"
                                    placeholder="지금은 직접 작성자를 입력해주세요, 로그인 후 로그인 유저가 자동으로 탑재됨."
-                                   th:value="${dto.writer}" readonly>
+                                   th:value="${dto.member}" readonly>
                         </div>
                         <div class="mb-3">
                             <label for="regDate" class="form-control">등록시간</label>
@@ -48,13 +48,13 @@
                         </div>
                         <div class="mb-3" th:with="link = ${pageRequestDTO.link}">
                             <!--                            수정폼 가기 방법2-->
-                            <a th:href="|@{/board/update}?bno=${dto.bno}&${link}|">
+                            <a th:href="|@{/board/update}?bno=${dto.freeBoardNo}&${link}|">
                                 <!--                    게시글 작성자와 로그인한 유저가 같은 경우에만, 수정하기 버튼 활성화하기.-->
-                                <button type="button" th:if="${user != null && user.Username == dto.writer}"
+                                <button type="button" th:if="${user != null && user.Username == dto.member}"
                                         class="btn btn-primary submitBtn">수정하기
                                 </button>
                             </a>
-                            <a th:href="|@{/board/list}?${link}|">
+                            <a th:href="|@{/free_board/list}?${link}|">
                                 <button type="button" class="btn btn-danger">목록가기</button>
                             </a>
                         </div>
