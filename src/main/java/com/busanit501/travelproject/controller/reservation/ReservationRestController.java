@@ -4,6 +4,7 @@ import com.busanit501.travelproject.annotation.member.Member;
 import com.busanit501.travelproject.domain.common.ReservationOrder;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.reservation.ReservationDTO;
+import com.busanit501.travelproject.dto.reservation.ReservationUserDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
 import com.busanit501.travelproject.service.reservation.ReservationService;
@@ -28,14 +29,12 @@ public class ReservationRestController {
 
     @GetMapping("/userReservation/{reservationOrder}")
     @Member
-    public HcbPageResponseDTO<ReservationDTO> getUserReservation(
-            @CookieValue(value = "memberNoCookie", required = false) String memberNoCookie,
+    public HcbPageResponseDTO<ReservationUserDTO> getUserReservation(
+            @CookieValue(value = "memberNo", required = false) String memberNoCookie,
             HttpServletRequest request, RedirectAttributes redirectAttributes,
             @PathVariable ReservationOrder reservationOrder, HcbPageRequestDTO pageRequestDTO) throws BindException {
         Long memberNo = memberNoCookie != null ? Long.parseLong(memberNoCookie) : null;
-        log.info(memberNo + "쿠키로 들어오는 멤버넘버확인");
-        HcbPageResponseDTO<ReservationDTO> result = reservationService.getReservationUser(memberNo, reservationOrder, pageRequestDTO);
-        log.info(result + "멤버 넘버로 조회한 결과 확인");
+        HcbPageResponseDTO<ReservationUserDTO> result = reservationService.getReservationUser(memberNo, reservationOrder, pageRequestDTO);
         return result;
     }
     //아직 어드민 어소리티 관련 확인 필요

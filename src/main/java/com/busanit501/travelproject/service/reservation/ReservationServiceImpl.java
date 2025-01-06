@@ -9,6 +9,7 @@ import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.member.MemberFullDTO;
 import com.busanit501.travelproject.dto.member.UpdateDTO;
 import com.busanit501.travelproject.dto.reservation.ReservationDTO;
+import com.busanit501.travelproject.dto.reservation.ReservationUserDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
 import com.busanit501.travelproject.repository.ProductJh1Repository;
@@ -77,10 +78,10 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public HcbPageResponseDTO<ReservationDTO> getReservationUser(
+    public HcbPageResponseDTO<ReservationUserDTO> getReservationUser(
             Long memberNo, ReservationOrder reservationOrder, HcbPageRequestDTO hcbPageRequestDTO) {
-        Page<ReservationDTO> result = reservationRepository.selectReservationUser(memberNo, reservationOrder, hcbPageRequestDTO.getPageable("reservationNo"));
-        return HcbPageResponseDTO.<ReservationDTO>builder()
+        Page<ReservationUserDTO> result = reservationRepository.selectReservationUser(memberNo, reservationOrder, hcbPageRequestDTO.getPageable("reservationNo"));
+        return HcbPageResponseDTO.<ReservationUserDTO>builder()
                 .dtoList(result.getContent())
                 .hcbPageRequestDTO(hcbPageRequestDTO)
                 .total((int) result.getTotalElements())
@@ -120,7 +121,6 @@ public class ReservationServiceImpl implements ReservationService {
         int productPrice = productJh1Repository.findProductByProductNo(productNo).orElseThrow().getPrice().intValue();
         if (memberPoint < productPrice) return false;
         member.updateMemberData(UpdateDTO.builder()
-                .memberNo(member.getMemberNo())
                 .memberID(member.getMemberID())
                 .memberPassword(member.getMemberPassword())
                 .memberName(member.getMemberName())
