@@ -2,10 +2,8 @@ package com.busanit501.travelproject.service.freeboard;
 
 
 import com.busanit501.travelproject.domain.FreeBoard;
-import com.busanit501.travelproject.dto.freeboard.FreeBoardDTO;
-import com.busanit501.travelproject.dto.freeboard.FreeBoardListReplyCountDTO;
-import com.busanit501.travelproject.dto.freeboard.PageRequestDTO;
-import com.busanit501.travelproject.dto.freeboard.PageResponseDTO;
+import com.busanit501.travelproject.domain.Member;
+import com.busanit501.travelproject.dto.freeboard.*;
 import com.busanit501.travelproject.repository.freeboard.FreeBoardRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +29,16 @@ public class FreeBoardServiceImpl implements com.busanit501.travelproject.servic
 
     @Override
     public Long register(FreeBoardDTO freeBoardDTO) {
-        FreeBoard freeBoard = modelMapper.map(freeBoardDTO, FreeBoard.class);
+        FreeBoard freeBoard = FreeBoard.builder()
+                .title(freeBoardDTO.getTitle())
+                .content(freeBoardDTO.getContent())
+                .member(Member.builder().memberNo(freeBoardDTO.getMemberNo()).build())
+                .build();
+                //modelMapper.map(freeBoardDTO, FreeBoard.class);
+        // builder. << 객체를 만들기 위한거임
+        // 그래서 FreeBoard << 엔티티 클래스를 들고와서 빌드업 패턴으로 객체로 만들어줌
+        // 왜냐하면 다른 title content 는 전부 문자열로 들어오기 때문에 형태가 같음
+        // 그치만 member 는 memberNo라는 long 으로 받아야 하는데 객체로 되어 있으니까
         Long freeBoardNo = freeBoardRepository.save(freeBoard).getFreeBoardNo();
         return freeBoardNo;
     }
@@ -89,6 +96,24 @@ public class FreeBoardServiceImpl implements com.busanit501.travelproject.servic
 
 
         return PageResponseDTO.<FreeBoardListReplyCountDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(result.getContent())
+                .total((int) result.getTotalElements())
+                .build();
+    }
+
+    @Override
+    public PageResponseDTO<FreeBoardReadDTO> listReadWithReplyCount(PageRequestDTO pageRequestDTO) {
+
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("freeBoardNo");
+
+
+        Page<FreeBoardReadDTO> result = freeBoardRepository.searchReadWithReplyCount(types,keyword,pageable);
+
+
+        return PageResponseDTO.<FreeBoardReadDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(result.getContent())
                 .total((int) result.getTotalElements())

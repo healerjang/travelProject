@@ -3,6 +3,7 @@ package com.busanit501.travelproject.repository.freeboard.search;
 
 import com.busanit501.travelproject.domain.FreeBoard;
 import com.busanit501.travelproject.dto.freeboard.FreeBoardListReplyCountDTO;
+import com.busanit501.travelproject.dto.freeboard.FreeBoardReadDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -23,4 +24,5 @@ public interface FreeBoardSearch {
     // 그래서, 2개의 테이블을 연결 조인(외부조인? 댓글 null 일수도 있기때문에)
     Page<FreeBoardListReplyCountDTO> searchWithReplyCount(String[] types, String keyword, Pageable pageable);
 
+    Page<FreeBoardReadDTO> searchReadWithReplyCount(String[] types, String keyword, Pageable pageable);
 }

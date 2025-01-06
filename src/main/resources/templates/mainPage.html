@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+    <link href="/css/mainPage.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dongle&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header__main">Hello</div>
+        <div class="signContainer">
+            <div id="login" class="dongle-regular">로그인</div>
+            <div id="register" class="dongle-regular">회원가입</div>
+
+        </div>
+        <div class="myPageContainer">
+            <img src="/images/user.png" id="member" alt="" style="height: 70%; margin: 2.5%"/>
+            <img src="/images/shoppingCart.png" id="shoppingCart" alt="" style="height: 70%; margin: 2.5%"/>
+            <img src="/images/airplane.png" id="reservation" alt="" style="height: 70%; margin: 2.5%"/>
+        </div>
+    </header>
+    <div class="searchContainer">
+        <div class="searchChild dongle-regular" id="searchLocation">여행지</div>
+        <div class="searchChild dongle-regular" id="searchStart">출발날짜</div>
+        <div class="searchChild dongle-regular" id="searchEnd">도착날짜</div>
+        <div class="searchIconBox"><img src="/images/search.png" alt=""/></div>
+        <div class="searchLocationContainer searchChildContainer">
+            <div class="countryImageContainer">
+                <div class="countryImageBox" style="background-image: url('/images/country/korea.png');" id="한국"></div>
+                <div class="countryImageBox" style="background-image: url('/images/country/japan.png');" id="일본"></div>
+                <div class="countryImageBox" style="background-image: url('/images/country/europe.png');" id="유럽"></div>
+                <div class="countryImageBox" style="background-image: url('/images/country/china.png');" id="중국"></div>
+                <div class="countryImageBox" style="background-image: url('/images/country/america.png');" id="미국"></div>
+            </div>
+            <div class="countryNameContainer"></div>
+            <div class="locationTagContainer">
+            </div>
+        </div>
+        <div class="searchStartContainer searchChildContainer">
+            <div class="monthTextContainer">
+                <div class="monthTextContainerLeftArrow"><img src="/images/leftArrow.png" alt=""/></div>
+                <div class="monthText" style="height: 100%"></div>
+                <div class="monthTextContainerRightArrow"><img src="/images/rightArrow.png" alt=""/></div>
+            </div>
+            <div class="dateContainer">
+                <div class="dateTextBox">월</div>
+                <div class="dateTextBox">화</div>
+                <div class="dateTextBox">수</div>
+                <div class="dateTextBox">목</div>
+                <div class="dateTextBox">금</div>
+                <div class="dateTextBox">토</div>
+                <div class="dateTextBox">일</div>
+            </div>
+        </div>
+        <div class="searchEndContainer searchChildContainer">
+            <div class="monthTextContainer">
+                <div class="monthTextContainerLeftArrow"><img src="/images/leftArrow.png" alt=""/></div>
+                <div class="monthText" style="height: 100%"></div>
+                <div class="monthTextContainerRightArrow"><img src="/images/rightArrow.png" alt=""/></div>
+            </div>
+            <div class="dateContainer">
+                <div class="dateTextBox">월</div>
+                <div class="dateTextBox">화</div>
+                <div class="dateTextBox">수</div>
+                <div class="dateTextBox">목</div>
+                <div class="dateTextBox">금</div>
+                <div class="dateTextBox">토</div>
+                <div class="dateTextBox">일</div>
+            </div>
+        </div>
+    </div>
+    <div class="imageContainer">
+        <div class="imageBoxContainer">
+            <div class="imageBox">
+                <div class="imageBoxTitle">타이틀</div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="/script/mainPage/search.js" th:inline="javascript"></script>
+<script th:inline="javascript">
+    const member = [[${member}]];
+    const idText = document.getElementById('login');
+    const registerText = document.getElementById('register');
+    const shoppingCartText = document.getElementById('shoppingCart');
+    const reservationText = document.getElementById('reservation');
+    const memberText = document.getElementById('member');
+
+    if (member) {
+        document.querySelector('.signContainer').style.display = 'none';
+        shoppingCartText.addEventListener('click', (e) => {
+            window.location.href = 'shoppingCart?';
+        })
+        reservationText.addEventListener('click', (e) => {
+            window.location.href = 'reservation?';
+        })
+        memberText.addEventListener('click', (e) => {
+            window.location.href = 'member/myPage?';
+        })
+    }
+    else {
+        document.querySelector('.myPageContainer').style.display = 'none';
+        idText.addEventListener('click', (e) => {
+            window.location.href = 'member/login?';
+        })
+        registerText.addEventListener('click', (e) => {
+            window.location.href = 'member/register?';
+        })
+    }
+</script>

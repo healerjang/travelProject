@@ -1,6 +1,7 @@
 package com.busanit501.travelproject.dto.freeboard;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,8 +23,8 @@ public class FreeBoardDTO {
     @NotEmpty
     private  String content;
 
-    @NotEmpty
-    private  String member;
+//    @NotNull
+    private long memberNo;
     private LocalDateTime regDate;
     private LocalDateTime modDate;
 }

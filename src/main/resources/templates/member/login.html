@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link href="/css/login.css" rel="stylesheet">
+    <link href="/css/member/login.css" rel="stylesheet">
 </head>
 
 <body>
@@ -42,11 +42,11 @@
             </div>
         </div>
     </div>
-    <script src="/script/login.js" th:inline="javascript"></script>
+    <script src="/script/member/login.js" th:inline="javascript"></script>
 </div>
 </body>
 <script th:inline="javascript">
     const login = [[${login}]]
-    if (login == "login") container.classList.remove("right-panel-active");
+    if (login === "login") container.classList.remove("right-panel-active");
 </script>
 </html>

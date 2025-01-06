@@ -16,8 +16,9 @@ public class UpdateDTO {
     private String memberName;
     private String memberEmail;
     private String memberPhone;
+    private Integer memberPoints;
 
     public boolean isData() {
-        return memberID != null && !memberID.isEmpty() && memberName != null && !memberName.isEmpty() && memberEmail != null && !memberEmail.isEmpty() && memberPhone != null && !memberPhone.isEmpty();
+        return memberID != null && !memberID.isEmpty() && memberName != null && !memberName.isEmpty() && memberEmail != null && !memberEmail.isEmpty() && memberPhone != null && !memberPhone.isEmpty() && memberPoints != null;
     }
 }
