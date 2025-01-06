@@ -23,7 +23,7 @@ public class PageRequestDTO {
     @Builder.Default
     private int size=10;
 
-    private String type; // "t", "c", "w", "tc", "tcw"
+    private String type;
     private String keyword;
 
     private String link;
@@ -32,12 +32,11 @@ public class PageRequestDTO {
         if (type == null || type.isEmpty()) {
             return null;
         }
-        // type = "tcw", ->getTypes -> ={"t","c","w"}
+
         return type.split("");
     }
 
-    // 검색시, 키워드 조건 이용해서 페이징 처리
-    // ...props -> 가변 인자, 여러개의 매개변수를 받을수 있음.
+
     public Pageable getPageable(String ...props) {
         Pageable pageable = PageRequest.of(this.page-1,
                 this.size,
@@ -61,12 +60,11 @@ public class PageRequestDTO {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-//                오류수정
-//                link = builder.toString();
-            } //if
+
+            }
 
             link = builder.toString();
-        } //if
+        }
         return link;
     }
 

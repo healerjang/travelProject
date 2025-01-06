@@ -134,7 +134,7 @@ public class FreeBoardSearchImpl extends QuerydslRepositorySupport
                         freeBoard.freeBoardNo,
                         freeBoard.title,
                         freeBoard.content,
-                        freeBoard.member,
+                        freeBoard.member.memberID,
                         freeBoard.regDate,
                         reply.count().as("replyCount")));
 
