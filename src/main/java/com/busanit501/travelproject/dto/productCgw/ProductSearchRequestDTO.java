@@ -15,11 +15,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @SuperBuilder
 public class ProductSearchRequestDTO extends PageRequestDTO {
-    private long locationNo;
+    private Long locationNo;
     private LocalDate startDate;
     private LocalDate endDate;
 
     public String getKeywordLink() {
         return "locationNo=" + locationNo + "&startDate=" + startDate + "&endDate=" + endDate;
+    }
+
+    public boolean isData() {
+        return locationNo != null || startDate != null || endDate != null;
     }
 }

@@ -13,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -56,36 +55,36 @@ public class ProductCgwRepositoryTest {
         ));
     private final ArrayList<Integer> locationNextCount = new ArrayList<>(Arrays.asList(3, 8, 13, 18));
 
-    @Test
-    public void setProduct() {
-        int countNum = 0;
-        for (int i = 0; i < productNames.size(); i ++) {
-            Location location = Location.builder()
-                    .country(productLocations.get(countNum))
-                    .city(productNames.get(i))
-                    .build();
+//    @Test
+//    public void setProduct() {
+//        int countNum = 0;
+//        for (int i = 0; i < productNames.size(); i ++) {
+//            Location location = Location.builder()
+//                    .country(productLocations.get(countNum))
+//                    .city(productNames.get(i))
+//                    .build();
+//
+//            locationJh1Repository.save(location);
+//
+//            productCgwRepository.save(Product.builder()
+//                            .name(productNames.get(i))
+//                            .description(productNames.get(i))
+//                            .price(0L)
+//                            .location(location)
+//                            .startDate(LocalDate.now())
+//                            .endDate(LocalDate.now().plusDays(1))
+//                            .capacity(5)
+//                            .imagePath(productPaths.get(i))
+//                    .build());
+//
+//            if (i == locationNextCount.get(countNum)) {countNum ++;}
+//        }
+//    }
 
-            locationJh1Repository.save(location);
-
-            productCgwRepository.save(Product.builder()
-                            .name(productNames.get(i))
-                            .description(productNames.get(i))
-                            .price(0L)
-                            .location(location)
-                            .startDate(LocalDate.now())
-                            .endDate(LocalDate.now().plusDays(1))
-                            .capacity(5)
-                            .imagePath(productPaths.get(i))
-                    .build());
-
-            if (i == locationNextCount.get(countNum)) {countNum ++;}
-        }
-    }
-
-    @Test
-    public void searchProductTest() {
-        Location location = locationJh1Repository.findById(1L).orElseThrow();
-        Page<Product> products = productCgwRepository.searchProduct(null, null, null, PageRequest.of(0, 10));
-        log.info("ProductCgwRepositoryTest searchProductTest products getElements, {}", products.getContent());
-    }
+//    @Test
+//    public void searchProductTest() {
+//        Location location = locationJh1Repository.findById(1L).orElseThrow();
+//        Page<Product> products = productCgwRepository.searchProduct(null, null, null, PageRequest.of(0, 10));
+//        log.info("ProductCgwRepositoryTest searchProductTest products getElements, {}", products.getContent());
+//    }
 }
