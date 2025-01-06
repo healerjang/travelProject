@@ -14,12 +14,6 @@ let dateTypeYearNow = now.getFullYear();
 let dateTypeMonthNow = now.getMonth() + 1;
 const selectStart = { current: null };
 const selectEnd = { current: null };
-let startMonthUpdateValue = 0;
-let endMonthUpdateValue = 0;
-const startContainLeftImage = searchStartContainer.querySelector('.monthTextContainerLeftArrow');
-const startContainRightImage = searchStartContainer.querySelector('.monthTextContainerRightArrow');
-const endContainLeftImage = searchEndContainer.querySelector('.monthTextContainerLeftArrow');
-const endContainRightImage = searchEndContainer.querySelector('.monthTextContainerRightArrow');
 let startContainSetting = false;
 let endContainSetting = false;
 const searchImageIcon = document.querySelector('.searchIconBox').querySelector('img');
@@ -66,7 +60,6 @@ for (const countryImage of countryImages) {
                 selectLocationTag.style.color = 'white';
             })
         }
-        scrollDown()
     })
 }
 
@@ -74,7 +67,6 @@ searchLocation.addEventListener('click', (e) => {
     if (viewSearch != null) viewSearch.style.display = 'none';
     searchLocationContainer.style.display = 'flex';
     viewSearch = searchLocationContainer;
-    scrollDown()
 })
 searchStart.addEventListener('click', (e) => {
     if (viewSearch != null) viewSearch.style.display = 'none';
@@ -84,7 +76,6 @@ searchStart.addEventListener('click', (e) => {
         addDateNum(searchStartContainer, dateTypeYearNow, dateTypeMonthNow, selectStart);
         startContainSetting = true;
     }
-    scrollDown()
 })
 searchEnd.addEventListener('click', (e) => {
     if (viewSearch != null) viewSearch.style.display = 'none';
@@ -94,46 +85,7 @@ searchEnd.addEventListener('click', (e) => {
         addDateNum(searchEndContainer, dateTypeYearNow, dateTypeMonthNow, selectEnd);
         endContainSetting = true;
     }
-    scrollDown()
 })
-
-startContainLeftImage.addEventListener('click', (e) => {
-    if (startMonthUpdateValue > 0) {
-        startMonthUpdateValue--;
-        const dateTypeYear = Math.trunc(startMonthUpdateValue / 12)
-        const dateTypeMonth = startMonthUpdateValue % 12;
-        addDateNum(searchStartContainer, dateTypeYearNow + dateTypeYear, dateTypeMonthNow + dateTypeMonth, selectStart)
-    }
-})
-
-startContainRightImage.addEventListener('click', (e) => {
-    startMonthUpdateValue ++;
-    const dateTypeYear = Math.trunc(startMonthUpdateValue / 12)
-    const dateTypeMonth = startMonthUpdateValue % 12;
-    addDateNum(searchStartContainer, dateTypeYearNow + dateTypeYear, dateTypeMonthNow + dateTypeMonth, selectStart)
-})
-
-endContainLeftImage.addEventListener('click', (e) => {
-    if (endMonthUpdateValue > 0) {
-        endMonthUpdateValue--;
-        const dateTypeYear = Math.trunc(endMonthUpdateValue / 12)
-        const dateTypeMonth = endMonthUpdateValue % 12;
-        addDateNum(searchEndContainer, dateTypeYearNow + dateTypeYear, dateTypeMonthNow + dateTypeMonth, selectEnd)
-    }
-})
-
-endContainRightImage.addEventListener('click', (e) => {
-    endMonthUpdateValue++;
-    const dateTypeYear = Math.trunc(endMonthUpdateValue / 12)
-    const dateTypeMonth = endMonthUpdateValue % 12;
-    addDateNum(searchEndContainer, dateTypeYearNow + dateTypeYear, dateTypeMonthNow + dateTypeMonth, selectEnd)
-})
-
-function scrollDown() {
-    window.scrollTo({
-        top: 1000, behavior:"smooth"
-    })
-}
 
 function addDateNum(searchDateContainer, dateTypeYear, dateTypeMonth, selectDate) {
     const monthTextContainer = searchDateContainer.querySelector('.monthTextContainer');
