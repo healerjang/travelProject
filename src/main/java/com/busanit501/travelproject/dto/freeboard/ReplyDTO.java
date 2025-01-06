@@ -15,10 +15,10 @@ import java.time.LocalDateTime;
 @Builder
 public class ReplyDTO {
 
-    private Long replyNo;// 댓글의 구분 번호,
+    private Long replyNo;
 
     @NotNull
-    private Long freeBoardNo; // 부모의 게시글 번호,
+    private Long freeBoardNo;
 
     @NotEmpty
     private String replyText;

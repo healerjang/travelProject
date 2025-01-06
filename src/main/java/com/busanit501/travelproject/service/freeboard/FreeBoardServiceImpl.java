@@ -25,10 +25,8 @@ import java.util.stream.Collectors;
 @Transactional
 public class FreeBoardServiceImpl implements com.busanit501.travelproject.service.freeboard.FreeBoardService {
 
-    //맵퍼에게 의존 해야함.
-    // 디비 작업 도구,
+
     private final FreeBoardRepository freeBoardRepository;
-    // DTO <-> Entity class
     private final ModelMapper modelMapper;
 
     @Override
@@ -66,9 +64,6 @@ public class FreeBoardServiceImpl implements com.busanit501.travelproject.servic
         Pageable pageable = pageRequestDTO.getPageable("freeBoaredNo");
 
         Page<FreeBoard> result = freeBoardRepository.searchAll(types, keyword, pageable);
-        // list -> PageResponseDTO 타입으로 변경 필요.
-
-        // result.getContent() -> 페이징된 엔티티 클래스 목록
         List<FreeBoardDTO> dtoList = result.getContent().stream()
                 .map(freeBoard -> modelMapper.map(freeBoard, FreeBoardDTO.class))
                 .collect(Collectors.toList());
@@ -80,7 +75,7 @@ public class FreeBoardServiceImpl implements com.busanit501.travelproject.servic
                 .total((int) result.getTotalElements())
                 .build();
 
-    } // list
+    }
 
     @Override
     public PageResponseDTO<FreeBoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO) {
@@ -89,7 +84,7 @@ public class FreeBoardServiceImpl implements com.busanit501.travelproject.servic
         String keyword = pageRequestDTO.getKeyword();
         Pageable pageable = pageRequestDTO.getPageable("freeBoardNo");
 
-        // 수정1
+
         Page<FreeBoardListReplyCountDTO> result = freeBoardRepository.searchWithReplyCount(types,keyword,pageable);
 
 
