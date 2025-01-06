@@ -21,7 +21,7 @@ function createPagination(start, end, currentPage,  link, size) {
     const anchor = document.createElement('a')
     anchor.textContent = i
     anchor.classList.add('page-link')
-    anchor.href = link + `?page=${i}&sze=${size}`
+    anchor.href = link + `?page=${i}&size=${size}`
     li.append(anchor)
     ul.append(li)
   }
