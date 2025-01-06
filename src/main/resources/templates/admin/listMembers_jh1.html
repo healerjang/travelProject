@@ -36,7 +36,6 @@
     const page = /*[[${requestDTO.page}]]*/ 0;
     const size = /*[[${requestDTO.size}]]*/ 0;
 
-
     function createMemberItem(memberNo, name, email, phone, points) {
       return _el('tr',
         _el('td', memberNo),
@@ -48,7 +47,7 @@
     }
 
     (async () => {
-      const response = await axios.get('/api/member/list?' + `page=${page}&size=${size}`);
+      const response = await axios.get('/api/member/list' + `?page=${page}&size=${size}`);
       const {data} = response;
       const tbody = document.querySelector('table.table').tBodies[0]
       for (const member of data.dtoList) {

@@ -20,7 +20,7 @@ public class PageRequestJh1DTO {
     private int page = 1;
 
     @Builder.Default
-    private int size = 10;
+    private int size = 20;
 
     public String getPageLink() {
         return "page=" + page + "&size=" + size;
