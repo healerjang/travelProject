@@ -1,13 +1,12 @@
 package com.busanit501.travelproject.repository.reservation;
 
-import com.busanit501.travelproject.domain.Product;
-import com.busanit501.travelproject.domain.QMember;
-import com.busanit501.travelproject.domain.QReservation;
-import com.busanit501.travelproject.domain.Reservation;
+import com.busanit501.travelproject.domain.*;
 import com.busanit501.travelproject.domain.common.ReservationOrder;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.reservation.ReservationDTO;
+import com.busanit501.travelproject.dto.reservation.ReservationUserDTO;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import lombok.extern.log4j.Log4j2;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -28,7 +28,7 @@ public class ReservationByOrderRepositoryImpl extends QuerydslRepositorySupport 
     }
 
     @Override
-    public Page<ReservationDTO> selectReservationUser(Long memberNo, ReservationOrder reservationOrder, Pageable pageable) {
+    public Page<ReservationUserDTO> selectReservationUser(Long memberNo, ReservationOrder reservationOrder, Pageable pageable) {
         QReservation reservation = QReservation.reservation;
         JPQLQuery<Reservation> query = from(reservation);
         BooleanBuilder booleanBuilder = new BooleanBuilder();
@@ -36,17 +36,45 @@ public class ReservationByOrderRepositoryImpl extends QuerydslRepositorySupport 
         booleanBuilder.and(reservation.reservationOrder.eq(reservationOrder));
         query.where(booleanBuilder);
         query.orderBy(reservation.reservationNo.desc());
-        JPQLQuery<ReservationDTO> dtoQuery = query.select(Projections.bean(ReservationDTO.class,
-                reservation.reservationNo,
-                reservation.product.productNo,
+        this.getQuerydsl().applyPagination(pageable, query);
+        JPQLQuery<Tuple> tupleQuery = query.select(
+                reservation,
                 reservation.member.memberNo,
-                reservation.reservationOrder
-                //regDate, modDate 생략
-        ));
-        this.getQuerydsl().applyPagination(pageable, dtoQuery);
-        List<ReservationDTO> reservationList = dtoQuery.fetch();
-        long total = dtoQuery.fetchCount();
-        return new PageImpl<>(reservationList, pageable, total);
+                reservation.product.name,
+                reservation.product.description,
+                reservation.product.price,
+                reservation.product.startDate,
+                reservation.product.endDate,
+                reservation.product.location.country,
+                reservation.product.location.city
+        );
+        List<Tuple> tupleList = tupleQuery.fetch();
+        List<ReservationUserDTO> dtoList = tupleList.stream().map(tuple -> {
+           Reservation reservation1 = tuple.get(0, Reservation.class);
+           Long memberNo1 = tuple.get(1, Long.class);
+           String productName = tuple.get(2, String.class);
+           String productDescription = tuple.get(3, String.class);
+           Long productPrice = tuple.get(4, Long.class);
+           LocalDate productStartDate = tuple.get(5, LocalDate.class);
+           LocalDate productEndDate = tuple.get(6, LocalDate.class);
+           String productLocationCountry = tuple.get(7, String.class);
+           String productLocationCity = tuple.get(8, String.class);
+           ReservationUserDTO reservationUserDTO = ReservationUserDTO.builder()
+                   .reservationNo(reservation1.getReservationNo())
+                   .memberNo(memberNo1)
+                   .productName(productName)
+                   .productDescription(productDescription)
+                   .productPrice(productPrice)
+                   .productStartDate(productStartDate)
+                   .productEndDate(productEndDate)
+                   .productLocationCountry(productLocationCountry)
+                   .productLocationCity(productLocationCity)
+                   .ReservationOrder(reservation1.getReservationOrder())
+                   .build();
+           return reservationUserDTO;
+        }).collect(Collectors.toList());
+        long total = query.fetchCount();
+        return new PageImpl<>(dtoList, pageable, total);
     }
 
     @Override
