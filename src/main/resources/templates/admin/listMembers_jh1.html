@@ -22,16 +22,49 @@
         <th>Phone</th>
       </tr>
       </thead>
-      <tbody>
-        <tr th:each="member : ${membersDTO.dtoList}">
-          <td th:text="${member.memberNo}"></td>
-          <td><a th:href="@{'/admin/member/view/' + ${member.memberNo}}" th:text="${member.memberName}"></a></td>
-          <td th:text="${member.memberEmail}"></td>
-          <td th:text="${member.memberPhone}"></td>
-        </tr>
-      </tbody>
+      <tbody></tbody>
     </table>
+    <nav id="PaginationHere"></nav>
   </div>
 </div>
+<th:block layout:fragment="scripts">
+  <script th:src="@{/script/pagination.js}"></script>
+  <script th:inline="javascript">
+
+    const page = /*[[${requestDTO.page}]]*/ 0;
+    const size = /*[[${requestDTO.size}]]*/ 0;
+
+    function _el (tagName, text = undefined) {
+      const el = document.createElement(tagName);
+      if (text) el.appendChild(document.createTextNode(text));
+      return el;
+    }
+
+    function createMemberMenuItem(no, name, email, phone) {
+      const tr = _el('tr');
+      const memberNo = _el('td', no)
+      const memberNameAnchor = _el('a', name)
+      memberNameAnchor.href = '/admin/member/view/' + no;
+      const memberName = _el('td')
+      memberName.append(memberNameAnchor);
+      const memberEmail = _el('td', email);
+      const memberPhone = _el('td', phone);
+      tr.append(memberNo, memberName, memberEmail, memberPhone);
+      return tr;
+    }
+
+    (async() => {
+      const response = await axios.get('/api/member/list?'+`page=${page}&size=${size}`);
+      const { data } = response;
+      const tbody = document.querySelector('table.table').tBodies[0]
+      for (const member of data.dtoList) {
+        tbody.appendChild(createMemberMenuItem(member.memberNo, member.memberName, member.memberEmail, member.memberPhone));
+      }
+      document.querySelector('#PaginationHere').appendChild(
+        createPagination(data.start, data.end, page, '/admin/member/list', size)
+      );
+    })()
+  </script>
+</th:block>
 </body>
 </html>

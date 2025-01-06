@@ -16,6 +16,8 @@ function createPagination(start, end, currentPage,  link, size) {
     const li = document.createElement('li')
     li.classList.add('page-item')
 
+    if (i === currentPage) li.classList.add('active')
+
     const anchor = document.createElement('a')
     anchor.textContent = i
     anchor.classList.add('page-link')
