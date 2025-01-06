@@ -54,6 +54,13 @@ public class AdminJh1RestController {
     return ResponseEntity.ok().body(Map.of("success", true, "productNo", productNo));
   }
 
+  @PutMapping("/api/product")
+  public ResponseEntity<Map<String, Object>> updateProduct(@RequestBody ProductJh1DTO dto) {
+    return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(Map.of("success", false, "message", "Not implemented!"));
+  }
+
+
+
   @GetMapping("/api/member/list")
   public ResponseEntity<PageResponseJh1DTO<MemberDTO>> listMembers(PageRequestJh1DTO requestDTO) {
     PageResponseJh1DTO<MemberDTO> membersDTO = adminService.listMembers(requestDTO);

@@ -97,6 +97,8 @@
 <th:block layout:fragment="scripts">
   <script th:src="@{/script/admin/admin-common.js}"></script>
   <script th:inline="javascript">
+    const productDTO = /*[[${productDTO}]]*/ null;
+
     /** @type {HTMLSelectElement} */
     const countrySelect = document.getElementById("travelCountry");
 
@@ -148,6 +150,28 @@
       }
     }
 
+    async function registerProduct(productName, productDescription, productPrice, startDate, endDate, productCapacity, locationNo) {
+      try {
+        const response = await axios.post('/api/product', {
+          name: productName,
+          description: productDescription,
+          price: productPrice,
+          startDate: startDate,
+          endDate: endDate,
+          capacity: productCapacity,
+          locationNo: locationNo,
+        })
+        const data = response.data;
+        if (data.success) {
+          window.alert("여행상품이 등록되었습니다.")
+          window.location.reload();
+        }
+      } catch (error) {
+        window.alert(error);
+        console.error(error);
+      }
+    }
+
     /* 국가를 선택했을 때, 해당 국가에 속해 있는 등록된 여행지 도시가 select에 나타나도록 실제로 이벤트 리스너를 등록함 */
     countrySelect.addEventListener("change", e => {
       const countryName = countrySelect.selectedOptions[0].text
@@ -164,11 +188,27 @@
       })
     })
 
+    document.getElementById("registerProductButton").addEventListener("click", () => {
+      if (productDTO == null) {
+        // 등록하기
+        registerProduct(
+          document.getElementById("productName").value,
+          document.getElementById("productDescription").value,
+          document.getElementById("productPrice").value,
+          document.getElementById("startDate").value,
+          document.getElementById("endDate").value,
+          document.getElementById("productCapacity").value,
+          document.getElementById("travelCity").value
+        )
+      } else {
+
+      }
+    })
+
 
 
     loadLocations().then(() => {
 
-      const productDTO = /*[[${productDTO}]]*/ null;
       if (productDTO != null) {
 
         function assignInputValue(id, val) {
