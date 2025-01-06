@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/bootstrap_member_yu.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Detail</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="container mt-4">
+        <!-- Product Image Section -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <img class="card-img-top" th:src="${product.imagePath}" alt="Product Image" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Details Section -->
+        <div class="row">
+            <div class="col-md-8">
+                <h2 th:text="${product.name}"></h2>
+                <p class="text-muted" th:text="${product.description}"></p>
+            </div>
+            <div class="col-md-4 text-end">
+                <h3 class="text-primary" th:text="'₩ ' + ${product.price}"></h3>
+            </div>
+        </div>
+
+        <!-- Review Section -->
+        <div class="reviews mt-4">
+            <h3>리뷰</h3>
+            <ul>
+                <li th:each="review : ${reviews}">
+                    <p th:text="${review.reviewContent}"></p>
+                    <small>Rating: <span th:text="${review.rating}"></span></small>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Add Review Section -->
+        <div class="add-review mt-4">
+            <h3>리뷰 작성</h3>
+            <form id="reviewForm">
+                <textarea id="reviewContent" class="form-control mb-2" placeholder="Write your review"></textarea>
+                <input type="number" id="rating" class="form-control mb-2" min="1" max="5" placeholder="Rating (1-5)">
+                <button type="button" class="btn btn-primary" onclick="submitReview()">등록하기</button>
+            </form>
+        </div>
+
+        <!-- Actions Section -->
+        <div class="row mt-4">
+            <div class="col-md-4 offset-md-8">
+                <button class="btn btn-primary w-100 mb-2" th:onclick="|window.location.href='@{/reservation/' + ${product.productNo}}'|">예약하기</button>
+                <button class="btn btn-secondary w-100" th:onclick="|window.location.href='@{/cart/add/' + ${product.productNo}}'|">장바구니에 추가</button>
+            </div>
+        </div>
+    </div>
+</th:block>
+<script>
+    function submitReview() {
+        const review = {
+            reviewContent: document.getElementById('reviewContent').value,
+            rating: document.getElementById('rating').value,
+            productNo: /* Replace with product ID */,
+            memberNo: /* Replace with member ID */,
+        };
+
+        fetch('/review/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(review),
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert('리뷰가 성공적으로 등록되었습니다.');
+                location.reload();
+            })
+            .catch(error => {
+                console.error('리뷰 등록 중 오류 발생:', error);
+                alert('리뷰 등록 실패. 다시 시도해주세요.');
+            });
+    }
+</script>
+</body>
+</html>

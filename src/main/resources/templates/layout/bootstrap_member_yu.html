@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/customize/bootstrap.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title layout:title-pattern="$CONTENT_TITLE :: $LAYOUT_TITLE">Travel</title>
+</head>
+<body>
+<nav class="navbar navbar-expand bg-body-tertiary sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand mb-0 h1" th:href="@{/}" th:text="Travel"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="ms-auto">
+                <a class="btn btn-outline-primary me-2" th:href="@{/}">메인페이지</a>
+                <a class="btn btn-outline-primary me-2" th:href="@{/mypage}">마이페이지</a>
+                <a class="btn btn-outline-primary me-2" th:href="@{/cart}">마이 장바구니</a>
+                <a class="btn btn-outline-primary" th:href="@{/reservations}">마이 예약페이지</a>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <!-- 본문 컨텐츠 삽입 -->
+    <th:block layout:fragment="content"></th:block>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</body>
+</html>
