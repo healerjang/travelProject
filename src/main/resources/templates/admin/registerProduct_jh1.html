@@ -230,7 +230,7 @@
 
     /** 서버에 있는 `imagePath`를 이미지 값으로 설정한다. */
     function setImagePath(imagePath) {
-      if (imagePath != undefined) {
+      if (!!imagePath) {
         assignInputValue("imagePath", imagePath);
         document.getElementById("imagePreview").src = '/productImage/' + imagePath;
         document.getElementById("imagePathView").innerText = imagePath;
