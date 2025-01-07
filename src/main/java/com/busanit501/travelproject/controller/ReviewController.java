@@ -18,7 +18,9 @@ public class ReviewController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ReviewJh1DTO> addReview(@RequestBody ReviewJh1DTO reviewDto) {
+    public ResponseEntity<ReviewJh1DTO> addReview(@CookieValue(value = "memberNo", required = false) String memberNoCookie , @RequestBody ReviewJh1DTO reviewDto) {
+        Long memberNo = memberNoCookie == null ? null : Long.parseLong(memberNoCookie);
+        reviewDto.setMemberNo(memberNo);
         try {
             ReviewJh1DTO savedReview = reviewService.addReview(reviewDto);
             return ResponseEntity.ok(savedReview);
