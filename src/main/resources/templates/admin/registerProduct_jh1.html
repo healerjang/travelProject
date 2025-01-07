@@ -35,9 +35,14 @@
     </div>
   </div>
   <div class="container">
-    <h1>여행상품 상세관리</h1>
+    <div class="text-center py-3">
+      <h1>여행상품 상세관리</h1>
+    </div>
     <section>
       <div class="card mb-3">
+        <div class="card-header">
+          상품 상세정보 편집
+        </div>
         <div class="card-body">
           <div class="input-group mb-2">
             <label for="productName" class="input-group-text">상품명</label>
@@ -111,13 +116,25 @@
       <div class="card-header">
         상품 예약 목록
       </div>
-      <div class="card-body"></div>
+      <div class="list-group list-group-flush">
+        <div th:each="reservation : ${productDTO.reservations}" class="list-group-item">
+          <a th:href="@{'/admin/member/view/' + ${reservation.memberNo}}" th:text="${reservation.memberName}"></a> 님이 예약했습니다.
+        </div>
+      </div>
     </div>
     <div class="card mb-3" th:if="${!#lists.isEmpty(productDTO.reviews)}">
       <div class="card-header">
         상품 리뷰 목록
       </div>
-      <div class="card-body"></div>
+      <div class="list-group list-group-flush">
+        <div th:each="review : ${productDTO.reviews}" class="list-group-item">
+          <div>
+            <a th:href="@{'/admin/member/view/' + ${review.memberNo}}" th:text="${review.memberName}"></a> 님의 리뷰
+            (<span th:text="${review.rating}" />)
+          </div>
+          <div th:text="${review.reviewContent}"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -338,7 +355,6 @@
       )
     })
 
-    // 수정할 경우에 한함
     assignInputValue("productName", productDTO.name)
     assignInputValue("productDescription", productDTO.description)
     assignInputValue("productPrice", productDTO.price)

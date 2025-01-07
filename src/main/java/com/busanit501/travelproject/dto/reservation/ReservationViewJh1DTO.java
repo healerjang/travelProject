@@ -21,9 +21,17 @@ import java.time.LocalDateTime;
 @ToString
 public class ReservationViewJh1DTO {
     private Long reservationNo;
+
     private Long memberNo;
+
+    /** 표시용 회원 이름. null 가능*/
+    private String memberName;
+
     private Long productNo;
+    /** 표시용 상품명. null 가능 */
     private String productName;
+
+
     @Builder.Default
     private ReservationOrder ReservationOrder = com.busanit501.travelproject.domain.common.ReservationOrder.PENDING;
 

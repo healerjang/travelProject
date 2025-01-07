@@ -68,11 +68,19 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
     return result.getProductNo();
   }
 
+  @Deprecated
   @Override
   public ProductJh1DTO getProductTmp(Long id) {
     Product product = productRepo.findById(id).orElseThrow();
     return productEntityToDTO(product);
   }
+
+  @Override
+  public ProductJh1DTO getProductCompact(Long id) {
+    Product product = productRepo.findById(id).orElseThrow();
+    return productEntityToDTO(product);
+  }
+
 
   @Override
   @Transactional

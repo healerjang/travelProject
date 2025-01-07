@@ -4,7 +4,6 @@ import com.busanit501.travelproject.domain.*;
 import com.busanit501.travelproject.dto.*;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.member.MemberFullDTO;
-import com.busanit501.travelproject.dto.reservation.ReservationDTO;
 import com.busanit501.travelproject.dto.reservation.ReservationViewJh1DTO;
 import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
 import com.busanit501.travelproject.dto.util.PageResponseJh1DTO;
@@ -22,12 +21,16 @@ public interface AdminJh1Service {
       .build();
   }
 
-  default ReservationDTO reservationToDTO(Reservation reservation) {
-    return ReservationDTO.builder()
-      .reservationNo(reservation.getReservationNo())
-      .memberNo(reservation.getMember().getMemberNo())
-      .productNo(reservation.getProduct().getProductNo())
-      .ReservationOrder(reservation.getReservationOrder())
+  default ReservationViewJh1DTO reservationToViewDTO(Reservation r) {
+    return ReservationViewJh1DTO.builder()
+      .reservationNo(r.getReservationNo())
+      .memberNo(r.getMember().getMemberNo())
+      .memberName(r.getMember().getMemberName())
+      .productNo(r.getProduct().getProductNo())
+      .productName(r.getProduct().getName())
+      .ReservationOrder(r.getReservationOrder())
+      .regDate(r.getRegDate())
+      .modDate(r.getModDate())
       .build();
   }
 
@@ -39,6 +42,7 @@ public interface AdminJh1Service {
       .productNo(review.getProduct().getProductNo())
       .productName(review.getProduct().getName())
       .memberNo(review.getMember().getMemberNo())
+      .memberName(review.getMember().getMemberName())
       .regDate(review.getRegDate())
       .modDate(review.getModDate())
       .build();
@@ -74,7 +78,7 @@ public interface AdminJh1Service {
 
   default ProductJh1DTO productToFullDTO(Product product) {
     ProductJh1DTO dto = productEntityToDTO(product);
-    List<ReservationDTO> reservationDTOList = product.getReservations().stream().map(this::reservationToDTO).toList();
+    List<ReservationViewJh1DTO> reservationDTOList = product.getReservations().stream().map(this::reservationToViewDTO).toList();
     List<ReviewJh1DTO> reviewDTOList = product.getReviews().stream().map(this::reviewToDTO).toList();
     dto.setReservations(reservationDTOList);
     dto.setReviews(reviewDTOList);
@@ -100,6 +104,7 @@ public interface AdminJh1Service {
       r -> ReservationViewJh1DTO.builder()
         .reservationNo(r.getReservationNo())
         .memberNo(member.getMemberNo())
+        .memberName(member.getMemberName())
         .productNo(r.getProduct().getProductNo())
         .productName(r.getProduct().getName())
         .ReservationOrder(r.getReservationOrder())
@@ -144,7 +149,11 @@ public interface AdminJh1Service {
   @Transactional
   Long registerProduct(ProductJh1DTO dto);
 
+  /** getProductCompact를 쓰시오 */
+  @Deprecated
   ProductJh1DTO getProductTmp(Long id);
+
+  ProductJh1DTO getProductCompact(Long id);
 
   ProductJh1DTO getProductFull(Long id);
 

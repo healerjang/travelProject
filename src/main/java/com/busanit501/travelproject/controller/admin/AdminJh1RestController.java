@@ -37,7 +37,7 @@ public class AdminJh1RestController {
 
   @GetMapping("/product/{productNo}")
   public ResponseEntity<ProductJh1DTO> getProductById(@PathVariable("productNo") Long productNo) {
-    ProductJh1DTO productDTO = adminService.getProductTmp(productNo);
+    ProductJh1DTO productDTO = adminService.getProductCompact(productNo);
     return ResponseEntity.ok().body(productDTO);
   }
 

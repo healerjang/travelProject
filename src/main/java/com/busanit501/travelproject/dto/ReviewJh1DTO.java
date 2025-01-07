@@ -19,9 +19,19 @@ public class ReviewJh1DTO {
   private Long reviewNo;
   private String reviewContent;
   private int rating;
+
+
   private Long productNo;
+
+  /** 페이지 표시용 상품명. null이 될 수도 있음 */
   private String productName;
+
+
+
   private Long memberNo;
+
+  /** 페이지 표시용 회원이름. null이 될 수도 있음 */
+  private String memberName;
 
   private LocalDateTime regDate;
   private LocalDateTime modDate;

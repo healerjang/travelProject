@@ -44,8 +44,8 @@ public class AdminJh1Controller {
 
   @GetMapping("/product/edit/{productNo}")
   public String editProduct(@PathVariable("productNo") @ModelAttribute("productNo") Long productNo, Model model) {
-//    ProductJh1DTO productDTO = adminService.getProductCompact(productNo);
     ProductJh1DTO productDTO = adminService.getProductFull(productNo);
+    log.info("productDTO: {}", productDTO);
     model.addAttribute("productDTO", productDTO);
     return "admin/registerProduct_jh1";
   }

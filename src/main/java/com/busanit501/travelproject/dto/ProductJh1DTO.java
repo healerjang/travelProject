@@ -1,6 +1,7 @@
 package com.busanit501.travelproject.dto;
 
 import com.busanit501.travelproject.dto.reservation.ReservationDTO;
+import com.busanit501.travelproject.dto.reservation.ReservationViewJh1DTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -38,7 +39,7 @@ public class ProductJh1DTO {
   private LocalDate endDate;
   private int capacity;
   private String imagePath;
-  private List<ReservationDTO> reservations;
+  private List<ReservationViewJh1DTO> reservations;
   private List<ReviewJh1DTO> reviews;
 
   @JsonProperty("until")
