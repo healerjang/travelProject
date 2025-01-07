@@ -90,6 +90,7 @@ public class MemberController {
             return "redirect:/mainPage";
         }
         model.addAttribute("memberDTO", memberDTO);
+        log.info("MemberController myPage memberDTO : {}", memberDTO);
         return "/member/myPage";
     }
 

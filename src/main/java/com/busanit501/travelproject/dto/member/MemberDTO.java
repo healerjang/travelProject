@@ -1,9 +1,7 @@
 package com.busanit501.travelproject.dto.member;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.busanit501.travelproject.service.member.ResponseLogin;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +9,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class MemberDTO {
     private long memberNo;
     private String memberID;
@@ -22,4 +21,5 @@ public class MemberDTO {
     private String memberUUID;
     private LocalDateTime regDate;
     private LocalDateTime modDate;
+    private ResponseLogin responseLogin;
 }
