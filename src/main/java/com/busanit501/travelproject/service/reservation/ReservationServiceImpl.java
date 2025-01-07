@@ -72,6 +72,27 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
+    public boolean refundReservation(Long reservationNo) {
+        Reservation reservation = reservationRepository.findById(reservationNo).orElseThrow();
+        Member member = reservation.getMember();
+        int memberPoint = reservation.getMember().getMemberPoint();
+        int productPrice = reservation.getProduct().getPrice().intValue();
+        member.updateMemberData(UpdateDTO.builder()
+                .memberID(member.getMemberID())
+                .memberPassword(member.getMemberPassword())
+                .memberName(member.getMemberName())
+                .memberEmail(member.getMemberEmail())
+                .memberPhone(member.getMemberPhone())
+                .memberPoints(memberPoint + productPrice)
+                .build());
+        memberRepository.save(member);
+        reservation.changeOrder(ReservationOrder.CANCELLED);
+        reservationRepository.save(reservation);
+        return true;
+    }
+
+    @Override
     public Long deleteReservationNow(Long reservationNo) {
         reservationRepository.deleteById(reservationNo);
         return reservationNo;
@@ -114,11 +135,9 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public boolean feePayment(Long reservationNo) {
         Reservation reservation = reservationRepository.findById(reservationNo).orElseThrow();
-        Long memberNo = reservation.getMember().getMemberNo();
-        Long productNo = reservation.getProduct().getProductNo();
-        Member member = memberRepository.findById(memberNo).orElseThrow();
-        int memberPoint = member.getMemberPoint();
-        int productPrice = productJh1Repository.findProductByProductNo(productNo).orElseThrow().getPrice().intValue();
+        Member member = reservation.getMember();
+        int memberPoint = reservation.getMember().getMemberPoint();
+        int productPrice = reservation.getProduct().getPrice().intValue();
         if (memberPoint < productPrice) return false;
         member.updateMemberData(UpdateDTO.builder()
                 .memberID(member.getMemberID())

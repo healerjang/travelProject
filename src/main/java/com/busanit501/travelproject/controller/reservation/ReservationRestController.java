@@ -3,10 +3,12 @@ package com.busanit501.travelproject.controller.reservation;
 import com.busanit501.travelproject.annotation.member.Member;
 import com.busanit501.travelproject.domain.common.ReservationOrder;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
+import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.reservation.ReservationDTO;
 import com.busanit501.travelproject.dto.reservation.ReservationUserDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
+import com.busanit501.travelproject.service.member.MemberService;
 import com.busanit501.travelproject.service.reservation.ReservationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -26,6 +28,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ReservationRestController {
     private final ReservationService reservationService;
+    private final MemberService memberService;
 
     @GetMapping("/userReservation/{reservationOrder}")
     @Member
@@ -37,6 +40,7 @@ public class ReservationRestController {
         HcbPageResponseDTO<ReservationUserDTO> result = reservationService.getReservationUser(memberNo, reservationOrder, pageRequestDTO);
         return result;
     }
+
     //아직 어드민 어소리티 관련 확인 필요
     @GetMapping("/adminReservation/{productNo}")
     public HcbPageResponseDTO<ReservationDTO> getAdminReservation(
@@ -45,7 +49,7 @@ public class ReservationRestController {
     }
 
     @PostMapping("/reg")
-    public Map<String,Long> reg(
+    public Map<String, Long> reg(
             @Valid @RequestBody ReservationDTO reservationDTO, BindingResult bindingResult,
             RedirectAttributes redirectAttributes) throws BindException {
         if (bindingResult.hasErrors()) {
@@ -56,7 +60,7 @@ public class ReservationRestController {
     }
 
     @PutMapping("/edit")
-    public Map<String,Long> edit(
+    public Map<String, Long> edit(
             @Valid @RequestBody ReservationDTO reservationDTO, BindingResult bindingResult,
             RedirectAttributes redirectAttributes) throws BindException {
         if (bindingResult.hasErrors()) {
@@ -67,21 +71,35 @@ public class ReservationRestController {
     }
 
     @PutMapping("/delete/{reservationNo}")
-    public Map<String,Long> delete(@PathVariable Long reservationNo) {
+    public Map<String, Long> delete(@PathVariable Long reservationNo) {
         Long result = reservationService.deleteReservation(reservationNo);
         return Map.of("reservationNo", result);
     }
 
+    @PutMapping("/refund/{reservationNo}")
+    public Map<String, Boolean> refund(@PathVariable Long reservationNo) {
+        boolean result = reservationService.refundReservation(reservationNo);
+        return Map.of("reservationNo", result);
+    }
+
     @DeleteMapping("/delete/now/{reservationNo}")
-    public Map<String,Long> deleteNow(@PathVariable Long reservationNo) {
+    public Map<String, Long> deleteNow(@PathVariable Long reservationNo) {
         Long result = reservationService.deleteReservationNow(reservationNo);
         return Map.of("reservationNo", result);
     }
 
     @PutMapping("/fee/{reservationNo}")
-    public Map<String,Boolean> fee(@PathVariable Long reservationNo) {
+    public Map<String, Boolean> fee(@PathVariable Long reservationNo) {
         boolean result = reservationService.feePayment(reservationNo);
         return Map.of("paymentCompCheck", result);
+    }
+
+    @GetMapping("/memberPoint")
+    public Map<String, Integer> memberPoint(@CookieValue(value = "memberNo", required = false) String memberNoCookie) {
+        Long memberNo = memberNoCookie != null ? Long.parseLong(memberNoCookie) : null;
+        MemberDTO result = memberService.getMember(memberNo);
+        int memberPoint = result.getMemberPoint();
+        return Map.of("memberPoint", memberPoint);
     }
 
     @GetMapping("/best")
