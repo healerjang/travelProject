@@ -106,14 +106,16 @@ public class FreeBoardController {
     }
 
     @PostMapping("/delete")
-    public String delete(Long freeBoardNo,
-//                         String keyword2, String page2, String type2,
-                         RedirectAttributes redirectAttributes) {
+    public String delete(Long freeBoardNo, RedirectAttributes redirectAttributes) {
         freeBoardService.delete(freeBoardNo);
+
+        // 삭제 결과를 redirectAttributes로 전달
         redirectAttributes.addFlashAttribute("result", freeBoardNo);
         redirectAttributes.addFlashAttribute("resultType", "delete");
-//        return "redirect:/free_board/list?"+"&keyword="+keyword2+"&page="+page2+"&type="+type2;
+
+        // 삭제 후 리스트로 리다이렉트
         return "redirect:/free_board/list";
     }
 
-}
+    }
+

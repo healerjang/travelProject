@@ -111,8 +111,10 @@
         </thead>
         <tbody>
         <!-- List of FreeBoards -->
-        <tr th:each="board : ${responseDTO.dtoList}">
-            <td th:text="${board.freeBoardNo}"></td>
+        <tr th:each="board, iterStat : ${responseDTO.dtoList}">
+<!--            데이터를 가져오는게 아니라 - 데이터를 순서대로 보여주는거-->
+<!--            index= 0 이니까 +1 해서 1번부터 보여주겠다-->
+            <td th:text="${iterStat.index + 1}"></td>
             <td th:text="${board.title}"></td>
             <td th:text="${board.memberName}"></td>
             <td th:text="${board.replyCount}"></td>

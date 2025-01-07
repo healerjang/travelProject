@@ -28,6 +28,7 @@ public class FreeBoardDTO {
     private long memberNo;
     private String memberName; // 작성자 이름을 저장할 수 있도록 추가
 
+
     private LocalDateTime regDate;
     private LocalDateTime modDate;
 }

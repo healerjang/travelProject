@@ -47,8 +47,14 @@ public class FreeBoardServiceImpl implements com.busanit501.travelproject.servic
     public FreeBoardDTO readOne(Long freeBoardNo) {
         Optional<FreeBoard> result = freeBoardRepository.findById(freeBoardNo);
         FreeBoard freeBoard = result.orElseThrow();
-        FreeBoardDTO dto = modelMapper.map(freeBoard, FreeBoardDTO.class);
-        return dto;
+        FreeBoardDTO freeBoardDTO = FreeBoardDTO.builder()
+                .freeBoardNo(freeBoardNo)
+                .title(freeBoard.getTitle())
+                .content(freeBoard.getContent())
+                .memberNo(freeBoard.getMember().getMemberNo())
+                .memberName(freeBoard.getMember().getMemberName())
+                .build();
+        return freeBoardDTO;
     }
 
     @Override
