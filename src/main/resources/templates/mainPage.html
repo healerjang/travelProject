@@ -11,29 +11,24 @@
 </head>
 <body>
     <header>
-        <div class="header__main">Hello</div>
+        <div class="header__main"></div>
         <div class="signContainer">
-            <div id="login" class="dongle-regular">로그인</div>
-            <div id="register" class="dongle-regular">회원가입</div>
+            <div id="login">로그인</div>
+            <div id="register">회원가입</div>
         </div>
         <div class="myPageContainer">
-            <img src="/images/user.png" id="member" alt="" style="height: 70%; margin: 2.5%"/>
-            <img src="/images/shoppingCart.png" id="shoppingCart" alt="" style="height: 70%; margin: 2.5%"/>
-            <img src="/images/airplane.png" id="reservation" alt="" style="height: 70%; margin: 2.5%"/>
+            <div id="member">마이페이지</div>
+            <div id="shoppingCart">장바구니</div>
+            <div id="reservation">예약확인</div>
         </div>
     </header>
     <div class="searchContainer">
-        <div class="searchChild dongle-regular" id="searchLocation">여행지</div>
-        <div class="searchChild dongle-regular" id="searchStart">출발날짜</div>
-        <div class="searchChild dongle-regular" id="searchEnd">도착날짜</div>
+        <div class="searchChild" id="searchLocation">여행지</div>
+        <div class="searchChild" id="searchStart">출발날짜</div>
+        <div class="searchChild" id="searchEnd">도착날짜</div>
         <div class="searchIconBox"><img src="/images/search.png" alt=""/></div>
         <div class="searchLocationContainer searchChildContainer">
             <div class="countryImageContainer">
-                <div class="countryImageBox" style="background-image: url('/images/country/korea.png');" id="한국"></div>
-                <div class="countryImageBox" style="background-image: url('/images/country/japan.png');" id="일본"></div>
-                <div class="countryImageBox" style="background-image: url('/images/country/europe.png');" id="유럽"></div>
-                <div class="countryImageBox" style="background-image: url('/images/country/china.png');" id="중국"></div>
-                <div class="countryImageBox" style="background-image: url('/images/country/america.png');" id="미국"></div>
             </div>
             <div class="countryNameContainer"></div>
             <div class="locationTagContainer">
@@ -73,14 +68,11 @@
         </div>
     </div>
     <div class="imageContainer">
-        <div class="imageBoxContainer">
-            <div class="imageBox">
-                <div class="imageBoxTitle">타이틀</div>
-            </div>
-        </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </body>
 <script src="/script/mainPage/search.js" th:inline="javascript"></script>
+<script src="/script/mainPage/mainPage.js" th:inline="javascript"></script>
 <script th:inline="javascript">
     const member = [[${member}]];
     const idText = document.getElementById('login');
@@ -88,6 +80,7 @@
     const shoppingCartText = document.getElementById('shoppingCart');
     const reservationText = document.getElementById('reservation');
     const memberText = document.getElementById('member');
+    let searchTotal = false;
 
     if (member) {
         document.querySelector('.signContainer').style.display = 'none';
@@ -108,6 +101,47 @@
         })
         registerText.addEventListener('click', (e) => {
             window.location.href = 'member/register?';
+        })
+    }
+
+    function addCountryImageClickListener(country) {
+        country.addEventListener('click', (e) => {
+            getCities(country.name).then((cities) => {
+                locationTagContainer.innerHTML = '';
+                countryNameContainer.innerText = country.name;
+
+                for (const city of cities) {
+                    addCityTag(city);
+                }
+            })
+        })
+    }
+
+    getCountries().then((countries) => {
+        for (const country of countries) {
+            addCountryImage(country);
+        }
+    });
+
+    printImageContainer();
+
+    function printImageContainer(page, size, locationNo, startDate, endDate) {
+        getContent(page, size, locationNo, startDate, endDate).then((content) => {
+            imageContainer.innerHTML = '';
+            for (const product of content.list) {
+                addImage(product.name, product.imagePath, product.productNo)
+            }
+            isAddImage = true;
+        })
+    }
+
+    function addImageContainer(page, size, locationNo, startDate, endDate) {
+        isAddImage = false;
+        getContent(page, size, locationNo, startDate, endDate).then((content) => {
+            for (const product of content.list) {
+                addImage(product.name, product.imagePath, product.productNo)
+            }
+            isAddImage = true;
         })
     }
 </script>

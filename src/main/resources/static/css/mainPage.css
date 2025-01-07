@@ -2,6 +2,10 @@
     font-family: 'HakgyoansimPuzzle';
     src: url('../font/HakgyoansimPuzzleTTFOutline.ttf') format('truetype');
 }
+@font-face {
+    font-family: 'HakgyoansimBadasseugi';
+    src: url('../font/HakgyoansimBadasseugiTTFL.ttf') format('truetype');
+}
 
 .dongle-regular {
     font-family: "Dongle", serif;
@@ -11,6 +15,11 @@
 * {
     margin: 0;
     padding: 0;
+}
+
+html {
+    height: 100%;
+    overflow: auto;
 }
 
 body {
@@ -28,7 +37,7 @@ header {
     justify-content: center;
     align-items: center;
     position: relative;
-    /*box-shadow: 1px 1px 10px 1px rgb(197, 197, 197);*/
+    box-shadow: 1px 1px 10px 1px rgb(197, 197, 197);
     z-index: 5;
 }
 
@@ -39,20 +48,32 @@ img {
 .header__main {
     position: absolute;
     font-size: 2.5vw;
-    font-family: HakgyoansimPuzzle, sans-serif;
+    background-image: url("../images/mainIcon.png");
     left: 5%;
     color: #3280f3;
+    background-size: cover;
+    background-position: center center;
+    height: 100%;
+    width: 15%;
 }
 
 .signContainer, .myPageContainer {
     display: flex;
     position: relative;
     left: 42%;
-    font-size: 1.8vw;
+    font-size: 1.1vw;
     width: 20%;
     height: 100%;
     justify-content: center;
     align-items: center;
+    font-family: HakgyoansimBadasseugi, sans-serif;
+    > img {
+        object-fit: cover;
+    }
+}
+
+.myPageContainer {
+    left: 38%;
 }
 
 .signContainer > div, .myPageContainer > div {
@@ -77,6 +98,7 @@ img {
     position: relative;
     left: 22%;
     flex-wrap: wrap;
+    font-family: HakgyoansimBadasseugi, sans-serif;
 }
 
 .searchChild{
@@ -150,6 +172,7 @@ img {
     width: 90%;
     margin-top: 5%;
     height: 200%;
+    margin-bottom: 5%;
 }
 
 .locationTagBox {
@@ -276,6 +299,8 @@ img {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    background-position: center center;
+    background-size: cover;
 }
 
 .imageBox:hover {
@@ -293,4 +318,5 @@ img {
     align-items: center;
     font-size: 2vw;
     color: white;
+    text-shadow: 1px 2px black;
 }
