@@ -1,5 +1,6 @@
 package com.busanit501.travelproject.dto;
 
+import com.busanit501.travelproject.dto.reservation.ReservationViewJh1DTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,6 @@ import java.util.List;
 
 /**
  * 여행상품 엔티티에서 예약 및 리뷰가 빠진 DTO
- * TODO: 예약 및 리뷰 추가되면 수동 매핑에 추가하기
  */
 @Data
 @Builder
@@ -37,8 +37,8 @@ public class ProductJh1DTO {
   private LocalDate endDate;
   private int capacity;
   private String imagePath;
-  private List<Object> reservations;
-  private List<Object> reviews;
+  private List<ReservationViewJh1DTO> reservations;
+  private List<ReviewJh1DTO> reviews;
 
   @JsonProperty("until")
   public long getUntil() {

@@ -3,6 +3,7 @@ package com.busanit501.travelproject.controller.admin;
 import com.busanit501.travelproject.dto.FreeBoardJh1DTO;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.LocationValueJh1DTO;
+import com.busanit501.travelproject.dto.ProductUpdateJh1DTO;
 import com.busanit501.travelproject.dto.member.MemberAddPointDTO;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
@@ -37,7 +38,7 @@ public class AdminJh1RestController {
 
   @GetMapping("/product/{productNo}")
   public ResponseEntity<ProductJh1DTO> getProductById(@PathVariable("productNo") Long productNo) {
-    ProductJh1DTO productDTO = adminService.getProductTmp(productNo);
+    ProductJh1DTO productDTO = adminService.getProductCompact(productNo);
     return ResponseEntity.ok().body(productDTO);
   }
 
@@ -56,8 +57,9 @@ public class AdminJh1RestController {
   }
 
   @PutMapping("/product")
-  public ResponseEntity<Map<String, Object>> updateProduct(@RequestBody ProductJh1DTO dto) {
-    return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(Map.of("success", false, "message", "Not implemented!"));
+  public ResponseEntity<Map<String, Object>> updateProduct(@RequestBody ProductUpdateJh1DTO dto) {
+    adminService.updateProduct(dto);
+    return ResponseEntity.ok().body(Map.of("success", true));
   }
 
 
