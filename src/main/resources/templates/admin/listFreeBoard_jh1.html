@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/travel_admin_aside_jh1.html}">
+<head>
+  <meta charset="UTF-8">
+  <title>자유게시판 관리</title>
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="py-3 text-center">
+    <h1>자유게시판 관리</h1>
+  </div>
+  <div class="container">
+    <table class="table">
+      <thead>
+      <tr>
+        <th>No.</th>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>작성일</th>
+      </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <nav id="PaginationHere"></nav>
+  </div>
+</div>
+<th:block layout:fragment="scripts">
+  <script th:src="@{/script/admin/admin-common.js}"></script>
+  <script th:src="@{/script/pagination.js}"></script>
+  <script th:inline="javascript">
+
+    const page = /*[[${requestDTO.page}]]*/ 0;
+    const size = /*[[${requestDTO.size}]]*/ 0;
+
+    function createBoardItem(boardNo, title, memberNo, writer, regDate) {
+      return _el('tr',
+        _el('td', boardNo),
+        _el('td', _el('a', title, a => a.href = '/admin/freeBoard/view/' + boardNo)),
+        _el('td', _el('a', writer, a => a.href = '/admin/member/view/' + memberNo)),
+        _el('td', regDate)
+      );
+    }
+
+    (async () => {
+      const response = await axios.get('/api/admin/freeBoard/list' + `?page=${page}&size=${size}`);
+      const {data} = response;
+      const tbody = document.querySelector('table.table').tBodies[0]
+      for (const freeBoard of data.dtoList) {
+        tbody.append(
+          createBoardItem(freeBoard.freeBoardNo, freeBoard.title, freeBoard.memberNo, freeBoard.memberName, freeBoard.regDate)
+        )
+      }
+      document.querySelector('#PaginationHere').appendChild(
+        createPagination(data.start, data.end, page, '/admin/freeBoard/list', size)
+      );
+    })()
+  </script>
+</th:block>
+</body>
+</html>

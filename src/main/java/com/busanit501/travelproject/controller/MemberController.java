@@ -85,8 +85,12 @@ public class MemberController {
     // 이후 쿠키나 시큐리티에서 memberNo를 받은 뒤 사용자의 정보를 보여주는 로직 개발 예정.
     @Member
     @GetMapping("/myPage")
-    public void myPage(Model model, String error, HttpServletRequest request) {
-        model.addAttribute("error", error);
+    public String myPage(Model model, HttpServletRequest request, MemberDTO memberDTO) {
+        if (memberDTO == null) {
+            return "redirect:/mainPage";
+        }
+        model.addAttribute("memberDTO", memberDTO);
+        return "/member/myPage";
     }
 
     // 시큐리티 및 쿠키로 사용자 확인 로직 개발 예정

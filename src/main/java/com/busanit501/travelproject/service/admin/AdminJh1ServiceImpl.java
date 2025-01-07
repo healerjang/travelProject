@@ -1,16 +1,19 @@
 package com.busanit501.travelproject.service.admin;
 
+import com.busanit501.travelproject.domain.FreeBoard;
 import com.busanit501.travelproject.domain.Location;
 import com.busanit501.travelproject.domain.Member;
 import com.busanit501.travelproject.domain.Product;
+import com.busanit501.travelproject.dto.FreeBoardJh1DTO;
 import com.busanit501.travelproject.dto.LocationValueJh1DTO;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.member.MemberFullDTO;
-import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
-import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
+import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
+import com.busanit501.travelproject.dto.util.PageResponseJh1DTO;
 import com.busanit501.travelproject.repository.LocationJh1Repository;
 import com.busanit501.travelproject.repository.ProductJh1Repository;
+import com.busanit501.travelproject.repository.freeboard.FreeBoardRepository;
 import com.busanit501.travelproject.repository.member.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,19 +32,12 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
   private final LocationJh1Repository locationRepo;
   private final ProductJh1Repository productRepo;
   private final MemberRepository memberRepo;
+  private final FreeBoardRepository freeBoardRepo;
 
   @Override
   public List<LocationValueJh1DTO> getLocationsOnly() {
     List<Location> locations = locationRepo.findAll();
-    List<LocationValueJh1DTO> dtoList = locations.stream().map(loc -> {
-      LocationValueJh1DTO dto = LocationValueJh1DTO.builder()
-        .locationNo(loc.getLocationNo())
-        .country(loc.getCountry())
-        .city(loc.getCity())
-        .build();
-
-      return dto;
-    }).toList();
+    List<LocationValueJh1DTO> dtoList = locations.stream().map(this::locationToDTO).toList();
     return dtoList;
   }
 
@@ -79,23 +75,23 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
   }
 
   @Override
-  public HcbPageResponseDTO<ProductJh1DTO> listProducts(HcbPageRequestDTO requestDTO) {
+  public PageResponseJh1DTO<ProductJh1DTO> listProducts(PageRequestJh1DTO requestDTO) {
     Page<Product> products = productRepo.findAll(PageRequest.of(requestDTO.getPage() - 1, requestDTO.getSize(), Sort.by("startDate")));
-    return HcbPageResponseDTO.<ProductJh1DTO>builder()
+    return PageResponseJh1DTO.<ProductJh1DTO>builder()
       .dtoList(products.stream().map(this::productEntityToDTO).toList())
       .total((int) products.getTotalElements())
-      .hcbPageRequestDTO(HcbPageRequestDTO.builder().page(requestDTO.getPage()).size(requestDTO.getSize()).pageSize(requestDTO.getPageSize()).build())
+      .pageRequestDTO(requestDTO)
       .build();
   }
 
 
   @Override
-  public HcbPageResponseDTO<MemberDTO> listMembers(HcbPageRequestDTO requestDTO) {
+  public PageResponseJh1DTO<MemberDTO> listMembers(PageRequestJh1DTO requestDTO) {
     Page<Member> members = memberRepo.findAll(PageRequest.of(requestDTO.getPage() - 1, requestDTO.getSize()));
-    return HcbPageResponseDTO.<MemberDTO>builder()
+    return PageResponseJh1DTO.<MemberDTO>builder()
       .dtoList(members.stream().map(this::memberEntityToDTO).toList())
       .total((int) members.getTotalElements())
-      .hcbPageRequestDTO(HcbPageRequestDTO.builder().page(requestDTO.getPage()).size(requestDTO.getSize()).pageSize(requestDTO.getPageSize()).build())
+      .pageRequestDTO(requestDTO)
       .build();
   }
 
@@ -103,6 +99,24 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
   public MemberFullDTO getMemberFullSupport(long memberNo) {
     Member member = memberRepo.findByMemberNo(memberNo);
     return memberEntityToFullDTO(member);
+  }
+
+  @Override
+  public void givePointTo(long memberNo, int amount) {
+    Member member = memberRepo.findByMemberNo(memberNo);
+    member.addPoint(amount);
+    memberRepo.save(member);
+  }
+
+  @Transactional
+  @Override
+  public PageResponseJh1DTO<FreeBoardJh1DTO> getFreeBoardList(PageRequestJh1DTO requestDTO) {
+    Page<FreeBoard> boards = freeBoardRepo.findAll(PageRequest.of(requestDTO.getPage() - 1, requestDTO.getSize()));
+    return PageResponseJh1DTO.<FreeBoardJh1DTO>builder()
+      .dtoList(boards.stream().map(this::boardToDTO).toList())
+      .total((int) boards.getTotalElements())
+      .pageRequestDTO(requestDTO)
+      .build();
   }
 
 }

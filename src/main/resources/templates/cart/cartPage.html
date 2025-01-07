@@ -1,42 +1,43 @@
 <!DOCTYPE html>
 <html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"><head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>장바구니</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-</head>
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/mainPageLayout.html}">
+<title layout:fragment="title">장바구니</title>
 <body>
 <!--나중에 layout 으로 싹 갈아야함-->
-<ul class="cartProduct"></ul>
-<ul class="cartPagination"></ul>
-<button type="button" class="btn btn-primary makeReservationBtn">예약</button>
-<button type="button" class="btn btn-secondary" onclick="addCart(1)">1 장바구니 추가 (임시)</button>
-<button type="button" class="btn btn-secondary" onclick="addCart(2)">2 장바구니 추가 (임시)</button>
-<button type="button" class="btn btn-secondary" onclick="addCart(3)">3 장바구니 추가 (임시)</button>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="/script/cart/cart.js"></script>
-<script th:inline="javascript">
-    const cartProduct = document.querySelector(".cartProduct")
-    const cartPagination = document.querySelector(".cartPagination")
-    function printCart(page) {
-        getCart({page})
-            .then(data => {
-                    printCartProduct(data.dtoList)
-                    printCartPagination(data)
-                }
-            ).catch(e => {
-                console.error(e)
-            }
-        )
-    }
+<main layout:fragment="content">
+    <ul class="cartProduct"></ul>
+    <ul class="cartPagination"></ul>
+    <button type="button" class="btn btn-primary makeReservationBtn">예약</button>
+    <button type="button" class="btn btn-secondary" onclick="addCart(1)">1 장바구니 추가 (임시)</button>
+    <button type="button" class="btn btn-secondary" onclick="addCart(2)">2 장바구니 추가 (임시)</button>
+    <button type="button" class="btn btn-secondary" onclick="addCart(3)">3 장바구니 추가 (임시)</button>
+</main>
 
-    function printCartProduct(dtoList) {
-        let str = ""
-        if (dtoList && dtoList.length > 0) {
-            for (const dto of dtoList) {
-                str += `
+<div layout:fragment="javascript">
+    <script src="/script/cart/cart.js"></script>
+    <script>
+        const cartProduct = document.querySelector(".cartProduct")
+        const cartPagination = document.querySelector(".cartPagination")
+
+        function printCart(page) {
+            getCart({page})
+                .then(data => {
+                        printCartProduct(data.dtoList)
+                        printCartPagination(data)
+                    }
+                ).catch(e => {
+                    console.error(e)
+                }
+            )
+        }
+
+        function printCartProduct(dtoList) {
+            let str = ""
+            if (dtoList && dtoList.length > 0) {
+                for (const dto of dtoList) {
+                    str += `
                <li class="list-group-item d-flex replyItem">
                <!--이미지 패스 dto.imagePath 도 붙여야함-->
                <!--<img src="{dto.imagePath}">-->
@@ -45,67 +46,69 @@
                <span class="col-2">${dto.price}</span>
                <button type="button" class="btn btn-danger cartDelBtn" data-productNo="${dto.productNo}">삭제</button>
                `
+                }
             }
+            cartProduct.innerHTML = str
         }
-        cartProduct.innerHTML = str
-    }
 
-    function printCartPagination(data) {
-        let pageStr = ''
-        if (data.prev) {
-            pageStr += `<li class="page-item"><a class="page-link"
+        function printCartPagination(data) {
+            let pageStr = ''
+            if (data.prev) {
+                pageStr += `<li class="page-item"><a class="page-link"
             data-page="${data.start - 1}">이전</a></li>
              `
-        }
-        for (let i = data.start; i <= data.end; i++) {
-            pageStr += `
+            }
+            for (let i = data.start; i <= data.end; i++) {
+                pageStr += `
             <li class="${data.page == i}?'page-item active':'page-item'">
                                     <a class="page-link"
                                        data-page="${i}">${i}</a>
                                 </li>
             `
-        }
-        if (data.next) {
-            pageStr += `<li class="page-item"><a class="page-link"
+            }
+            if (data.next) {
+                pageStr += `<li class="page-item"><a class="page-link"
             data-page="${data.end + 1}">다음</a></li>
              `
-        }
-        cartPagination.innerHTML = pageStr
-    }
-    let page = 1
-    cartPagination.addEventListener("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const target = e.target
-
-        if (!target || target.tagName != 'A') {
-            return
-        }
-        const pageNum = target.getAttribute("data-page")
-        page = pageNum
-        printCart(page)
-
-    }, false)
-
-    printCart(page)
-
-    document.querySelector(".makeReservationBtn").addEventListener("click", function (e) {
-        makeReservation().then(data => {
-            console.log(data.reservationNoSize + "개의 예약 완료")
-        }).catch(e => {
-                console.error(e)
             }
-        )
-    })
-    document.querySelector(".cartProduct").addEventListener("click", async function (e) {
-        const target = e.target
-        if (target.tagName != 'BUTTON') return
-        const productNo = target.getAttribute("data-productNo")
-        await delCart(productNo)
-        cartProduct.innerHTML = ''
-        cartPagination.innerHTML = ''
+            cartPagination.innerHTML = pageStr
+        }
+
+        let page = 1
+        cartPagination.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const target = e.target
+
+            if (!target || target.tagName != 'A') {
+                return
+            }
+            const pageNum = target.getAttribute("data-page")
+            page = pageNum
+            printCart(page)
+
+        }, false)
+
         printCart(page)
-    })
-</script>
+
+        document.querySelector(".makeReservationBtn").addEventListener("click", function (e) {
+            makeReservation().then(data => {
+                console.log(data.reservationNoSize + "개의 예약 완료")
+            }).catch(e => {
+                    console.error(e)
+                }
+            )
+        })
+        document.querySelector(".cartProduct").addEventListener("click", async function (e) {
+            const target = e.target
+            if (target.tagName != 'BUTTON') return
+            const productNo = target.getAttribute("data-productNo")
+            await delCart(productNo)
+            cartProduct.innerHTML = ''
+            cartPagination.innerHTML = ''
+            printCart(page)
+        })
+    </script>
+</div>
 </body>
 </html>

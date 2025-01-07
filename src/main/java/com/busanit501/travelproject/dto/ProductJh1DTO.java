@@ -26,6 +26,13 @@ public class ProductJh1DTO {
   private String description;
   private Long price;
   private Long locationNo;
+
+  /**
+   * <p>실제 여행지 정보</p>
+   * <p>상황에 따라 null이 될수도 있다.</p>
+   * */
+  private LocationValueJh1DTO location;
+
   private LocalDate startDate;
   private LocalDate endDate;
   private int capacity;
