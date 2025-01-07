@@ -101,7 +101,7 @@ public class FreeBoardController {
         redirectAttributes.addFlashAttribute("result", freeBoardDTO.getFreeBoardNo());
         redirectAttributes.addFlashAttribute("resultType", "update");
 
-        return "redirect:/food/read?freeBoardNo="+freeBoardDTO.getFreeBoardNo()+"&keyword="+keyword2+"&page="+page2+"&type="+type2;
+        return "redirect:/free_board/read?freeBoardNo="+freeBoardDTO.getFreeBoardNo()+"&keyword="+keyword2+"&page="+page2+"&type="+type2;
 
     }
 

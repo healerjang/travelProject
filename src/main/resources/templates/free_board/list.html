@@ -68,7 +68,7 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">게시글 검색</h5>
+                    <h5 class="card-title"></h5>
                     <form action="/free_board/list" method="get" id="searchForm">
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -94,7 +94,7 @@
     </div>
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <a href="/free_board/register" class="btn btn-primary">새 글 등록</a>
+        <a href="/free_board/register" class="btn btn-primary">글쓰기</a>
         <form method="get" action="/free_board/list" class="d-flex" style="max-width: 300px;">
         </form>
     </div>
@@ -117,7 +117,7 @@
             <td th:text="${board.memberName}"></td>
             <td th:text="${board.replyCount}"></td>
             <td>
-                <a th:href="@{'/read.html?freeBoardNo='+ ${board.freeBoardNo}}" class="btn btn-info btn-sm">보기</a>
+                <a th:href="@{'/free_board/read?freeBoardNo=' + ${board.freeBoardNo}}" class="btn btn-info btn-sm">보기</a>
                 <a th:href="@{'/free_board/update?freeBoardNo=' + ${board.freeBoardNo}}" class="btn btn-warning btn-sm">수정</a>
                 <form style="display: inline" th:action="@{'/free_board/delete?freeBoardNo=' + ${board.freeBoardNo}}" method="post">
                     <input type="submit" class="btn btn-danger btn-sm" value="삭제"
