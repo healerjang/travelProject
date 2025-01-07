@@ -4,20 +4,13 @@ import com.busanit501.travelproject.dto.UploadProductImageFileDTO;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,6 +37,11 @@ public class AdminProductImageController {
     return ""; // No extension if no '.' or ends with '.'
   }
 
+  private void ensureDir(String country) throws IOException {
+    Path path = Paths.get(uploadPath, country);
+    if (!Files.exists(path)) Files.createDirectory(path);
+  }
+
   private String handleTargetingFileUpload(MultipartFile file, String country, String city) {
     String originalFilename = file.getOriginalFilename();
 
@@ -51,6 +49,7 @@ public class AdminProductImageController {
     Path savePath = Paths.get(uploadPath, country, saveStr);
 
     try {
+      ensureDir(country);
       file.transferTo(savePath);
       return country + "/" + saveStr;
     } catch (IOException ioe) {
@@ -60,7 +59,7 @@ public class AdminProductImageController {
   }
 
 
-  @PostMapping(value = "/api/productImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PostMapping(value = "/api/admin/productImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<Map<String, Object>> uploadProductImage(
     @Valid UploadProductImageFileDTO uploadDTO,
     BindingResult br
@@ -78,38 +77,6 @@ public class AdminProductImageController {
     }
   }
 
-  @GetMapping(value = "/api/productImage/{imagePath}")
-  public ResponseEntity<Resource> getProductImage(@PathVariable String imagePath) {
-    try {
-      Resource resource = new FileSystemResource(uploadPath + File.separator + imagePath);
-      HttpHeaders headers = new HttpHeaders();
-      String mimeType = Files.probeContentType(resource.getFile().toPath());
-      headers.add("Content-Type", mimeType);
-      return ResponseEntity.ok().headers(headers).body(resource);
-    } catch (FileNotFoundException fnoex) {
-      return ResponseEntity.notFound().build();
-    } catch (IOException e) {
-      return ResponseEntity.notFound().build();
-    }
-  }
-
-  @GetMapping(value = "/api/productImage/{countryDir}/{cityNameWithExt}")
-  public ResponseEntity<Resource> getProductImage(
-    @PathVariable String countryDir,
-    @PathVariable String cityNameWithExt
-  ) {
-    try {
-      Resource resource = new FileSystemResource(uploadPath + File.separator + countryDir + File.separator + cityNameWithExt);
-      HttpHeaders headers = new HttpHeaders();
-      String mimeType = Files.probeContentType(resource.getFile().toPath());
-      headers.add("Content-Type", mimeType);
-      return ResponseEntity.ok().headers(headers).body(resource);
-    } catch (FileNotFoundException fnoex) {
-      return ResponseEntity.notFound().build();
-    } catch (IOException e) {
-      return ResponseEntity.notFound().build();
-    }
-  }
 
 
 }

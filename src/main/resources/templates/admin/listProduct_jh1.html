@@ -53,7 +53,7 @@
       }
 
       (async () => {
-        const response = await axios.get(`/api/product/list?page=${page}&size=${size}`);
+        const response = await axios.get('/api/admin/product/list'+`?page=${page}&size=${size}`);
         const data = response.data;
         document.getElementById("PaginationHere")
           .append(createPagination(data.start, data.end, data.page, '/admin/product/list', data.size));

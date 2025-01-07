@@ -45,7 +45,7 @@ function clearSelect(el) {
 
 /** 여행지를 추가한다. */
 async function registerLocation(country, city) {
-  return await axios.post("/api/location", { country, city })
+  return await axios.post('/api/admin/location', { country, city })
 }
 
 /**

@@ -81,7 +81,7 @@
     const memberNo = /*[[${memberDTO.memberNo}]]*/ 0;
 
     async function givePoint(amount) {
-      const response = await axios.post('/api/member/givePoint', {memberNo, amount})
+      const response = await axios.post('/api/admin/member/givePoint', {memberNo, amount})
       const data = response.data;
       if (data.success) {
         window.alert("포인트가 지급되었습니다.")

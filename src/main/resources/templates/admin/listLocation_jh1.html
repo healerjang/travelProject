@@ -108,7 +108,7 @@
     });
 
     (async () => {
-      const response = await axios.get("/api/location/list");
+      const response = await axios.get('/api/admin/location/list');
       const {data} = response
       for (const location of data) {
         const countryName = location.country;
