@@ -2,32 +2,29 @@
 <html lang="ko"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="www.thymeleaf.org"
-      layout:decorate="~{layout/base.html}"
->
+      layout:decorate="~{layout/base.html}">
+
 <body>
-<div layout:fragment="content" class="container mt-4">
-    <h1>Register FreeBoard</h1>
+<div layout:fragment="content" class="container mt-4" style="max-width: 600px; background: #fff; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); padding: 20px;">
+    <h1 class="text-center mb-4" style="color: #ff5a5f;">자유게시판 글 등록</h1>
 
     <form method="post" action="/free_board/register">
         <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title" name="title" required>
+            <label for="title" class="form-label" style="font-weight: bold;">제목</label>
+            <input type="text" class="form-control" id="title" name="title" placeholder="제목을 입력하세요" required style="border-radius: 6px;">
         </div>
 
         <div class="mb-3">
-            <label for="content" class="form-label">Content</label>
-            <textarea class="form-control" id="content" name="content" rows="4" required></textarea>
+            <label for="content" class="form-label" style="font-weight: bold;">내용</label>
+            <textarea class="form-control" id="content" name="content" rows="4" placeholder="내용을 입력하세요" required style="border-radius: 6px;"></textarea>
         </div>
 
-<!--        <div class="mb-3">-->
-<!--            <label for="memberNo" class="form-label">Member</label>-->
-<!--            <input type="text" class="form-control" id="memberNo" name="memberNo" value="1" required readonly>-->
-<!--&lt;!&ndash;            th : value = ${} << login 된 이름을 가져오게 만들기 value= 1 << 하드코딩 된 부분 &ndash;&gt;-->
-<!--        </div>-->
+        <!-- MemberNo input removed as login system is assumed -->
 
-        <button type="submit" class="btn btn-primary">Register</button>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary" style="background-color: #ff5a5f; border: none;">등록하기</button>
+        </div>
     </form>
-
 </div>
 
 </body>

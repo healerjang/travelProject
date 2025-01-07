@@ -1,5 +1,6 @@
 package com.busanit501.travelproject.dto.freeboard;
 
+import com.busanit501.travelproject.domain.QMember;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
