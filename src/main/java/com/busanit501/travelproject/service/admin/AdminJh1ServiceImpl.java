@@ -75,6 +75,13 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
   }
 
   @Override
+  @Transactional
+  public ProductJh1DTO getProductFull(Long id) {
+    Product product = productRepo.findById(id).orElseThrow();
+    return productToFullDTO(product);
+  }
+
+  @Override
   public PageResponseJh1DTO<ProductJh1DTO> listProducts(PageRequestJh1DTO requestDTO) {
     Page<Product> products = productRepo.findAll(PageRequest.of(requestDTO.getPage() - 1, requestDTO.getSize(), Sort.by("startDate")));
     return PageResponseJh1DTO.<ProductJh1DTO>builder()

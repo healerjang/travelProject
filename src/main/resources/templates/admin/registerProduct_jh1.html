@@ -37,7 +37,7 @@
   <div class="container">
     <h1>여행상품 상세관리</h1>
     <section>
-      <div class="card">
+      <div class="card mb-3">
         <div class="card-body">
           <div class="input-group mb-2">
             <label for="productName" class="input-group-text">상품명</label>
@@ -90,7 +90,7 @@
             <button id="applyProductImage" class="btn btn-outline-secondary">이미지 적용</button>
           </div>
           <input id="imagePath" name="imagePath" type="hidden">
-          <div class="card">
+          <div class="card mb-3">
             <div class="card-header">
               이미지 미리보기
               <span id="imagePathView" class="text-body-secondary"></span>
@@ -105,6 +105,20 @@
         </div>
       </div>
     </section>
+  </div>
+  <div class="container" th:if="${productDTO != null}">
+    <div class="card mb-3" th:if="${!#lists.isEmpty(productDTO.reservations)}">
+      <div class="card-header">
+        상품 예약 목록
+      </div>
+      <div class="card-body"></div>
+    </div>
+    <div class="card mb-3" th:if="${!#lists.isEmpty(productDTO.reviews)}">
+      <div class="card-header">
+        상품 리뷰 목록
+      </div>
+      <div class="card-body"></div>
+    </div>
   </div>
 </div>
 <th:block layout:fragment="scripts">
@@ -199,9 +213,11 @@
 
     /** 서버에 있는 `imagePath`를 이미지 값으로 설정한다. */
     function setImagePath(imagePath) {
-      assignInputValue("imagePath", imagePath);
-      document.getElementById("imagePreview").src = '/productImage/' + imagePath;
-      document.getElementById("imagePathView").innerText = imagePath;
+      if (imagePath != undefined) {
+        assignInputValue("imagePath", imagePath);
+        document.getElementById("imagePreview").src = '/productImage/' + imagePath;
+        document.getElementById("imagePathView").innerText = imagePath;
+      }
     }
 
 
