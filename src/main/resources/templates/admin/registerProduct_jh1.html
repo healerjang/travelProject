@@ -321,14 +321,14 @@
     const productDTO = /*[[${productDTO}]]*/ {};
 
     /** 상품 업데이트를 처리한다. */
-    async function updateProduct(productNo, name, description, price, startDate, endDate, capacity, locationNo, imagePath) {
+    async function updateProduct(productNo, name, description, capacity, imagePath) {
       try {
         const response = await axios.put('/api/admin/product', {
-          productNo, name, description, price, startDate, endDate, capacity, locationNo, imagePath,
+          productNo, name, description, capacity, imagePath,
         })
         const data = response.data;
         if (data.success) {
-          window.alert("여행상품이 수정되었습니다..")
+          window.alert("여행상품이 수정되었습니다.")
           window.location.reload();
         }
       } catch (error) {
@@ -346,11 +346,7 @@
         productDTO.productNo,
         inputValueOf("productName"),
         inputValueOf("productDescription"),
-        inputValueOf("productPrice"),
-        inputValueOf("startDate"),
-        inputValueOf("endDate"),
         inputValueOf("productCapacity"),
-        inputValueOf("travelCity"),
         inputValueOf("imagePath"),
       )
     })

@@ -9,12 +9,28 @@
   <title layout:title-pattern="$CONTENT_TITLE :: $LAYOUT_TITLE">Travel</title>
 </head>
 <body>
+<style>
+    .header__main {
+        /*position: absolute;*/
+        /*font-size: 2.5vw;*/
+        /*background-image: url("/images/mainIcon.png");*/
+        /*left: 5%;*/
+        /*color: #3280f3;*/
+        /*background-size: cover;*/
+        /*background-position: center center;*/
+        /*height: 100%;*/
+        /*width: 15%;*/
+        width: 150px;
+    }
+</style>
 <th:block layout:fragment="style">
 
 </th:block>
 <nav class="navbar navbar-expand bg-body-tertiary sticky-top">
   <div class="container-fluid">
-    <a class="navbar-brand mb-0 h1" th:href="@{/}" th:text="Travel"></a>
+    <a class="m-0" th:href="@{/mainPage}">
+      <img class="header__main" src="/images/mainIcon.png" alt="Logo">
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>

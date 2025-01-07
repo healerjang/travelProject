@@ -149,6 +149,8 @@ public interface AdminJh1Service {
   @Transactional
   Long registerProduct(ProductJh1DTO dto);
 
+  void updateProduct(ProductUpdateJh1DTO dto);
+
   /** getProductCompact를 쓰시오 */
   @Deprecated
   ProductJh1DTO getProductTmp(Long id);
