@@ -2,6 +2,7 @@ package com.busanit501.travelproject.interceptor;
 
 import com.busanit501.travelproject.annotation.member.Member;
 import com.busanit501.travelproject.context.MemberContext;
+import com.busanit501.travelproject.dto.member.LoginDTO;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.util.CookieDTO;
 import com.busanit501.travelproject.service.member.MemberService;
@@ -40,6 +41,8 @@ public class ReadMemberInterceptor implements HandlerInterceptor {
                 if (!hashUUID.isEmpty() && !memberNo.isEmpty()) {
                     memberDTO = memberService.checkMemberUUID(Long.valueOf(memberNo), hashUUID);
                 }
+
+                memberDTO.setResponseLogin(memberService.login(new LoginDTO(memberDTO.getMemberID(), memberDTO.getMemberPassword())));
 
                 MemberContext.setMember(memberDTO);
             }

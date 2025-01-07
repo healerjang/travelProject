@@ -11,8 +11,10 @@ const updateDuplicateLoading = personalInformationUpdateActive.querySelector(".u
 const updateDuplicateCheck = personalInformationUpdateActive.querySelector(".updateDuplicateCheck");
 const updateDuplicateCross = personalInformationUpdateActive.querySelector(".updateDuplicateCross");
 const updateDuplicateGuide = personalInformationUpdateActive.querySelector(".updateDuplicateGuide");
+const saveButton = personalInformationUpdateActive.querySelector(".saveButton");
 let activeUpdateKeyword = null;
-let activeDuplicateIcon = null;
+let activeUpdatePage = false;
+let updateCheck = false;
 const updateKeyWordDict = new Map([
     ["아이디", "id"],
     ["이름", "name"],
@@ -34,8 +36,21 @@ cancelButton.addEventListener('click', (e) => {
 })
 
 updateInput.addEventListener('input', (e) => {
-    duplicateCheck();
+    if (activeUpdatePage && updateInput.innerText !== "") duplicateCheck();
 })
+
+updateInput.addEventListener('mousedown', (e) => {
+    e.stopPropagation()
+    e.preventDefault()
+    updateInput.focus();
+})
+
+function hideUpdateGuides() {
+    updateDuplicateGuide.style.display = "none";
+    updateDuplicateCheck.style.display = "none";
+    updateDuplicateCross.style.display = "none";
+    updateDuplicateLoading.style.display = "none";
+}
 
 function updateRouterClick(updateRouter) {
     personalInformationNormalActive.style.display = "none";
@@ -46,39 +61,72 @@ function updateRouterClick(updateRouter) {
     updateBoxContentHeader.innerText = `기존 ${activeUpdateKeyword}`;
     updateInputHeader.innerText = `변경 후 ${activeUpdateKeyword}`;
     updateBoxContentText.innerText = routerParent.querySelector(".personalInformationBoxContentText").innerText;
+
+    hideUpdateGuides();
+    updateCheck = false;
+    activeUpdatePage = true;
 }
 
 function activeNormal() {
     personalInformationUpdateActive.style.display = "none";
     personalInformationNormalActive.style.display = "block";
+    updateCheck = false;
+
+    updateInput.innerText = "";
+    hideUpdateGuides();
+    activeUpdatePage = true;
 }
 
 function duplicateCheck() {
-    if (activeDuplicateIcon != null) activeDuplicateIcon.style.display = "none";
+    hideUpdateGuides();
     updateDuplicateLoading.style.display = "block";
-    updateDuplicateGuide.style.display = "none";
     const keyword = updateKeyWordDict.get(activeUpdateKeyword);
-    console.log(keyword)
-    duplicateCheckToKeyword(keyword, updateInput.value).then(duplicate => {
-        console.log(duplicate)
+    duplicateCheckToKeyword(keyword, updateInput.innerText).then(duplicate => {
         if (duplicate) {
             updateDuplicateLoading.style.display = "none";
-            activeDuplicateIcon = updateDuplicateCheck;
-            activeDuplicateIcon.style.display = "block";
+            updateDuplicateCheck.style.display = "block";
             updateDuplicateGuide.style.display = "block";
             updateDuplicateGuide.innerText = `해당 ${keyword}는 사용할 수 있습니다.`
+            updateCheck = true;
         }
         else {
             updateDuplicateLoading.style.display = "none";
-            activeDuplicateIcon = updateDuplicateCross;
-            activeDuplicateIcon.style.display = "block";
+            updateDuplicateCross.style.display = "block";
             updateDuplicateGuide.style.display = "block";
             updateDuplicateGuide.innerText = `해당 ${keyword}는 사용할 수 없습니다.`
+            updateCheck = false;
         }
+        if (!activeUpdatePage) hideUpdateGuides();
     })
 }
 
+saveButton.addEventListener('click', (e)=> {
+    const keyword = updateKeyWordDict.get(activeUpdateKeyword);
+    if (updateCheck) {
+        const trimmedInput = updateInput.innerText.trim();
+        updateMember(keyword, trimmedInput).then(success=> {
+            if (success) {
+                document.getElementById(`${keyword}View`).innerText = trimmedInput;
+                activeNormal();
+            }
+            else {alert("사용자의 데이터가 이미 수정되었거나 없는 사용자입니다.")}
+        })
+    }
+})
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function duplicateCheckToKeyword(keyword, inputData) {
+    await delay(1000)
     const response = await axios.get(`/member/update/${keyword}/${encodeURIComponent(inputData)}`);
+    return response.data;
+}
+
+async function updateMember(keyword, inputData) {
+    const response = await axios.put(`/member/update/${keyword}`, inputData, {
+        headers: {'Content-Type': 'application/json'}
+    });
     return response.data;
 }
