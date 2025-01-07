@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="www.thymeleaf.org"
+>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreeBoard List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-4">
+    <h1>FreeBoard List</h1>
+
+    <div>
+        <a href="/free_board/register" class="btn btn-primary">Register New Post</a>
+    </div>
+
+    <div class="mt-4">
+        <form method="get" action="/free_board/list">
+            <input type="text" name="keyword" placeholder="Search..." value="${pageRequestDTO.keyword}" class="form-control">
+            <button type="submit" class="btn btn-secondary mt-2">Search</button>
+        </form>
+    </div>
+
+    <table class="table mt-4">
+        <thead>
+        <tr>
+            <th scope="col">No</th>
+            <th scope="col">Title</th>
+            <th scope="col">Content</th>
+            <th scope="col">Writer</th>
+            <th scope="col">Reply Count</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- List of FreeBoards -->
+        <tr th:each="board : ${responseDTO.dtoList}">
+            <td th:text="${board.freeBoardNo}"></td>
+            <td th:text="${board.title}"></td>
+            <td th:text="${board.content}"></td>
+            <td th:text="${board.member}"></td>
+            <td th:text="${board.replyCount}"></td>
+            <td>
+                <a th:href="@{/freeboard/read?freeBoardNo=${board.freeBoardNo}}" class="btn btn-info">View</a>
+                <a th:href="@{/freeboard/update?freeBoardNo=${board.freeBoardNo}}" class="btn btn-warning">Edit</a>
+                <form method="post" action="/freeboard/delete" th:object="${board}" class="d-inline">
+                    <input type="hidden" th:field="*{freeBoardNo}"/>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <!-- Pagination Links -->
+        <div th:if="${responseDTO.total > 1}">
+            <ul class="pagination">
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, responseDTO.total - 1)}">
+                    <a class="page-link" th:href="@{/freeboard/list?page=${i}}"
+                       th:text="${i + 1}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

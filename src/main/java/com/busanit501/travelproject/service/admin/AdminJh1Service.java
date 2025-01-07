@@ -1,18 +1,28 @@
 package com.busanit501.travelproject.service.admin;
 
+import com.busanit501.travelproject.domain.FreeBoard;
+import com.busanit501.travelproject.domain.Location;
 import com.busanit501.travelproject.domain.Member;
 import com.busanit501.travelproject.domain.Product;
 import com.busanit501.travelproject.dto.*;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.member.MemberFullDTO;
 import com.busanit501.travelproject.dto.reservation.ReservationDTO;
-import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
-import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
+import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
+import com.busanit501.travelproject.dto.util.PageResponseJh1DTO;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
 
 public interface AdminJh1Service {
+
+  default LocationValueJh1DTO locationToDTO(Location location) {
+    return LocationValueJh1DTO.builder()
+      .locationNo(location.getLocationNo())
+      .city(location.getCity())
+      .country(location.getCountry())
+      .build();
+  }
 
   default ProductJh1DTO productEntityToDTO(Product product) {
     return ProductJh1DTO.builder()
@@ -21,6 +31,7 @@ public interface AdminJh1Service {
       .description(product.getDescription())
       .price(product.getPrice())
       .locationNo(product.getLocation().getLocationNo())
+      .location(locationToDTO(product.getLocation()))
       .startDate(product.getStartDate())
       .endDate(product.getEndDate())
       .capacity(product.getCapacity())
@@ -95,6 +106,18 @@ public interface AdminJh1Service {
       .build();
   }
 
+  default FreeBoardJh1DTO boardToDTO(FreeBoard fb) {
+    return FreeBoardJh1DTO.builder()
+      .freeBoardNo(fb.getFreeBoardNo())
+      .title(fb.getTitle())
+      .content(fb.getContent())
+      .regDate(fb.getRegDate())
+      .modDate(fb.getModDate())
+      .memberNo(fb.getMember().getMemberNo())
+      .memberName(fb.getMember().getMemberName())
+      .build();
+  }
+
   @Transactional
   List<LocationValueJh1DTO> getLocationsOnly();
 
@@ -105,10 +128,13 @@ public interface AdminJh1Service {
 
   ProductJh1DTO getProductTmp(Long id);
 
-  HcbPageResponseDTO<ProductJh1DTO> listProducts(HcbPageRequestDTO requestDTO);
+  PageResponseJh1DTO<ProductJh1DTO> listProducts(PageRequestJh1DTO requestDTO);
 
-
-  HcbPageResponseDTO<MemberDTO> listMembers(HcbPageRequestDTO requestDTO);
+  PageResponseJh1DTO<MemberDTO> listMembers(PageRequestJh1DTO requestDTO);
 
   MemberFullDTO getMemberFullSupport(long memberNo);
+
+  void givePointTo(long memberNo, int amount);
+
+  PageResponseJh1DTO<FreeBoardJh1DTO> getFreeBoardList(PageRequestJh1DTO requestDTO);
 }
