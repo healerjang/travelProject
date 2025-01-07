@@ -166,7 +166,7 @@
 <script layout:fragment="javascript" th:inline="javascript">
     // 수정폼으로 이동하기.
     document.querySelector(".submitBtn").addEventListener("click", function (e) {
-        self.location = "/food/update?bno="+[[${dto.freeBoardNo}]]+"&"+[[${pageRequestDTO.link}]], false
+        self.location = "/free_board/update?freeBoardNo="+[[${dto.freeBoardNo}]]+"&"+[[${pageRequestDTO.link}]], false
     });
 </script>
 
