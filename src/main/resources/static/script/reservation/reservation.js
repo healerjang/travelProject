@@ -12,6 +12,10 @@ async function deleteReservation(reservationNo){
     const result = await axios.put(`/reservation/delete/${reservationNo}`)
     return result.data
 }
+async function refundReservation(reservationNo){
+    const result = await axios.put(`/reservation/refund/${reservationNo}`)
+    return result.data
+}
 
 async function deleteReservationNow(reservationNo){
     const result = await axios.delete(`/reservation/delete/now/${reservationNo}`)
@@ -20,5 +24,10 @@ async function deleteReservationNow(reservationNo){
 
 async function feeReservation(reservationNo){
     const result = await axios.put(`/reservation/fee/${reservationNo}`)
+    return result.data
+}
+
+async function getMemberPoint() {
+    const result = await axios.get(`/reservation/memberPoint`)
     return result.data
 }
