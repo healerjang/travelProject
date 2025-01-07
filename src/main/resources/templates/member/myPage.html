@@ -3,21 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link href="/static/css/member/myPage.css" rel="stylesheet">
+    <link href="/css/member/myPage.css" rel="stylesheet">
 </head>
 <body>
 <header>
-    <div class="header__main">Hello</div>
+    <div class="header__main"></div>
     <div class="myPageContainer">
-        <img src="/static/images/user.png" id="member" alt="" style="height: 70%; margin: 2.5%"/>
-        <img src="/static/images/shoppingCart.png" id="shoppingCart" alt="" style="height: 70%; margin: 2.5%"/>
-        <img src="/static/images/airplane.png" id="reservation" alt="" style="height: 70%; margin: 2.5%"/>
+        <div id="member">마이페이지</div>
+        <div id="shoppingCart">장바구니</div>
+        <div id="reservation">예약확인</div>
     </div>
 </header>
 <div class="mainContainer">
     <nav>
-        <div><div>a</div></div>
+        <div class="navContainer" style="background-color: #a8a8a8" id="home">
+            <div class="navIcon homeIcon"></div>
+            <div class="navHeader">홈</div>
+        </div>
+        <div class="navContainer" id="personalInformation">
+            <div class="navIcon personalInformationIcon"></div>
+            <div class="navHeader">개인정보</div>
+        </div>
+        <div class="navContainer" id="lock">
+            <div class="navIcon lockIcon"></div>
+            <div class="navHeader">보안</div>
+        </div>
+        <div class="line"></div>
+        <div class="navContainer">
+            <div class="navIcon" id="info"></div>
+            <div class="navHeader">정보</div>
+        </div>
     </nav>
+    <div class="headerContainer homeContainer">
+        <div class="homeHeaderIcon"></div>
+        <h1 class="homeHeader">[[${memberDTO.memberName}]]님, 환영합니다</h1>
+        <div class="homeHeaderText">이곳에서는 자신의 개인정보를 관리할 수 있습니다.</div>
+        <div class="homeContentContainer">
+            <div class="homeContentBox homeContentPersonalInformationBox">
+                <div class="homeContentPersonalInformationHeader">
+                    <div class="homeContentPersonalInformationIcon"></div>
+                    <div class="homeContentPersonalInformationHeaderText">개인정보 조회 및 변경</div>
+                </div>
+                <div class="homeContentPersonalInformationContent">
+                    <ul style="list-style-type: none;">
+                        <li style="margin-bottom: 2%">아이디, 이름 등을 조회할 수 있습니다.</li>
+                        <li style="margin-bottom: 2%">개인정보들을 수정, 변경할 수 있습니다.</li>
+                        <li>추가되지 않은 개인정보를 추가할 수 있습니다.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="homeContentBox homeContentLockBox">
+                <div class="homeContentLockHeader">
+                    <div class="homeContentLockIcon"></div>
+                    <div class="homeContentLockHeaderText">보안 및 인증</div>
+                </div>
+                <div class="homeContentLockContent">
+                    <ul style="list-style-type: none;">
+                        <li style="margin-bottom: 2%">비밀번호를 변경할 수 있습니다.</li>
+                        <li style="margin-bottom: 2%">2단계 인증을 설정할 수 있습니다.</li>
+                        <li>결제 등록을 변경할 수 있습니다.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="headerContainer personalInformationContainer">
+        <div class="personalInformationHeader">
+            <h1>개인 정보</h1>
+        </div>
+        <div class="personalInformationHeaderText">
+            이곳에서는 자신의 개인 정보를 조회 및 변경할 수 있습니다.
+        </div>
+        <div class="personalInformationBox">
+            <div class="personalInformationNormalActive">
+                <h2 class="personalInformationBoxHeader">기본 정보</h2>
+                <div class="personalInformationBoxContent">
+                    <div class="personalInformationBoxContentHeader">아이디</div>
+                    <div class="personalInformationBoxContentText">[[${memberDTO.memberID}]]</div>
+                    <div class="personalInformationBoxContentUpdateRouter">&gt</div>
+                </div>
+                <div class="personalInformationBoxContent">
+                    <div class="personalInformationBoxContentHeader">이름</div>
+                    <div class="personalInformationBoxContentText">[[${memberDTO.memberName}]]</div>
+                    <div class="personalInformationBoxContentUpdateRouter">&gt</div>
+                </div>
+                <div class="personalInformationBoxContent">
+                    <div class="personalInformationBoxContentHeader">이메일</div>
+                    <div class="personalInformationBoxContentText">[[${memberDTO.memberEmail}]]</div>
+                    <div class="personalInformationBoxContentUpdateRouter">&gt</div>
+                </div>
+                <div class="personalInformationBoxContent">
+                    <div class="personalInformationBoxContentHeader">전화번호</div>
+                    <div class="personalInformationBoxContentText">[[${memberDTO.memberPhone}]]</div>
+                    <div class="personalInformationBoxContentUpdateRouter">&gt</div>
+                </div>
+            </div>
+            <div class="personalInformationUpdateActive">
+                <div class="updateHeader">
+                    <div class="updateHeaderBack">&lt</div>
+                    <h2 class="updateHeaderText">수정 및 변경</h2>
+                </div>
+                <div class="updateBoxContent">
+                    <div class="updateBoxContentHeader"></div>
+                    <div class="updateBoxContentText"></div>
+                </div>
+                <div class="updateInputContainer">
+                    <div class="updateInputHeader"></div>
+                    <textarea class="updateInput"></textarea>
+                    <div class="updateDuplicateLoading"></div>
+                    <div class="updateDuplicateCheck"></div>
+                    <div class="updateDuplicateCross"></div>
+                    <div class="updateDuplicateGuide"></div>
+                </div>
+                <div class="updateButtonContainer">
+                    <div class="cancelButton">취소</div>
+                    <div class="saveButton">저장</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="headerContainer lockContainer">
+        <div class="lockBox certificationBox">
+            <div class="boxHeader">인증 활성화</div>
+            <div class="certificationContent">
+                <div class="certificationHeader">이메일 인증이 비활성화 되어있습니다.</div>
+                <div class="certificationButton">활성화</div>
+            </div>
+            <div class="certificationContent">
+                <div class="certificationHeader">휴대폰 인증이 비활성화 되어있습니다.</div>
+                <div class="certificationButton">활성화</div>
+            </div>
+        </div>
+        <div class="lockBox changePasswordBox">
+            <div class="boxHeader">비밀번호 변경</div>
+            <div class="inputTextArea" contenteditable="true" id="oldPassword" data-first-input="true">기존 비밀번호</div>
+            <div class="inputTextArea" contenteditable="true" id="newPassword" data-first-input="true">변경할 비밀번호</div>
+            <div class="inputTextArea" contenteditable="true" id="passwordCheck" data-first-input="true">변경할 비밀번호 확인</div>
+            <div class="changeButton">변경</div>
+        </div>
+    </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </body>
+<script src="/script/member/myPage.js"></script>
+<script src="/script/member/myPageUpdate.js"></script>
+<script src="/script/member/myPageLock.js"></script>
 </html>
