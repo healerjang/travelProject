@@ -53,7 +53,7 @@ public class FreeBoardController {
             return "redirect:/free_board/list";
         }
         freeBoardDTO.setMemberNo(memberDTO.getMemberNo());
-        //검사가 통과가 되고, 정상 입력
+
         Long freeBoardNo = freeBoardService.register(freeBoardDTO);
 
         redirectAttributes.addFlashAttribute("result", freeBoardNo);
@@ -101,18 +101,19 @@ public class FreeBoardController {
         redirectAttributes.addFlashAttribute("result", freeBoardDTO.getFreeBoardNo());
         redirectAttributes.addFlashAttribute("resultType", "update");
 
-        return "redirect:/food/read?freeBoardNo="+freeBoardDTO.getFreeBoardNo()+"&keyword="+keyword2+"&page="+page2+"&type="+type2;
+        return "redirect:/free_board/read?freeBoardNo="+freeBoardDTO.getFreeBoardNo()+"&keyword="+keyword2+"&page="+page2+"&type="+type2;
 
     }
 
     @PostMapping("/delete")
     public String delete(Long freeBoardNo,
-                         String keyword2,String page2, String type2,
+//                         String keyword2, String page2, String type2,
                          RedirectAttributes redirectAttributes) {
         freeBoardService.delete(freeBoardNo);
         redirectAttributes.addFlashAttribute("result", freeBoardNo);
         redirectAttributes.addFlashAttribute("resultType", "delete");
-        return "redirect:/food/list?"+"&keyword="+keyword2+"&page="+page2+"&type="+type2;
+//        return "redirect:/free_board/list?"+"&keyword="+keyword2+"&page="+page2+"&type="+type2;
+        return "redirect:/free_board/list";
     }
 
 }

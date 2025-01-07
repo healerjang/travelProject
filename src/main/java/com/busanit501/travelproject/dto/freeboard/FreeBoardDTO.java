@@ -1,5 +1,6 @@
 package com.busanit501.travelproject.dto.freeboard;
 
+import com.busanit501.travelproject.domain.Member;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -25,6 +26,8 @@ public class FreeBoardDTO {
 
 //    @NotNull
     private long memberNo;
+    private String memberName; // 작성자 이름을 저장할 수 있도록 추가
+
     private LocalDateTime regDate;
     private LocalDateTime modDate;
 }
