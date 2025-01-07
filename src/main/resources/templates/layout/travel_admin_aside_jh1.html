@@ -23,13 +23,13 @@
     <div class="collapse navbar-collapse" id="navbarNav"></div>
   </div>
 </nav>
-<div class="row w-100">
-  <aside class="col-12 col-md-3 col-xl-2 d-none d-md-block sticky-top">
-    <div class="list-group">
-      <a class="list-group-item list-group-item-action" th:href="@{/admin/member/list}">회원관리</a>
-      <a class="list-group-item list-group-item-action" th:href="@{/admin/product/list}">여행상품 관리</a>
-      <a class="list-group-item list-group-item-action" th:href="@{/admin/location/list}">여행지 관리</a>
-      <a class="list-group-item list-group-item-action" th:href="@{/admin/freeBoard/list}">자유게시판 관리</a>
+<div class="d-flex w-100">
+  <aside class="col-12 h-auto min-vh-100 col-md-3 col-xl-2 d-none d-md-block sticky-top bg-body-secondary text-body-secondary" style="z-index: 1019!important;">
+    <div class="list-group list-group-flush">
+      <a class="list-group-item list-group-item-action bg-transparent" th:href="@{/admin/member/list}">회원관리</a>
+      <a class="list-group-item list-group-item-action bg-transparent" th:href="@{/admin/product/list}">여행상품 관리</a>
+      <a class="list-group-item list-group-item-action bg-transparent" th:href="@{/admin/location/list}">여행지 관리</a>
+      <a class="list-group-item list-group-item-action bg-transparent" th:href="@{/admin/freeBoard/list}">자유게시판 관리</a>
     </div>
   </aside>
   <main class="col">

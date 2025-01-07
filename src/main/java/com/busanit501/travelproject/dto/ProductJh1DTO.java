@@ -15,7 +15,6 @@ import java.util.List;
 
 /**
  * 여행상품 엔티티에서 예약 및 리뷰가 빠진 DTO
- * TODO: 예약 및 리뷰 추가되면 수동 매핑에 추가하기
  */
 @Data
 @Builder
