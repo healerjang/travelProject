@@ -1,89 +1,157 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/bootstrap_member_yu.html}">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/bootstrap_member_yu.html}">
 <head>
     <meta charset="UTF-8">
-    <title>Product Detail</title>
+    <link th:href="@{/css/customize/bootstrap.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title layout:title-pattern="$CONTENT_TITLE :: $LAYOUT_TITLE">Travel</title>
+    <style>
+        .product-img {
+            border-radius: 20px;
+            max-height: 500px;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .main-layout {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .left-section, .right-section {
+            flex: 1;
+        }
+
+        .right-section {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #FF385C;
+        }
+
+        button {
+            border-radius: 10px;
+        }
+    </style>
 </head>
+
 <body>
+<th:block layout:fragment="navbar">
+    <!-- 네비게이션 바 포함 -->
+    <th:block layout:include="~{layout/bootstrap_member_yu.html :: navbar}"/>
+</th:block>
+
+<!-- 메인 콘텐츠 영역 -->
 <th:block layout:fragment="content">
-    <div class="container mt-4">
-        <!-- Product Image Section -->
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <div class="card">
-                    <img class="card-img-top" th:src="${product.imagePath}" alt="Product Image" />
+    <div class="container mt-5">
+        <!-- 상품 이미지 섹션 -->
+        <div class="text-center mb-4">
+            <img class="product-img" th:src="${product.imagePath ?: '/images/default.jpg'}" alt="상품 이미지">
+        </div>
+
+        <!-- 상품 정보 (이미지 하단으로 이동) -->
+        <div class="text-center mb-4">
+            <h2 th:text="${product.name ?: '상품 이름 없음'}"></h2>
+            <p th:text="${product.description ?: '상품 설명이 없습니다.'}"></p>
+            <p class="price" th:text="'₩ ' + ${product.price ?: 0}"></p>
+        </div>
+
+        <!-- 메인 콘텐츠 레이아웃 -->
+        <div class="main-layout">
+            <!-- 좌측: 리뷰 작성 섹션 -->
+            <div class="left-section">
+                <h3>리뷰 작성</h3>
+                <form id="reviewForm">
+                    <textarea id="reviewContent" class="form-control mb-2" placeholder="리뷰를 작성해주세요."></textarea>
+                    <input type="number" id="rating" class="form-control mb-2" min="1" max="5" placeholder="평점 (1-5)">
+                    <input type="hidden" id="productNo" th:value="${product.productNo}" />
+                    <input type="hidden" id="memberNo" th:value="${session.memberNo}" />
+                    <button type="button" class="btn btn-primary w-100" onclick="submitReview()">리뷰 등록</button>
+                </form>
+
+                <!-- 기존 리뷰 목록 -->
+                <div class="mt-4">
+                    <h4>리뷰 목록</h4>
+                    <ul>
+                        <li th:each="review : ${reviews}">
+                            <p th:text="${review.reviewContent ?: '리뷰 내용 없음'}"></p>
+                            <small>평점: <span th:text="${review.rating ?: 'N/A'}"></span></small>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </div>
 
-        <!-- Product Details Section -->
-        <div class="row">
-            <div class="col-md-8">
-                <h2 th:text="${product.name}"></h2>
-                <p class="text-muted" th:text="${product.description}"></p>
-            </div>
-            <div class="col-md-4 text-end">
-                <h3 class="text-primary" th:text="'₩ ' + ${product.price}"></h3>
-            </div>
-        </div>
+            <!-- 우측: 예약, 장바구니, 날짜 선택 -->
+            <div class="right-section">
+                <h4>예약하기</h4>
+                <form id="reservationForm">
+                    <label for="start_date">체크인 날짜</label>
+                    <input type="date" id="start_date" class="form-control mb-2" required onchange="calculateTotalPrice()">
 
-        <!-- Review Section -->
-        <div class="reviews mt-4">
-            <h3>리뷰</h3>
-            <ul>
-                <li th:each="review : ${reviews}">
-                    <p th:text="${review.reviewContent}"></p>
-                    <small>Rating: <span th:text="${review.rating}"></span></small>
-                </li>
-            </ul>
-        </div>
+                    <label for="end_date">체크아웃 날짜</label>
+                    <input type="date" id="end_date" class="form-control mb-2" required onchange="calculateTotalPrice()">
 
-        <!-- Add Review Section -->
-        <div class="add-review mt-4">
-            <h3>리뷰 작성</h3>
-            <form id="reviewForm">
-                <textarea id="reviewContent" class="form-control mb-2" placeholder="Write your review"></textarea>
-                <input type="number" id="rating" class="form-control mb-2" min="1" max="5" placeholder="Rating (1-5)">
-                <button type="button" class="btn btn-primary" onclick="submitReview()">등록하기</button>
-            </form>
-        </div>
+                    <p>남은 인원: <span id="capacity" th:text="${product.capacity ?: 'N/A'}"></span></p>
+                    <p class="price">총 금액: <span id="total_price">₩ 0</span></p>
 
-        <!-- Actions Section -->
-        <div class="row mt-4">
-            <div class="col-md-4 offset-md-8">
-                <button class="btn btn-primary w-100 mb-2" th:onclick="|window.location.href='@{/reservation/' + ${product.productNo}}'|">예약하기</button>
-                <button class="btn btn-secondary w-100" th:onclick="|window.location.href='@{/cart/add/' + ${product.productNo}}'|">장바구니에 추가</button>
+                    <button class="btn btn-primary w-100 mb-2" type="button"
+                            th:onclick="'window.location.href=\'' + @{/reservation/{productNo}(productNo=${product.productNo})} + '\''">예약하기</button>
+                    <button class="btn btn-secondary w-100"
+                            th:onclick="'window.location.href=\'' + @{/cart/add/{productNo}(productNo=${product.productNo})} + '\''">장바구니에 추가</button>
+                </form>
             </div>
         </div>
     </div>
-</th:block>
-<script>
-    function submitReview() {
-        const review = {
-            reviewContent: document.getElementById('reviewContent').value,
-            rating: document.getElementById('rating').value,
-            productNo: /* Replace with product ID */,
-            memberNo: /* Replace with member ID */,
-        };
 
-        fetch('/review/add', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(review),
-        })
-            .then(response => response.json())
-            .then(data => {
-                alert('리뷰가 성공적으로 등록되었습니다.');
-                location.reload();
+    <!-- JavaScript -->
+    <script>
+        const productPrice = parseFloat("[[${product.price}]]");  // 제품 가격
+        function calculateTotalPrice() {
+            const startDate = new Date(document.getElementById('start_date').value);
+            const endDate = new Date(document.getElementById('end_date').value);
+
+            if (startDate && endDate && endDate > startDate) {
+                const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+                const totalPrice = days * productPrice;
+                document.getElementById('total_price').innerText = `₩ ${totalPrice.toLocaleString()}`;
+            } else {
+                document.getElementById('total_price').innerText = '₩ 0';
+            }
+        }
+
+        function submitReview() {
+            const review = {
+                reviewContent: document.getElementById('reviewContent').value,
+                rating: document.getElementById('rating').value,
+                productNo: document.getElementById('productNo').value,
+                memberNo: document.getElementById('memberNo').value,
+            };
+
+            fetch('/review/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(review),
             })
-            .catch(error => {
-                console.error('리뷰 등록 중 오류 발생:', error);
-                alert('리뷰 등록 실패. 다시 시도해주세요.');
-            });
-    }
-</script>
+                .then(response => response.json())
+                .then(data => {
+                    alert('리뷰가 성공적으로 등록되었습니다.');
+                    location.reload();
+                })
+                .catch(error => {
+                    alert('리뷰 등록 실패. 다시 시도해주세요.');
+                });
+        }
+    </script>
+</th:block>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

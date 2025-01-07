@@ -7,3 +7,4 @@ public interface MemberProductDetailService {
 
     ProductJh1DTO getProductById(Long productNo);
 }
+

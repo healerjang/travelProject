@@ -1,10 +1,12 @@
 package com.busanit501.travelproject.service.member;
 
+import com.busanit501.travelproject.domain.Member;
 import com.busanit501.travelproject.domain.Product;
 import com.busanit501.travelproject.domain.Review;
 import com.busanit501.travelproject.dto.ReviewJh1DTO;
-import com.busanit501.travelproject.repository.member.ProductRepository;
+import com.busanit501.travelproject.repository.member.MemberRepository;
 import com.busanit501.travelproject.repository.member.ReviewRepository;
+import com.busanit501.travelproject.repository.ProductJh1Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +17,14 @@ import java.util.stream.Collectors;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final ProductRepository productRepository;
+    private final ProductJh1Repository productRepository;
+    private final MemberRepository memberRepository;
 
     @Autowired
-    public ReviewServiceImpl(ReviewRepository reviewRepository, ProductRepository productRepository) {
+    public ReviewServiceImpl(ReviewRepository reviewRepository, ProductJh1Repository productRepository, MemberRepository memberRepository) {
         this.reviewRepository = reviewRepository;
         this.productRepository = productRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -42,11 +46,14 @@ public class ReviewServiceImpl implements ReviewService {
         Product product = productRepository.findById(reviewDto.getProductNo())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid productNo: " + reviewDto.getProductNo()));
 
+        Member member = memberRepository.findById(reviewDto.getMemberNo())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid memberNo: " + reviewDto.getMemberNo()));
+
         Review review = Review.builder()
                 .reviewContent(reviewDto.getReviewContent())
                 .rating(reviewDto.getRating())
                 .product(product)
-                // Member 정보를 MemberRepository에서 가져와 설정해야 함
+                .member(member)
                 .build();
 
         Review savedReview = reviewRepository.save(review);
@@ -60,4 +67,9 @@ public class ReviewServiceImpl implements ReviewService {
                 .build();
     }
 
+
+    @Override
+    public ReviewJh1DTO saveReview(ReviewJh1DTO dto) {
+        return null;
+    }
 }
