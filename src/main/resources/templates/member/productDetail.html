@@ -105,7 +105,7 @@
                     <button class="btn btn-primary w-100 mb-2" type="button"
                             th:onclick="'window.location.href=\'' + @{/reservation/{productNo}(productNo=${product.productNo})} + '\''">예약하기</button>
                     <button class="btn btn-secondary w-100"
-                            th:onclick="'window.location.href=\'' + @{/cart/add/{productNo}(productNo=${product.productNo})} + '\''">장바구니에 추가</button>
+                            th:onclick="addCart(${product.productNo})">장바구니에 추가</button>
                 </form>
             </div>
         </div>
@@ -153,5 +153,6 @@
 </th:block>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/script/cart/cart.js"></script>
 </body>
 </html>
