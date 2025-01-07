@@ -14,27 +14,25 @@ public class MemberRestController {
 
     private final MemberService memberService;
 
-    @PostMapping(value = "/id", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public boolean duplicateId(@RequestBody String id) {
+    @GetMapping(value = "/id/{id}")
+    public boolean duplicateId(@PathVariable String id) {
         return memberService.duplicateID(id);
     }
 
-    @PostMapping(value = "/name", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public boolean duplicateName(@RequestBody String name) {
+    @GetMapping(value = "/name/{name}")
+    public boolean duplicateName(@PathVariable String name) {
         return memberService.duplicateName(name);
     }
 
-    @PostMapping(value = "/email", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public boolean duplicateEmail(@RequestBody String email) {
+    @GetMapping(value = "/email/{email}")
+    public boolean duplicateEmail(@PathVariable String email) {
         return memberService.duplicateEmail(email);
     }
 
-    @PostMapping(value = "/phone", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public boolean duplicatePhone(@RequestBody String phone) {
+    @GetMapping(value = "/phone/{phone}")
+    public boolean duplicatePhone(@PathVariable String phone) {
         return memberService.duplicatePhone(phone);
     }
-    
-    //put매핑은 시큐리티, 쿠키 등으로 사용자의 번호를 받은 뒤 수정하는 로직으로 개발예정.
 
     @PutMapping(value = "/id", consumes = MediaType.APPLICATION_JSON_VALUE)
     public boolean updateId(@RequestBody String id) {
