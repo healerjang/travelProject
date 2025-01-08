@@ -25,7 +25,6 @@ public class FreeBoardController {
     @GetMapping("/list")
     public String list(PageRequestDTO pageRequestDTO, Model model ) { // 서버 -> 화면으로 전달
         PageResponseDTO<FreeBoardReadDTO> responseDTO = freeBoardService.listReadWithReplyCount(pageRequestDTO);
-        log.info("pageRequestDTO 의 getLink 조사 : " + pageRequestDTO.getLink());
         model.addAttribute("responseDTO", responseDTO);
 
         return "free_board/list";
@@ -44,10 +43,8 @@ public class FreeBoardController {
             @Valid FreeBoardDTO freeBoardDTO,
                                BindingResult bindingResult,
                                RedirectAttributes redirectAttributes) {
-        log.info("Free_BoardController register post 로직처리: ");
-        log.info("Free_BoardController register post  foodDTO : " + freeBoardDTO);
+
         if (bindingResult.hasErrors()) {
-            log.info("has errors : 유효성 에러가 발생");
 
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/free_board/list";
@@ -83,11 +80,6 @@ public class FreeBoardController {
                              PageRequestDTO pageRequestDTO,
                              String keyword2,String page2, String type2,
                              RedirectAttributes redirectAttributes) {
-        log.info("FoodController updatePost post 로직처리: ");
-        log.info("FoodController updatePost post  foodDTO : " + freeBoardDTO);
-
-        log.info("FoodController updatePost post  pageRequestDTO : " + pageRequestDTO);
-
 
         if (bindingResult.hasErrors()) {
             log.info("has errors : 유효성 에러가 발생함.");
@@ -109,11 +101,9 @@ public class FreeBoardController {
     public String delete(Long freeBoardNo, RedirectAttributes redirectAttributes) {
         freeBoardService.delete(freeBoardNo);
 
-        // 삭제 결과를 redirectAttributes로 전달
         redirectAttributes.addFlashAttribute("result", freeBoardNo);
         redirectAttributes.addFlashAttribute("resultType", "delete");
 
-        // 삭제 후 리스트로 리다이렉트
         return "redirect:/free_board/list";
     }
 
