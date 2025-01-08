@@ -51,10 +51,13 @@ public class ReservationRestController {
     @PostMapping("/reg")
     public Map<String, Long> reg(
             @Valid @RequestBody ReservationDTO reservationDTO, BindingResult bindingResult,
+            @CookieValue(value = "memberNo", required = false) String memberNoCookie,
             RedirectAttributes redirectAttributes) throws BindException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
+        Long memberNo = memberNoCookie != null ? Long.parseLong(memberNoCookie) : null;
+        reservationDTO.setMemberNo(memberNo);
         Long result = reservationService.registerReservation(reservationDTO);
         return Map.of("reservationNo", result);
     }
