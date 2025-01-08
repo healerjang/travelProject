@@ -1,6 +1,7 @@
 package com.busanit501.travelproject.dto.freeboard;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FreeBoardDTO {
+public class FreeBoardReadDTO {
     private  Long freeBoardNo;
     @NotEmpty
     @Size(min = 3, max = 100)
@@ -22,11 +23,12 @@ public class FreeBoardDTO {
     @NotEmpty
     private  String content;
 
-//    @NotNull
+    @NotNull
     private long memberNo;
-    private String memberName; // 작성자 이름을 저장할 수 있도록 추가
-
-
+    private String memberName;
     private LocalDateTime regDate;
     private LocalDateTime modDate;
+
+    private Long replyCount;
+
 }
