@@ -15,6 +15,19 @@
                 width: calc(50% - 0.5rem);
             }
         }
+
+        .btn-check:checked + .btn-pending {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+        .btn-check:checked + .btn-cancelled {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+        .btn-check:checked + .btn-completed {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
     </style>
 </head>
 <body>
@@ -24,13 +37,13 @@
     <div id="orderBtn" class="btn-group" role="group" aria-label="Basic radio toggle button group">
         <input type="radio" class="btn-check" name="btnradio" id="btnradio1" data-order="PENDING" autocomplete="off"
                checked>
-        <label class="btn btn-outline-primary" for="btnradio1">Pending</label>
+        <label class="btn btn-outline-primary btn-pending" for="btnradio1">Pending</label>
 
         <input type="radio" class="btn-check" name="btnradio" id="btnradio2" data-order="COMPLETED" autocomplete="off">
-        <label class="btn btn-outline-primary" for="btnradio2">Completed</label>
+        <label class="btn btn-outline-primary btn-completed" for="btnradio2">Completed</label>
 
         <input type="radio" class="btn-check" name="btnradio" id="btnradio3" data-order="CANCELLED" autocomplete="off">
-        <label class="btn btn-outline-primary" for="btnradio3">Cancelled</label>
+        <label class="btn btn-outline-primary btn-cancelled" for="btnradio3">Cancelled</label>
     </div>
     <label for="orderBtn" class="memberPointLabel"></label>
 
