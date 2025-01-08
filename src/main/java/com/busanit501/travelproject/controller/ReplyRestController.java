@@ -25,22 +25,15 @@ public class ReplyRestController {
 
     private final ReplyService replyService;
 
-    @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/write", consumes = MediaType.APPLICATION_JSON_VALUE)
 
-    public ResponseEntity<Map<String,Long>> register(
-            @Valid @RequestBody ReplyDTO replyDTO,
-            BindingResult bindingResult
+    public Long register(
+            @RequestBody ReplyDTO replyDTO
     ) throws BindException {
-
-        if (bindingResult.hasErrors()) {
-            throw new BindException(bindingResult);
-        }
-
-        Map<String,Long> map = Map.of("replyNo",1L);
-        return ResponseEntity.ok(map);
+        return replyService.register(replyDTO);
     }
 
-
+// 댓글 조회
     @GetMapping(value ="/{replyNo}")
     public ReplyDTO getRead(@PathVariable("replyNo") Long replyNo)
     {
@@ -48,7 +41,7 @@ public class ReplyRestController {
         return replyDTO;
     }
 
-
+// 댓글 수정
     @PutMapping(value ="/{replyNo}")
     public Map<String,Long> updateReply(
             @Valid @RequestBody ReplyDTO replyDTO,
@@ -63,7 +56,7 @@ public class ReplyRestController {
         return map;
     }
 
-
+// 댓글 삭제
     @DeleteMapping(value ="/{replyNo}")
     public Map<String,Long> deleteReply(
             @PathVariable("replyNo") Long replyNo) throws BindException {
@@ -72,11 +65,13 @@ public class ReplyRestController {
         return map;
     }
 
+    // 댓글 카운트
     @GetMapping(value = "/count/{freeBoardNo}")
     public Long countReply(@PathVariable Long freeBoardNo){
         return replyService.countReply(freeBoardNo);
     }
 
+    // 댓글 리스트
     @GetMapping(value = "/replyList/{freeBoardNo}/{page}/{size}")
     public PageResponseDTO<ReplyDTO> getReplyList(@PathVariable Long freeBoardNo,
                                                   @PathVariable int page,

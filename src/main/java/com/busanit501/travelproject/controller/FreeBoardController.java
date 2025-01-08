@@ -61,8 +61,11 @@ public class FreeBoardController {
     }
 
     @GetMapping("/read")
-    public void read(Long freeBoardNo, PageRequestDTO pageRequestDTO,
+    @Member
+    // httpServletRequest request요청해서 @Member<< 들어있는 MemberDTO 그대로 주입하겠다 그런의미
+    public void read(Long freeBoardNo, PageRequestDTO pageRequestDTO, HttpServletRequest request, MemberDTO memberDTO,
                      Model model) {
+        model.addAttribute("memberName", memberDTO.getMemberName());
         FreeBoardDTO freeBoardDTO = freeBoardService.readOne(freeBoardNo);
         model.addAttribute("dto", freeBoardDTO);
     }
