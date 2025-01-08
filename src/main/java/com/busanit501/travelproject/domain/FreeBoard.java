@@ -24,5 +24,7 @@ public class FreeBoard extends BaseEntity{
     private Member member;
 
     public void changeTitleContent(@NotEmpty @Size(min = 3, max = 100) String title, @NotEmpty String content) {
+        this.title = title;
+        this.content = content;
     }
 }

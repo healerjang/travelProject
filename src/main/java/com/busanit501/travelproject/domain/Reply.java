@@ -18,18 +18,19 @@ public class Reply extends BaseEntity{
     private String content;
     @ManyToOne
     @JoinColumn(name = "member_no", nullable = false)
+    @ToString.Exclude
     private Member member;
     @NotEmpty
     private String replyText;
-    @ManyToOne(fetch = FetchType.LAZY) // fetch = 가져오는거 , LAZY = 사용하는 시점에 조회함(늦게 가져오는거)
-    //FetchType.EAGER, 즉시로딩, 사용 안해도 조회 하겠다.
-    private FreeBoard freeBoard; // 부모의 게시글 번호,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private FreeBoard freeBoard;
 
     public void changeBoard(FreeBoard freeBoard) {
         this.freeBoard = freeBoard;
     }
 
-    // 수정 시, 내용만 변경하기위해서 사용함, 세터 안쓰는 이유 => 불변성을 유지하기 위해서
+
     public void changeReplyText(String replyText) {
         this.replyText = replyText;
     }
