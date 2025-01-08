@@ -36,6 +36,13 @@ public class RootConfig {
                 map().setFreeBoardNo(source.getFreeBoard().getFreeBoardNo());
             }
         });
+        modelMapper.addMappings(new PropertyMap<ReplyDTO, Reply>() {
+
+            @Override
+            protected void configure() {
+                map().setContent(source.getReplyText());
+            }
+        });
         return modelMapper;
     }
 }
