@@ -1,5 +1,5 @@
-async function getUserReservation({reservationOrder, page}){
-    const result = await axios.get(`/reservation/userReservation/${reservationOrder}`, {params: {page}})
+async function getUserReservation({reservationOrder, page, size}){
+    const result = await axios.get(`/reservation/userReservation/${reservationOrder}`, {params: {page, size}})
     return result.data
 }
 
@@ -12,6 +12,10 @@ async function deleteReservation(reservationNo){
     const result = await axios.put(`/reservation/delete/${reservationNo}`)
     return result.data
 }
+async function refundReservation(reservationNo){
+    const result = await axios.put(`/reservation/refund/${reservationNo}`)
+    return result.data
+}
 
 async function deleteReservationNow(reservationNo){
     const result = await axios.delete(`/reservation/delete/now/${reservationNo}`)
@@ -21,4 +25,14 @@ async function deleteReservationNow(reservationNo){
 async function feeReservation(reservationNo){
     const result = await axios.put(`/reservation/fee/${reservationNo}`)
     return result.data
+}
+
+async function getMemberPoint() {
+    const result = await axios.get(`/reservation/memberPoint`)
+    return result.data
+}
+
+async function getImage(imgPath) {
+    const result = await axios.get(`/productImage/${imgPath}`)
+    return result
 }

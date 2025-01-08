@@ -18,3 +18,8 @@ async function addCart(productNo){
     const result = await axios.get(`/cart/add/${productNo}`)
     return result
 }
+
+async function getImage(imgPath) {
+    const result = await axios.get(`/productImage/${imgPath}`)
+    return result
+}

@@ -16,6 +16,7 @@ public class ReservationUserDTO {
     private Long reservationNo;
     private Long memberNo;
     private String productName;
+    private String imagePath;
     private String productDescription;
     private Long productPrice;
     private LocalDate productStartDate;
