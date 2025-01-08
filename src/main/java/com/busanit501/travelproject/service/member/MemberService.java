@@ -19,4 +19,5 @@ public interface MemberService {
     boolean duplicateEmail(String email);
     boolean duplicatePhone(String phone);
     MemberDTO checkMemberUUID(Long memberNo, String memberUUID);
+    ResponseLogin getResponseLogin(LoginDTO loginDTO);
 }
