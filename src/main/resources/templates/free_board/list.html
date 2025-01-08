@@ -114,7 +114,7 @@
         <tr th:each="board, iterStat : ${responseDTO.dtoList}">
 <!--            데이터를 가져오는게 아니라 - 데이터를 순서대로 보여주는거-->
 <!--            index= 0 이니까 +1 해서 1번부터 보여주겠다-->
-            <td th:text="${iterStat.index + 1}"></td>
+            <td th:text="${iterStat.index + 1}" class="freeBoardIndex"></td>
             <td th:text="${board.title}"></td>
             <td th:text="${board.memberName}"></td>
             <td th:text="${board.replyCount}"></td>
@@ -152,19 +152,43 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<script>
+<script th:inline="javascript">
+    const freeBoardIndexes = document.querySelectorAll(".freeBoardIndex");
+    //querySelectorAll 배열 형태로
+    // 전부 들고 오겠다는 소리임
+    // 위에 class freeBoardIndex 정의 해둔것을 가져오겠다 한거임 .class 의미
+    let total = [[${responseDTO.total}]];
+    const page = [[${responseDTO.page}]] - 1;
+    const size = [[${responseDTO.size}]];
+
+    console.log(total);
+
+    for(const freeBoardIndex of freeBoardIndexes) {
+        freeBoardIndex.innerText = total-- - page * size;
+    // total에서 하나씩 잘라내면서 page 1 * size 10개
+        // total에서 -10개를 뺀 것을 2페이지에 표기하겠다.
+    }
+
     // 페이지이동 1,2,3,4,5~
-    document.querySelector(".pagination").addEventListener("click", function (e) {
+    // selector - 하나만 가져오겠다
+    // all 붙으면 다
+    // document - 문서
+    // ex) selector << or => 배열로 가져오겠단 소리
+    document.querySelector(".pagination").addEventListener("click", function(e) {
         e.preventDefault();
         e.stopPropagation();
         const target = e.target;
         if (target.tagName !== "A") {
             return;
         }
+        //getAttribut- 사용자 데이터 정의한 것을 그대로 가져온 것
+        //target.dataset.num; 같이 사용할 수 있음
         const num = target.getAttribute("data-num");
 
         const formObj = document.querySelector("form");
         formObj.innerHTML += `<input type="hidden" name="page" value="${num}">`;
+        // innerHTML  = 이거는 전부 다 들고오겠다는 거임. 클래스나 기본 태그 + 내용물 전부
+        // innerText = <div>태그</div> 태그만 가져오는거고
         formObj.submit();
     }, false);
 

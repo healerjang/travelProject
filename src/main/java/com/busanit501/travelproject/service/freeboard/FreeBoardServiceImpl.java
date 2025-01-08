@@ -53,8 +53,8 @@ public class FreeBoardServiceImpl implements com.busanit501.travelproject.servic
                 .content(freeBoard.getContent())
                 .memberNo(freeBoard.getMember().getMemberNo())
                 .memberName(freeBoard.getMember().getMemberName())
-                .modDate(freeBoard.getMember().getModDate())
-                .regDate(freeBoard.getMember().getRegDate())
+                .modDate(freeBoard.getModDate())
+                .regDate(freeBoard.getRegDate())
                 .build();
         return freeBoardDTO;
     }
