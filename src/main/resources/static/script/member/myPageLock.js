@@ -5,7 +5,7 @@ const passwordCheck = document.getElementById("passwordCheck");
 const changeButton = document.querySelector(".changeButton");
 
 for(const inputTextArea of inputTextAreas) {
-    inputTextArea.addEventListener("click", (e)=> {
+    inputTextArea.addEventListener("focus", (e)=> {
         clickInputTextArea(inputTextArea);
     })
 }

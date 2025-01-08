@@ -35,14 +35,8 @@ cancelButton.addEventListener('click', (e) => {
     activeNormal()
 })
 
-updateInput.addEventListener('input', (e) => {
-    if (activeUpdatePage && updateInput.innerText !== "") duplicateCheck();
-})
-
-updateInput.addEventListener('mousedown', (e) => {
-    e.stopPropagation()
-    e.preventDefault()
-    updateInput.focus();
+updateInput.addEventListener('focus', (e) => {
+    if (activeUpdatePage) duplicateCheckToKeyword(updateKeyWordDict.get(activeUpdateKeyword));
 })
 
 function hideUpdateGuides() {
@@ -74,30 +68,7 @@ function activeNormal() {
 
     updateInput.innerText = "";
     hideUpdateGuides();
-    activeUpdatePage = true;
-}
-
-function duplicateCheck() {
-    hideUpdateGuides();
-    updateDuplicateLoading.style.display = "block";
-    const keyword = updateKeyWordDict.get(activeUpdateKeyword);
-    duplicateCheckToKeyword(keyword, updateInput.innerText).then(duplicate => {
-        if (duplicate) {
-            updateDuplicateLoading.style.display = "none";
-            updateDuplicateCheck.style.display = "block";
-            updateDuplicateGuide.style.display = "block";
-            updateDuplicateGuide.innerText = `해당 ${keyword}는 사용할 수 있습니다.`
-            updateCheck = true;
-        }
-        else {
-            updateDuplicateLoading.style.display = "none";
-            updateDuplicateCross.style.display = "block";
-            updateDuplicateGuide.style.display = "block";
-            updateDuplicateGuide.innerText = `해당 ${keyword}는 사용할 수 없습니다.`
-            updateCheck = false;
-        }
-        if (!activeUpdatePage) hideUpdateGuides();
-    })
+    activeUpdatePage = false;
 }
 
 saveButton.addEventListener('click', (e)=> {
@@ -118,10 +89,33 @@ function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function duplicateCheckToKeyword(keyword, inputData) {
-    await delay(1000)
-    const response = await axios.get(`/member/update/${keyword}/${encodeURIComponent(inputData)}`);
-    return response.data;
+async function duplicateCheckToKeyword(keyword) {
+    updateDuplicateLoading.style.display = "block";
+    while (activeUpdatePage) {
+        const inputData = updateInput.innerText;
+        await delay(1000)
+        if (inputData !== "") {
+            const response = await axios.get(`/member/update/${keyword}/${encodeURIComponent(inputData)}`);
+            console.log(response);
+            const check = response.data;
+
+            if (check) {
+                updateDuplicateLoading.style.display = "none";
+                updateDuplicateCheck.style.display = "block";
+                updateDuplicateGuide.style.display = "block";
+                updateDuplicateGuide.innerText = `해당 ${keyword}는 사용할 수 있습니다.`
+                updateCheck = true;
+            }
+            else {
+                updateDuplicateLoading.style.display = "none";
+                updateDuplicateCross.style.display = "block";
+                updateDuplicateGuide.style.display = "block";
+                updateDuplicateGuide.innerText = `해당 ${keyword}는 사용할 수 없습니다.`
+                updateCheck = false;
+            }
+        }
+    }
+    hideUpdateGuides();
 }
 
 async function updateMember(keyword, inputData) {
