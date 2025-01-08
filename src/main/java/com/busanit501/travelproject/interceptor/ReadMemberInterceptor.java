@@ -42,7 +42,7 @@ public class ReadMemberInterceptor implements HandlerInterceptor {
                     memberDTO = memberService.checkMemberUUID(Long.valueOf(memberNo), hashUUID);
                 }
 
-                if (memberDTO != null) memberDTO.setResponseLogin(memberService.login(new LoginDTO(memberDTO.getMemberID(), memberDTO.getMemberPassword())));
+                if (memberDTO != null) memberDTO.setResponseLogin(memberService.getResponseLogin(new LoginDTO(memberDTO.getMemberID(), memberDTO.getMemberPassword())));
 
 
 

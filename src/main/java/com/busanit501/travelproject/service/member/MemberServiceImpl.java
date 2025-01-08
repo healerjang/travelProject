@@ -107,5 +107,15 @@ public class MemberServiceImpl implements MemberService {
         return modelMapper.map(member, MemberDTO.class);
     }
 
+    @Override
+    public ResponseLogin getResponseLogin(LoginDTO loginDTO) {
+        Member member = memberRepository.findByMemberIDAndMemberPassword(loginDTO.getMemberID(), loginDTO.getMemberPassword());
+        if (member == null) return ResponseLogin.FALSE;
+        ResponseLogin responseLogin;
+        if (adminList.contains(loginDTO.getMemberID())) responseLogin = ResponseLogin.ADMIN;
+        else responseLogin = ResponseLogin.USER;
+        return responseLogin;
+    }
+
 
 }
