@@ -36,4 +36,15 @@ public class Product extends BaseEntity {
     private Set<Reservation> reservations;
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Review> reviews;
+
+    /**
+     * 비즈니스 모델에 민감하지 않은 정보를 업데이트한다.
+     * @author 원종호
+     */
+    public void updateProductSafe(String name, String description, int capacity, String imagePath) {
+        this.name = name;
+        this.description = description;
+        if (capacity > this.capacity) this.capacity = capacity;
+        this.imagePath = imagePath;
+    }
 }

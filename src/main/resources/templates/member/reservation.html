@@ -3,7 +3,20 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/mainPageLayout.html}">
-<title layout:fragment="title">예약 확인</title>
+<head>
+    <title layout:fragment="title">예약 확인</title>
+    <style>
+        .custom-col {
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .custom-col {
+                width: calc(50% - 0.5rem);
+            }
+        }
+    </style>
+</head>
 <body>
 <!--임시 예약 관리 페이지 (유저)-->
 <!--레이아웃이 정해지면 수정할 것-->
@@ -21,6 +34,9 @@
     </div>
     <label for="orderBtn" class="memberPointLabel"></label>
 
+    <div class="accordion reservationList" id="accordionExample">
+    </div>
+
     <ul class="reservationList"></ul>
     <ul class="pagination reservationListPagination"></ul>
 </main>
@@ -33,8 +49,8 @@
         const memberPointLabel = document.querySelector(".memberPointLabel")
         let reservationOrder = 'PENDING'
 
-        function printReservation(reservationOrder, page) {
-            getUserReservation({reservationOrder, page})
+        function printReservation(reservationOrder, page, size) {
+            getUserReservation({reservationOrder, page, size})
                 .then(data => {
                         resetReservation()
                         printReservationList(data.dtoList)
@@ -56,19 +72,98 @@
             if (dtoList && dtoList.length > 0) {
                 for (const dto of dtoList) {
                     str += `
-               <li class="list-group-item d-flex replyItem">
-               <span class="col-1">${dto.productName}</span>
-               <span class="col-4">${dto.productDescription}</span>
-               <span class="col-2">${dto.productStartDate}~${dto.productEndDate}</span>
-               <span class="col-1">${dto.productPrice}원</span>
-               <span class="col-1">${dto.productLocationCountry}/${dto.productLocationCity}</span>
-                ${reservationOrder !== 'COMPLETED' ? `<button type="button" class="btn btn-primary feePaymentBtn" data-reservationNo="${dto.reservationNo}">결제</button>` : ''}
-                ${reservationOrder === 'PENDING' ? `<button type="button" class="btn btn-danger reservationDelBtn" data-reservationNo="${dto.reservationNo}">취소</button>` : ''}
-                ${reservationOrder === 'COMPLETED' ? `<button type="button" class="btn btn-danger reservationRefBtn" data-reservationNo="${dto.reservationNo}">환불</button>` : ''}
-                `
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapse${dto.reservationNo}" aria-expanded="false"
+                                        aria-controls="collapse${dto.reservationNo}">
+                                    ${dto.productName}
+                                </button>
+                            </h2>
+                            <div id="collapse${dto.reservationNo}" class="accordion-collapse collapse"
+                                 data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <div class="row g-0">
+                                        <div class="card mb-3 ms-2 custom-col">
+                                            <div class="card-header">
+                                                이미지 미리보기
+                                                <span id="imagePathView" class="text-body-secondary"></span>
+                                            </div>
+                                            <div class="card-body d-flex justify-content-center align-items-center">
+                                                <img id="imagePreview" class="card-img-bottom ${dto.imagePath}" src=""
+                                                     alt="Card image cap">
+                                            </div>
+                                        </div>
+                                        <div class="card mb-3 ms-2 custom-col">
+                                            <div class="card-header">
+                                                상품 상세정보
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="input-group mb-2">
+                                                    <label for="productName" class="input-group-text">상품명</label>
+                                                    <input id="productName" type="text" class="form-control"
+                                                           value="${dto.productName}" readonly>
+                                                </div>
+                                                <div class="input-group mb-2">
+                                                    <span class="input-group-text">여행지</span>
+                                                    <div class="form-floating">
+                                                        <select class="form-select" id="travelCountry"
+                                                                style="pointer-events: none">
+                                                            <option selected>${dto.productLocationCountry}</option>
+                                                        </select>
+                                                        <label for="travelCountry" class="form-label">국가</label>
+                                                    </div>
+                                                    <div class="form-floating">
+                                                        <select class="form-select" id="travelCity"
+                                                                style="pointer-events: none">
+                                                            <option selected>${dto.productLocationCity}</option>
+                                                        </select>
+                                                        <label for="travelCity" class="form-label">도시</label>
+                                                    </div>
+                                                </div>
+                                                <div class="input-group mb-2">
+                                                    <label for="productName" class="input-group-text">여행 일정</label>
+                                                    <div class="form-floating">
+                                                        <input id="startDate" class="form-control" type="date"
+                                                               value="${dto.productStartDate}" readonly>
+                                                            <label for="startDate">시작일</label>
+                                                    </div>
+                                                    <div class="form-floating">
+                                                        <input id="endDate" class="form-control" type="date"
+                                                               value="${dto.productEndDate}" readonly>
+                                                            <label for="endDate">종료일</label>
+                                                    </div>
+                                                </div>
+                                                <div class="input-group mb-2">
+                                                    <label for="productPrice" class="input-group-text">상품가격</label>
+                                                    <input type="number" id="productPrice" class="form-control"
+                                                           value="${dto.productPrice}" readonly>
+                                                </div>
+                                                <div class="input-group mb-2">
+                                                    <label for="productDescription"
+                                                           class="input-group-text">상세설명</label>
+                                                    <textarea id="productDescription" class="form-control"
+                                                              placeholder="상세설명" style="height: 400px"
+                                                              readonly>${dto.productDescription}</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        ${reservationOrder !== 'COMPLETED' ? `<button type="button" class="btn btn-primary feePaymentBtn" data-reservationNo="${dto.reservationNo}">결제</button>` : ''}
+                                        ${reservationOrder === 'PENDING' ? `<button type="button" class="btn btn-danger reservationDelBtn" data-reservationNo="${dto.reservationNo}">취소</button>` : ''}
+                                        ${reservationOrder === 'COMPLETED' ? `<button type="button" class="btn btn-danger reservationRefBtn" data-reservationNo="${dto.reservationNo}">환불</button>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        `
                 }
             }
             reservationList.innerHTML = str
+            for (const dto of dtoList) {
+                setImagePath(dto.imagePath)
+            }
         }
 
         function printReservationListPagination(data) {
@@ -102,6 +197,7 @@
         }
 
         let page = 1
+        const size = 5
         reservationListPagination.addEventListener("click", function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -112,28 +208,30 @@
             }
             const pageNum = target.getAttribute("data-page")
             page = pageNum
-            printReservation(reservationOrder, page)
+            printReservation(reservationOrder, page, size)
 
         }, false)
 
-        printReservation(reservationOrder, page)
+        printReservation(reservationOrder, page, size)
         printMemberPoint()
 
         document.querySelector(".btn-group").addEventListener("click", function (e) {
             const target = e.target
             if (target.tagName != 'INPUT') return
             reservationOrder = target.getAttribute("data-order")
-            printReservation(reservationOrder)
+            printReservation(reservationOrder, 1, size)
         }, false)
 
         document.querySelector(".reservationList").addEventListener("click", function (e) {
             const target = e.target
             if (!target.classList.contains('feePaymentBtn')) return
+            e.stopPropagation()
+            e.preventDefault()
             const reservationNo = target.getAttribute("data-reservationNo")
             console.log("결제 클릭됨, reservationNo 는 " + reservationNo)
             feeReservation(reservationNo).then(data => {
                     console.log(data)
-                    printReservation(reservationOrder, page)
+                    printReservation(reservationOrder, page, size)
                     printMemberPoint()
                 }
             ).catch(e => console.error(e))
@@ -145,7 +243,7 @@
             const reservationNo = target.getAttribute("data-reservationNo")
             console.log("취소 클릭됨, reservationNo 는 " + reservationNo)
             deleteReservation(reservationNo).then(data =>
-                printReservation(reservationOrder, page)
+                printReservation(reservationOrder, page, size)
             ).catch(e => console.error(e))
 
         })
@@ -156,11 +254,18 @@
             const reservationNo = target.getAttribute("data-reservationNo")
             console.log("환불 클릭됨, reservationNo 는 " + reservationNo)
             refundReservation(reservationNo).then(data => {
-                printReservation(reservationOrder, page)
+                printReservation(reservationOrder, page, size)
                 printMemberPoint()
             }).catch(e => console.error(e))
 
         })
+
+        function setImagePath(imagePath) {
+            const imagePaths = document.getElementsByClassName(imagePath)
+            for (let image of imagePaths) {
+                image.src = '/productImage/' + imagePath
+            }
+        }
     </script>
 </div>
 </body>

@@ -3,6 +3,7 @@ package com.busanit501.travelproject.config;
 import com.busanit501.travelproject.annotation.member.Member;
 import com.busanit501.travelproject.context.MemberContext;
 import com.busanit501.travelproject.dto.member.MemberDTO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,9 @@ import java.lang.reflect.Method;
 
 @Component
 @Log4j2
+@RequiredArgsConstructor
 public class CustomMemberArgumentResolver implements HandlerMethodArgumentResolver {
+
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         if(!parameter.getParameterType().equals(MemberDTO.class)) return false;

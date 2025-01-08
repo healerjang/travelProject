@@ -7,6 +7,7 @@ import com.busanit501.travelproject.domain.Product;
 import com.busanit501.travelproject.dto.FreeBoardJh1DTO;
 import com.busanit501.travelproject.dto.LocationValueJh1DTO;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
+import com.busanit501.travelproject.dto.ProductUpdateJh1DTO;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.member.MemberFullDTO;
 import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
@@ -68,10 +69,34 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
     return result.getProductNo();
   }
 
+
+  @Override
+  public void updateProduct(ProductUpdateJh1DTO dto) {
+    Product product = productRepo.findById(dto.getProductNo()).orElseThrow();
+    product.updateProductSafe(dto.getName(), dto.getDescription(), dto.getCapacity(), dto.getImagePath());
+    productRepo.save(product);
+  }
+
+
+  @Deprecated
   @Override
   public ProductJh1DTO getProductTmp(Long id) {
     Product product = productRepo.findById(id).orElseThrow();
     return productEntityToDTO(product);
+  }
+
+  @Override
+  public ProductJh1DTO getProductCompact(Long id) {
+    Product product = productRepo.findById(id).orElseThrow();
+    return productEntityToDTO(product);
+  }
+
+
+  @Override
+  @Transactional
+  public ProductJh1DTO getProductFull(Long id) {
+    Product product = productRepo.findById(id).orElseThrow();
+    return productToFullDTO(product);
   }
 
   @Override

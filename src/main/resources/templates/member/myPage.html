@@ -79,22 +79,22 @@
                 <h2 class="personalInformationBoxHeader">기본 정보</h2>
                 <div class="personalInformationBoxContent">
                     <div class="personalInformationBoxContentHeader">아이디</div>
-                    <div class="personalInformationBoxContentText">[[${memberDTO.memberID}]]</div>
+                    <div class="personalInformationBoxContentText" id="idView">[[${memberDTO.memberID}]]</div>
                     <div class="personalInformationBoxContentUpdateRouter">&gt</div>
                 </div>
                 <div class="personalInformationBoxContent">
                     <div class="personalInformationBoxContentHeader">이름</div>
-                    <div class="personalInformationBoxContentText">[[${memberDTO.memberName}]]</div>
+                    <div class="personalInformationBoxContentText" id="nameView">[[${memberDTO.memberName}]]</div>
                     <div class="personalInformationBoxContentUpdateRouter">&gt</div>
                 </div>
                 <div class="personalInformationBoxContent">
                     <div class="personalInformationBoxContentHeader">이메일</div>
-                    <div class="personalInformationBoxContentText">[[${memberDTO.memberEmail}]]</div>
+                    <div class="personalInformationBoxContentText" id="emailView">[[${memberDTO.memberEmail}]]</div>
                     <div class="personalInformationBoxContentUpdateRouter">&gt</div>
                 </div>
                 <div class="personalInformationBoxContent">
                     <div class="personalInformationBoxContentHeader">전화번호</div>
-                    <div class="personalInformationBoxContentText">[[${memberDTO.memberPhone}]]</div>
+                    <div class="personalInformationBoxContentText" id="phoneView">[[${memberDTO.memberPhone}]]</div>
                     <div class="personalInformationBoxContentUpdateRouter">&gt</div>
                 </div>
             </div>
@@ -109,7 +109,7 @@
                 </div>
                 <div class="updateInputContainer">
                     <div class="updateInputHeader"></div>
-                    <textarea class="updateInput"></textarea>
+                    <div class="updateInput" contenteditable="true" tabindex="0"></div>
                     <div class="updateDuplicateLoading"></div>
                     <div class="updateDuplicateCheck"></div>
                     <div class="updateDuplicateCross"></div>

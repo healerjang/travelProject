@@ -39,34 +39,83 @@
       <div class="list-group-item">
         <div class="row">
           <div class="col-auto">
-            <button class="btn btn-primary" id="GivePointButton">포인트 지급</button>
-          </div>
-          <div class="col-auto">
             <div class="input-group">
               <label class="input-group-text" for="givePoint">포인트</label>
               <input class="form-control" id="givePoint" placeholder="지급할 포인트 입력" type="number">
             </div>
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-primary" id="GivePointButton">포인트 지급</button>
           </div>
         </div>
       </div>
     </div>
     <div class="card mb-3">
       <div class="card-header">여행상품 예약 내역</div>
-      <div class="list-group list-group-flush">
-        <div class="list-group-item" th:each="reservation : ${memberDTO.reservations}"></div>
-      </div>
+      <table class="table">
+        <thead>
+        <tr>
+          <th>No.</th>
+          <th>상품명</th>
+          <th>예약일시</th>
+          <th>상태</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="reservation : ${memberDTO.reservations}">
+          <td th:text="${reservation.reservationNo}"></td>
+          <td><a th:text="${reservation.productName}" th:href="@{'/admin/product/edit/' + ${reservation.productNo}}" /></td>
+          <td th:text="${reservation.regDate}"></td>
+          <td th:text="${reservation.getReservationOrder()}"></td>
+        </tr>
+        </tbody>
+      </table>
     </div>
     <div class="card mb-3">
       <div class="card-header">리뷰 목록</div>
-      <div class="list-group list-group-flush">
-        <div class="list-group-item" th:each="review : ${memberDTO.reviews}"></div>
-      </div>
+      <table class="table">
+        <thead>
+        <tr>
+          <th>No.</th>
+          <th>상품명</th>
+          <th>평점</th>
+          <th>내용</th>
+          <th>리뷰시각</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="review : ${memberDTO.reviews}">
+          <td th:text="${review.reviewNo}"></td>
+          <td><a th:text="${review.productName}" th:href="@{'/admin/product/edit/' + ${review.productNo}}" /></td>
+          <td th:text="${review.rating}"></td>
+          <td th:text="${review.reviewContent}"></td>
+          <td th:text="${review.regDate}"></td>
+        </tr>
+        </tbody>
+      </table>
     </div>
     <div class="card mb-3">
       <div class="card-header">작성한 게시글 목록</div>
-      <div class="list-group list-group-flush">
-        <div class="list-group-item" th:each="freeBoard : ${memberDTO.freeBoards}"></div>
-      </div>
+      <table class="table">
+        <thead>
+        <tr>
+          <th>No.</th>
+          <th>제목</th>
+          <th>내용</th>
+          <th>작성일</th>
+          <th>관리</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="freeBoard : ${memberDTO.freeBoards}">
+          <td th:text="${freeBoard.freeBoardNo}" />
+          <td th:text="${freeBoard.title}" />
+          <td th:text="${freeBoard.content}" />
+          <td th:text="${freeBoard.regDate}" />
+          <td><button th:data-board-no="${freeBoard.freeBoardNo}" class="btn btn-outline-danger btn-sm" onclick="console.log(this.dataset.boardNo)">삭제</button></td>
+        </tr>
+        </tbody>
+      </table>
     </div>
     <div class="card mb-3">
       <div class="card-header">댓글 목록</div>
