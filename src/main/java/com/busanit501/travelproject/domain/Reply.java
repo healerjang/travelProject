@@ -30,6 +30,14 @@ public class Reply extends BaseEntity{
         this.freeBoard = freeBoard;
     }
 
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
 
     public void changeReplyText(String replyText) {
         this.replyText = replyText;
