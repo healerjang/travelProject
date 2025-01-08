@@ -202,7 +202,7 @@ function addImage(name, imagePath, productNo) {
     const imageBoxTitle = document.createElement('div');
     const imageBoxContainer = document.createElement('div');
     imageBox.classList.add('imageBox');
-    imageBox.style.backgroundImage = `url('${imagePath}')`
+    imageBox.style.backgroundImage = `url('../images/${imagePath}')`
     imageBoxTitle.classList.add('imageBoxTitle');
     imageBoxTitle.innerText = name;
     imageBoxContainer.classList.add('imageBoxContainer')
