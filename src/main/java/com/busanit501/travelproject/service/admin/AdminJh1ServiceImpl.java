@@ -16,6 +16,7 @@ import com.busanit501.travelproject.repository.LocationJh1Repository;
 import com.busanit501.travelproject.repository.ProductJh1Repository;
 import com.busanit501.travelproject.repository.freeboard.FreeBoardRepository;
 import com.busanit501.travelproject.repository.member.MemberRepository;
+import com.busanit501.travelproject.service.CustomMapperJh1;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,9 +27,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Set;
 
+
 @Service
 @RequiredArgsConstructor
 public class AdminJh1ServiceImpl implements AdminJh1Service {
+
+  private final CustomMapperJh1 customMapper;
 
   private final LocationJh1Repository locationRepo;
   private final ProductJh1Repository productRepo;
@@ -38,7 +42,7 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
   @Override
   public List<LocationValueJh1DTO> getLocationsOnly() {
     List<Location> locations = locationRepo.findAll();
-    List<LocationValueJh1DTO> dtoList = locations.stream().map(this::locationToDTO).toList();
+    List<LocationValueJh1DTO> dtoList = locations.stream().map(customMapper::locationToDTO).toList();
     return dtoList;
   }
 
@@ -82,13 +86,13 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
   @Override
   public ProductJh1DTO getProductTmp(Long id) {
     Product product = productRepo.findById(id).orElseThrow();
-    return productEntityToDTO(product);
+    return customMapper.productToCompactDTO(product);
   }
 
   @Override
   public ProductJh1DTO getProductCompact(Long id) {
     Product product = productRepo.findById(id).orElseThrow();
-    return productEntityToDTO(product);
+    return customMapper.productToCompactDTO(product);
   }
 
 
@@ -96,14 +100,14 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
   @Transactional
   public ProductJh1DTO getProductFull(Long id) {
     Product product = productRepo.findById(id).orElseThrow();
-    return productToFullDTO(product);
+    return customMapper.productToFullDTO(product);
   }
 
   @Override
   public PageResponseJh1DTO<ProductJh1DTO> listProducts(PageRequestJh1DTO requestDTO) {
     Page<Product> products = productRepo.findAll(PageRequest.of(requestDTO.getPage() - 1, requestDTO.getSize(), Sort.by("startDate")));
     return PageResponseJh1DTO.<ProductJh1DTO>builder()
-      .dtoList(products.stream().map(this::productEntityToDTO).toList())
+      .dtoList(products.stream().map(customMapper::productToCompactDTO).toList())
       .total((int) products.getTotalElements())
       .pageRequestDTO(requestDTO)
       .build();
@@ -114,7 +118,7 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
   public PageResponseJh1DTO<MemberDTO> listMembers(PageRequestJh1DTO requestDTO) {
     Page<Member> members = memberRepo.findAll(PageRequest.of(requestDTO.getPage() - 1, requestDTO.getSize()));
     return PageResponseJh1DTO.<MemberDTO>builder()
-      .dtoList(members.stream().map(this::memberEntityToDTO).toList())
+      .dtoList(members.stream().map(customMapper::memberToDTO).toList())
       .total((int) members.getTotalElements())
       .pageRequestDTO(requestDTO)
       .build();
@@ -123,7 +127,7 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
   @Override
   public MemberFullDTO getMemberFullSupport(long memberNo) {
     Member member = memberRepo.findByMemberNo(memberNo);
-    return memberEntityToFullDTO(member);
+    return customMapper.memberToFullDTO(member);
   }
 
   @Override
@@ -138,7 +142,7 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
   public PageResponseJh1DTO<FreeBoardJh1DTO> getFreeBoardList(PageRequestJh1DTO requestDTO) {
     Page<FreeBoard> boards = freeBoardRepo.findAll(PageRequest.of(requestDTO.getPage() - 1, requestDTO.getSize()));
     return PageResponseJh1DTO.<FreeBoardJh1DTO>builder()
-      .dtoList(boards.stream().map(this::boardToDTO).toList())
+      .dtoList(boards.stream().map(customMapper::boardToDTO).toList())
       .total((int) boards.getTotalElements())
       .pageRequestDTO(requestDTO)
       .build();
