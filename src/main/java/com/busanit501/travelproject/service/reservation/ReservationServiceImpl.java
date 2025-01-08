@@ -15,6 +15,7 @@ import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseD
 import com.busanit501.travelproject.repository.ProductJh1Repository;
 import com.busanit501.travelproject.repository.member.MemberRepository;
 import com.busanit501.travelproject.repository.reservation.ReservationRepository;
+import com.busanit501.travelproject.service.CustomMapperJh1;
 import com.busanit501.travelproject.service.admin.AdminJh1Service;
 import com.busanit501.travelproject.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final MemberRepository memberRepository;
     private final ProductJh1Repository productJh1Repository;
     private final AdminJh1Service adminJh1Service;
+    private final CustomMapperJh1 customMapper;
 
     @Override
     public Long registerReservation(ReservationDTO reservationDTO) {
@@ -125,7 +127,8 @@ public class ReservationServiceImpl implements ReservationService {
         List<Long> result = reservationRepository.bestReservationProducts();
         List<ProductJh1DTO> dtoList = result.stream().map(productNo -> {
             Product ett = productJh1Repository.findProductByProductNo(productNo).orElseThrow();
-            ProductJh1DTO dto = adminJh1Service.productEntityToDTO(ett);
+//            ProductJh1DTO dto = adminJh1Service.productEntityToDTO(ett);
+            ProductJh1DTO dto = customMapper.productToCompactDTO(ett);
             return dto;
         }).collect(Collectors.toList());
         return dtoList;
