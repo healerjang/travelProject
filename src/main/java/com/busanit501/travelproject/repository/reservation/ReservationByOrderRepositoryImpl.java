@@ -41,6 +41,7 @@ public class ReservationByOrderRepositoryImpl extends QuerydslRepositorySupport 
                 reservation,
                 reservation.member.memberNo,
                 reservation.product.name,
+                reservation.product.imagePath,
                 reservation.product.description,
                 reservation.product.price,
                 reservation.product.startDate,
@@ -53,16 +54,18 @@ public class ReservationByOrderRepositoryImpl extends QuerydslRepositorySupport 
            Reservation reservation1 = tuple.get(0, Reservation.class);
            Long memberNo1 = tuple.get(1, Long.class);
            String productName = tuple.get(2, String.class);
-           String productDescription = tuple.get(3, String.class);
-           Long productPrice = tuple.get(4, Long.class);
-           LocalDate productStartDate = tuple.get(5, LocalDate.class);
-           LocalDate productEndDate = tuple.get(6, LocalDate.class);
-           String productLocationCountry = tuple.get(7, String.class);
-           String productLocationCity = tuple.get(8, String.class);
+           String productImgPath = tuple.get(3, String.class);
+           String productDescription = tuple.get(4, String.class);
+           Long productPrice = tuple.get(5, Long.class);
+           LocalDate productStartDate = tuple.get(6, LocalDate.class);
+           LocalDate productEndDate = tuple.get(7, LocalDate.class);
+           String productLocationCountry = tuple.get(8, String.class);
+           String productLocationCity = tuple.get(9, String.class);
            ReservationUserDTO reservationUserDTO = ReservationUserDTO.builder()
                    .reservationNo(reservation1.getReservationNo())
                    .memberNo(memberNo1)
                    .productName(productName)
+                   .imagePath(productImgPath)
                    .productDescription(productDescription)
                    .productPrice(productPrice)
                    .productStartDate(productStartDate)

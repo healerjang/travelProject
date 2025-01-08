@@ -1,5 +1,5 @@
-async function getUserReservation({reservationOrder, page}){
-    const result = await axios.get(`/reservation/userReservation/${reservationOrder}`, {params: {page}})
+async function getUserReservation({reservationOrder, page, size}){
+    const result = await axios.get(`/reservation/userReservation/${reservationOrder}`, {params: {page, size}})
     return result.data
 }
 
@@ -30,4 +30,9 @@ async function feeReservation(reservationNo){
 async function getMemberPoint() {
     const result = await axios.get(`/reservation/memberPoint`)
     return result.data
+}
+
+async function getImage(imgPath) {
+    const result = await axios.get(`/productImage/${imgPath}`)
+    return result
 }

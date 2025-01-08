@@ -19,7 +19,7 @@ public class HcbPageRequestDTO {
     @Builder.Default
     private int pageSize = 10;
     public Pageable getPageable(String ...props) {
-        Pageable pageable = PageRequest.of(this.getPage() - 1, this.getPageSize(), Sort.by(props).descending());
+        Pageable pageable = PageRequest.of(this.getPage() - 1, this.getSize(), Sort.by(props).descending());
         return pageable;
 
     }
