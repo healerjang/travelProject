@@ -7,7 +7,19 @@
   <meta charset="UTF-8">
   <title>여행상품 상세관리</title>
 </head>
-
+<th:block layout:fragment="style">
+  <style>
+      .card:target .card-header {
+          color: #000 !important;
+          background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important;
+      }
+  </style>
+</th:block>
+<div layout:fragment="aside-extra" class="list-group list-group-flush">
+  <a class="list-group-item list-group-item-action" href="#ProductDetail">상품 상세정보 편집</a>
+  <a class="list-group-item list-group-item-action" href="#Reservations">상품 예약 내역</a>
+  <a class="list-group-item list-group-item-action" href="#Reviews">상품 리뷰</a>
+</div>
 <div layout:fragment="content">
   <div class="modal fade" id="registerLocationModal" tabindex="-1" aria-labelledby="exampleModalLabel"
        aria-hidden="true">
@@ -35,7 +47,7 @@
     </div>
   </div>
   <div class="container">
-    <div class="text-center py-3">
+    <div id="ProductDetail" class="text-center py-3">
       <h1>여행상품 상세관리</h1>
     </div>
     <section>
@@ -112,17 +124,22 @@
     </section>
   </div>
   <div class="container" th:if="${productDTO != null}">
-    <div class="card mb-3" th:if="${!#lists.isEmpty(productDTO.reservations)}">
+    <div id="Reservations" class="card mb-3" th:if="${!#lists.isEmpty(productDTO.reservations)}">
       <div class="card-header">
         상품 예약 목록
       </div>
       <div class="list-group list-group-flush">
         <div th:each="reservation : ${productDTO.reservations}" class="list-group-item">
-          <a th:href="@{'/admin/member/view/' + ${reservation.memberNo}}" th:text="${reservation.memberName}"></a> 님이 예약했습니다.
+          <div class="row">
+            <div class="col-auto text-body-secondary" th:text="${#temporals.format(reservation.regDate, 'yyyy''년'' MM''월'' dd''일'' HH:mm' )}" />
+            <div class="col-auto">
+              <a th:href="@{'/admin/member/view/' + ${reservation.memberNo}}" th:text="${reservation.memberName}" /> 님이 예약했습니다.
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="card mb-3" th:if="${!#lists.isEmpty(productDTO.reviews)}">
+    <div id="Reviews" class="card mb-3" th:if="${!#lists.isEmpty(productDTO.reviews)}">
       <div class="card-header">
         상품 리뷰 목록
       </div>

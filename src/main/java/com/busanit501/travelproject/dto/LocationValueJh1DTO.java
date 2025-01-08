@@ -7,6 +7,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+
+/**
+ * 해당 여행지와 연관된 상품은 모르겠고, 여행지 정보만 담겨 있는 DTO
+ * @author 원종호
+ */
 @Data
 @Builder
 @NoArgsConstructor
