@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity
 @Getter
 @Builder
@@ -22,6 +24,8 @@ public class FreeBoard extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "member_no", nullable = false)
     private Member member;
+    @OneToMany(mappedBy = "freeBoard", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Reply> replies;
 
     public void changeTitleContent(@NotEmpty @Size(min = 3, max = 100) String title, @NotEmpty String content) {
         this.title = title;
