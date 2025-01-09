@@ -1,7 +1,7 @@
 package com.busanit501.travelproject.service;
 
 import com.busanit501.travelproject.dto.FreeBoardJh1DTO;
-import com.busanit501.travelproject.dto.LocationValueJh1DTO;
+import com.busanit501.travelproject.dto.ProductImageAdminDTO;
 import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
 import com.busanit501.travelproject.dto.util.PageResponseJh1DTO;
 import com.busanit501.travelproject.service.admin.AdminJh1Service;
@@ -18,6 +18,9 @@ public class Jh1ServiceTest {
 
   @Autowired
   private AdminJh1Service service;
+
+  @Autowired
+  private UploadedImagesComponent imageWalker;
 
 //  @Test
 //  public void registerLocationTest() {
@@ -61,5 +64,17 @@ public class Jh1ServiceTest {
     PageResponseJh1DTO<FreeBoardJh1DTO> freeBoardList = service.getFreeBoardList(PageRequestJh1DTO.builder().page(1).size(10).build());
     log.info("freeBoardList : {}", freeBoardList);
     freeBoardList.getDtoList().forEach(log::info);
+  }
+
+  @Test
+  public void imagesTest() {
+    List<ProductImageAdminDTO> list = service.getProductImages();
+    list.forEach(log::info);
+  }
+
+  @Test
+  public void imageDirTest() {
+    List<String> list = imageWalker.getList();
+    list.forEach(log::info);
   }
 }
