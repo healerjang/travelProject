@@ -35,17 +35,21 @@ function clickPreAndNextDate(searchDateContainer, dateStart, selectDate) {
     previousIcon.addEventListener('click', (e)=> {
         if (dateStart > 0) {
             dateStart --
-            const inputMonth = (dateTypeMonthNow + dateStart) % 12;
-            const inputYear = Math.floor((dateTypeMonthNow + dateStart) / 12) + dateTypeYearNow
-            addDateNum(searchDateContainer, inputYear, inputMonth, selectDate);
+            insertAddDateNum(dateStart, searchDateContainer, selectDate)
         }
     })
     nextIcon.addEventListener('click', (e)=> {
         dateStart ++
-        const inputMonth = (dateTypeMonthNow + dateStart) % 12;
-        const inputYear = Math.floor((dateTypeMonthNow + dateStart) / 12) + dateTypeYearNow
-        addDateNum(searchDateContainer, inputYear, inputMonth, selectDate);
+        insertAddDateNum(dateStart, searchDateContainer, selectDate)
     })
+}
+
+function insertAddDateNum(dateStart, searchDateContainer, selectDate) {
+    let inputMonth = (dateTypeMonthNow + dateStart) % 12;
+    inputMonth = inputMonth === 0 ? 12 : inputMonth;
+    let inputYear = Math.floor((dateTypeMonthNow + dateStart) / 12) + dateTypeYearNow
+    inputYear = inputMonth === 12 ? --inputYear : inputYear;
+    addDateNum(searchDateContainer, inputYear, inputMonth, selectDate);
 }
 
 document.addEventListener('click', (e)=> {
@@ -165,7 +169,7 @@ function getDayOfWeek(year, month, day = 1) {
 }
 
 function isSearch() {
-    return locationNo != null || startDate != null || endDate != null;
+    return locationNo == null && startDate == null && endDate == null;
 }
 
 searchImageIcon.addEventListener('click', (e)=> {
@@ -245,7 +249,6 @@ function getContentToScrollDown() {
 
 window.addEventListener('scroll', () => {
     if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight ) {
-        console.log("스크롤이벤트 동작중")
         getContentToScrollDown();
     }
 })
