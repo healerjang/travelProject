@@ -15,7 +15,9 @@ public class TempMembReservController {
     public String reservation(MemberDTO memberDTO, Model model) {
         if (memberDTO != null) {
             model.addAttribute("member", true);
+            return "/cart/cartPage";
+        } else {
+            return "redirect:/mainPage";
         }
-        return "/member/reservation";
     }
 }

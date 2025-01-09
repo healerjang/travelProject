@@ -6,16 +6,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class CartPageController {
 
     @GetMapping("/cart")
     @Member
-    public String cartPage(MemberDTO memberDTO, Model model) {
+    public String cartPage(MemberDTO memberDTO, Model model, RedirectAttributes redirectAttributes) {
         if (memberDTO != null) {
             model.addAttribute("member", true);
+            return "/cart/cartPage";
+        } else {
+            redirectAttributes.addFlashAttribute("error", "로그인이 필요합니다.");
+            return "redirect:/mainPage";
         }
-        return "/cart/cartPage";
     }
 }
