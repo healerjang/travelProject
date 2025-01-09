@@ -81,7 +81,7 @@ img {
 
 .myPageContainer {
     width: 30%;
-    left: 38%;
+    left: 36%;
     > div {
         padding: 2%;
     }
@@ -345,4 +345,11 @@ img {
 
 .goAdminContainer:hover {
     background-color: #cdcdcd;
+}
+
+#logout {
+    background-position: center center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 2%;
 }
