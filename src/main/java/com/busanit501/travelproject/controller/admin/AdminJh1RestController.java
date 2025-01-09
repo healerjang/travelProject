@@ -1,7 +1,7 @@
 package com.busanit501.travelproject.controller.admin;
 
 import com.busanit501.travelproject.annotation.member.Member;
-import com.busanit501.travelproject.dto.FreeBoardJh1DTO;
+import com.busanit501.travelproject.dto.freeboard.FreeBoardJh1DTO;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.LocationValueJh1DTO;
 import com.busanit501.travelproject.dto.ProductUpdateJh1DTO;
@@ -9,7 +9,6 @@ import com.busanit501.travelproject.dto.member.MemberAddPointDTO;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
 import com.busanit501.travelproject.dto.util.PageResponseJh1DTO;
-import com.busanit501.travelproject.exception.member.UnauthorizedException;
 import com.busanit501.travelproject.exception.member.UnauthorizedRestException;
 import com.busanit501.travelproject.service.admin.AdminJh1Service;
 import com.busanit501.travelproject.service.member.ResponseLogin;

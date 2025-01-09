@@ -5,6 +5,7 @@ import com.busanit501.travelproject.domain.Location;
 import com.busanit501.travelproject.domain.Member;
 import com.busanit501.travelproject.domain.Product;
 import com.busanit501.travelproject.dto.*;
+import com.busanit501.travelproject.dto.freeboard.FreeBoardJh1DTO;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.member.MemberFullDTO;
 import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
