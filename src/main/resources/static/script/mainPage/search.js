@@ -14,8 +14,6 @@ let dateTypeYearNow = now.getFullYear();
 let dateTypeMonthNow = now.getMonth() + 1;
 const selectStart = { current: null };
 const selectEnd = { current: null };
-let startContainSetting = false;
-let endContainSetting = false;
 const searchImageIcon = document.querySelector('.searchIconBox').querySelector('img');
 const imageContainer = document.querySelector('.imageContainer');
 let startDate = null;
@@ -23,6 +21,32 @@ let endDate = null;
 let locationNo = null;
 let isAddImage = false;
 let page = 1;
+let startDateStart = 0;
+let endDateStart = 0;
+
+clickPreAndNextDate(searchStartContainer, startDateStart, selectStart)
+clickPreAndNextDate(searchEndContainer, endDateStart, selectEnd)
+
+function clickPreAndNextDate(searchDateContainer, dateStart, selectDate) {
+    const previousIcon = searchDateContainer.querySelector(".monthTextContainerLeftArrow");
+    const nextIcon = searchDateContainer.querySelector(".monthTextContainerRightArrow");
+
+
+    previousIcon.addEventListener('click', (e)=> {
+        if (dateStart > 0) {
+            dateStart --
+            const inputMonth = (dateTypeMonthNow + dateStart) % 12;
+            const inputYear = Math.floor((dateTypeMonthNow + dateStart) / 12) + dateTypeYearNow
+            addDateNum(searchDateContainer, inputYear, inputMonth, selectDate);
+        }
+    })
+    nextIcon.addEventListener('click', (e)=> {
+        dateStart ++
+        const inputMonth = (dateTypeMonthNow + dateStart) % 12;
+        const inputYear = Math.floor((dateTypeMonthNow + dateStart) / 12) + dateTypeYearNow
+        addDateNum(searchDateContainer, inputYear, inputMonth, selectDate);
+    })
+}
 
 document.addEventListener('click', (e)=> {
     if (!e.target.closest('.searchContainer')) {
@@ -81,19 +105,13 @@ searchStart.addEventListener('click', (e) => {
     if (viewSearch != null) viewSearch.style.display = 'none';
     searchStartContainer.style.display = 'flex';
     viewSearch = searchStartContainer;
-    if (!startContainSetting) {
-        addDateNum(searchStartContainer, dateTypeYearNow, dateTypeMonthNow, selectStart);
-        startContainSetting = true;
-    }
+    addDateNum(searchStartContainer, dateTypeYearNow, dateTypeMonthNow, selectStart);
 })
 searchEnd.addEventListener('click', (e) => {
     if (viewSearch != null) viewSearch.style.display = 'none';
     searchEndContainer.style.display = 'flex';
     viewSearch = searchEndContainer;
-    if (!endContainSetting) {
-        addDateNum(searchEndContainer, dateTypeYearNow, dateTypeMonthNow, selectEnd);
-        endContainSetting = true;
-    }
+    addDateNum(searchEndContainer, dateTypeYearNow, dateTypeMonthNow, selectEnd);
 })
 
 function addDateNum(searchDateContainer, dateTypeYear, dateTypeMonth, selectDate) {
