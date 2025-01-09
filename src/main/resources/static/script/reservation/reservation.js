@@ -12,8 +12,12 @@ async function deleteReservation(reservationNo){
     const result = await axios.put(`/reservation/delete/${reservationNo}`)
     return result.data
 }
-async function refundReservation(reservationNo){
-    const result = await axios.put(`/reservation/refund/${reservationNo}`)
+async function refundReservation(reservationNo,refundPercent){
+    const obj = {
+        reservationNo: `${reservationNo}`,
+        refundPercent: `${refundPercent}`
+    }
+    const result = await axios.post(`/reservation/refund`, obj)
     return result.data
 }
 

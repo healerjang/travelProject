@@ -7,6 +7,7 @@ import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.reservation.ReservationDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
+import com.busanit501.travelproject.repository.ProductJh1Repository;
 import com.busanit501.travelproject.service.admin.AdminJh1Service;
 import com.busanit501.travelproject.service.reservation.ReservationService;
 import jakarta.servlet.http.Cookie;
@@ -24,10 +25,12 @@ import java.util.stream.Collectors;
 public class CartController {
     private final AdminJh1Service adminJh1Service;
     private final ReservationService reservationService;
+    private final ProductJh1Repository productJh1Repository;
     private static final String CART_COOKIE_NAME = "cart";
 
-    @GetMapping("/add/{productNo}")
-    public boolean addToCart(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable Long productNo) {
+    @GetMapping("/add/{productNo}") // 결과는 addResult 에 success, alreadyReserved, alreadyCarted 세개
+    public Map<String, String> addToCart(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable Long productNo) {
+        if (productJh1Repository.findProductByProductNo(productNo).isPresent()) return Map.of("addResult", "alreadyReserved");
         Optional<Cookie> optionalCookie = Arrays.stream(httpServletRequest.getCookies())
                 .filter(cookie -> CART_COOKIE_NAME.equals(cookie.getName()))
                 .findFirst();
@@ -36,19 +39,19 @@ public class CartController {
             newCartCookie.setPath("/");
             newCartCookie.setMaxAge(60 * 60 * 2);
             httpServletResponse.addCookie(newCartCookie);
-            return true;
+            return Map.of("addResult", "success");
         } else {
             String existValue = optionalCookie.get().getValue();
             String[] values = existValue.split("-");
             if (Arrays.asList(values).contains(productNo.toString())) {
-                return false;
+                return Map.of("addResult", "alreadyCarted");
             }
             Cookie cartCookie = optionalCookie.get();
             cartCookie.setValue(existValue + "-" + productNo.toString());
             cartCookie.setPath("/");
             cartCookie.setMaxAge(60 * 60 * 2);
             httpServletResponse.addCookie(cartCookie);
-            return true;
+            return Map.of("addResult", "success");
         }
     }
 
@@ -104,22 +107,25 @@ public class CartController {
     @PostMapping("/makeReservation")
     @Member
     public Map<String, Integer> makeReservation(MemberDTO memberDTO, HttpServletRequest httpServletRequest) {
-        List<Long> result = new ArrayList<>();
+        List<Boolean> result = new ArrayList<>();
         Optional<Cookie> optionalCookie = Arrays.stream(httpServletRequest.getCookies())
                 .filter(cookie -> CART_COOKIE_NAME.equals(cookie.getName()))
                 .findFirst();
         if (optionalCookie.isEmpty()) return Map.of("reservationNoSize", 0);
         if (memberDTO == null) return Map.of("reservationNoSize", 0);
         Cookie cartCookie = optionalCookie.get();
-        List<String> productNos = Arrays.asList(cartCookie.getValue().split("-"));
-        productNos.stream().map(Long::parseLong).forEach(productNo -> {
+        List<Long> productNoList = Arrays.asList(cartCookie.getValue().split("-")).stream().map(Long::parseLong).toList();
+        for (Long productNo : productNoList) {
+            if (productJh1Repository.findProductByProductNo(productNo).isPresent()) return Map.of("reservationNoSize", 0);
+        }
+        for (Long productNo : productNoList) {
             ReservationDTO reservationDTO = ReservationDTO.builder()
                     .memberNo(memberDTO.getMemberNo())
                     .productNo(productNo)
                     .ReservationOrder(ReservationOrder.PENDING)
                     .build();
             result.add(reservationService.registerReservation(reservationDTO));
-        });
+        }
         return Map.of("reservationNoSize", result.size());
     }
 }

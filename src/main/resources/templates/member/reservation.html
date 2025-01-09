@@ -165,7 +165,7 @@
                                     <div class="d-flex justify-content-end gap-2">
                                         ${reservationOrder !== 'COMPLETED' ? `<button type="button" class="btn btn-primary feePaymentBtn" data-reservationNo="${dto.reservationNo}">결제</button>` : ''}
                                         ${reservationOrder === 'PENDING' ? `<button type="button" class="btn btn-danger reservationDelBtn" data-reservationNo="${dto.reservationNo}">취소</button>` : ''}
-                                        ${reservationOrder === 'COMPLETED' ? `<button type="button" class="btn btn-danger reservationRefBtn" data-reservationNo="${dto.reservationNo}">환불</button>` : ''}
+                                        ${reservationOrder === 'COMPLETED' ? `<button type="button" class="btn btn-danger reservationRefBtn" data-reservationNo="${dto.reservationNo}" data-startDate="${dto.productStartDate}">환불</button>` : ''}
                                     </div>
                                 </div>
                             </div>
@@ -241,32 +241,56 @@
             e.stopPropagation()
             e.preventDefault()
             const reservationNo = target.getAttribute("data-reservationNo")
-            feeReservation(reservationNo).then(data => {
-                    printReservation(reservationOrder, page, size)
-                    printMemberPoint()
-                }
-            ).catch(e => console.error(e))
+            if(confirm("해당 예약을 결제하시겠습니까?")) {
+                feeReservation(reservationNo).then(data => {
+                        if (data.paymentCompCheck) alert("예약되었습니다.")
+                        else alert("잔여포인트가 부족합니다.")
+                        printReservation(reservationOrder, page, size)
+                        printMemberPoint()
+                    }
+                ).catch(e => console.error(e))
+            }
         })
 
         document.querySelector(".reservationList").addEventListener("click", function (e) {
             const target = e.target
             if (!target.classList.contains('reservationDelBtn')) return
             const reservationNo = target.getAttribute("data-reservationNo")
-            deleteReservation(reservationNo).then(data =>
-                printReservation(reservationOrder, page, size)
-            ).catch(e => console.error(e))
-
+            if(confirm("해당 예약을 취소하시겠습니까?")) {
+                deleteReservation(reservationNo).then(data =>
+                    printReservation(reservationOrder, page, size)
+                ).catch(e => console.error(e))
+            }
         })
 
         document.querySelector(".reservationList").addEventListener("click", function (e) {
             const target = e.target
             if (!target.classList.contains('reservationRefBtn')) return
             const reservationNo = target.getAttribute("data-reservationNo")
-            refundReservation(reservationNo).then(data => {
-                printReservation(reservationOrder, page, size)
-                printMemberPoint()
-            }).catch(e => console.error(e))
-
+            const diffDateFormula = Math.floor((new Date(target.getAttribute("data-startDate")) - new Date())/(1000*60*60*24))
+            const diffDate = diffDateFormula < 0 ? 0 : diffDateFormula
+            let refundPercent
+            switch (diffDate) {
+                default : refundPercent = 100; break
+                case 9:
+                case 8: refundPercent = 95;break
+                case 7:
+                case 6:
+                case 5:
+                case 4:
+                case 3:
+                case 2: refundPercent = 90;break
+                case 1: refundPercent = 80;break
+                case 0: refundPercent = 50;break
+            }
+            if(confirm(`규정에 따라 ${refundPercent}%의 포인트가 환불됩니다. \n 해당 예약을 환불하시겠습니까?`)) {
+                refundReservation(reservationNo,refundPercent).then(data => {
+                    if (data) alert("환불되었습니다.")
+                    else alert("")
+                    printReservation(reservationOrder, page, size)
+                    printMemberPoint()
+                }).catch(e => console.error(e))
+            }
         })
 
         function setImagePath(imagePath) {
