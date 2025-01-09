@@ -82,7 +82,7 @@
           _el('h3', product.productName),
           _el('div', product.imagePath, div => div.classList.add('text-body-secondary')),
           _el('img', img => {
-            img.src = '/productImage/' + product.imagePath
+            img.src = '/thumbnail/' + product.imagePath
             img.alt = product.imagePath
           }),
           a => {
@@ -100,7 +100,7 @@
         _el('a',
           _el('div', unusedImage),
           _el('img', img => {
-            img.src = '/productImage/' + unusedImage
+            img.src = '/thumbnail/' + unusedImage
             img.alt = unusedImage
           }),
           a => {
