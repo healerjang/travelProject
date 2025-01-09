@@ -35,17 +35,21 @@ function clickPreAndNextDate(searchDateContainer, dateStart, selectDate) {
     previousIcon.addEventListener('click', (e)=> {
         if (dateStart > 0) {
             dateStart --
-            const inputMonth = (dateTypeMonthNow + dateStart) % 12;
-            const inputYear = Math.floor((dateTypeMonthNow + dateStart) / 12) + dateTypeYearNow
-            addDateNum(searchDateContainer, inputYear, inputMonth, selectDate);
+            insertAddDateNum(dateStart, searchDateContainer, selectDate)
         }
     })
     nextIcon.addEventListener('click', (e)=> {
         dateStart ++
-        const inputMonth = (dateTypeMonthNow + dateStart) % 12;
-        const inputYear = Math.floor((dateTypeMonthNow + dateStart) / 12) + dateTypeYearNow
-        addDateNum(searchDateContainer, inputYear, inputMonth, selectDate);
+        insertAddDateNum(dateStart, searchDateContainer, selectDate)
     })
+}
+
+function insertAddDateNum(dateStart, searchDateContainer, selectDate) {
+    let inputMonth = (dateTypeMonthNow + dateStart) % 12;
+    inputMonth = inputMonth === 0 ? 12 : inputMonth;
+    let inputYear = Math.floor((dateTypeMonthNow + dateStart) / 12) + dateTypeYearNow
+    inputYear = inputMonth === 12 ? --inputYear : inputYear;
+    addDateNum(searchDateContainer, inputYear, inputMonth, selectDate);
 }
 
 document.addEventListener('click', (e)=> {
