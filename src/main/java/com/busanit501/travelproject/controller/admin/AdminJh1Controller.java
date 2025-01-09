@@ -1,11 +1,13 @@
 package com.busanit501.travelproject.controller.admin;
 
 import com.busanit501.travelproject.annotation.member.Member;
+import com.busanit501.travelproject.dto.ProductImageAdminDTO;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.member.MemberFullDTO;
 import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
 import com.busanit501.travelproject.exception.member.UnauthorizedException;
+import com.busanit501.travelproject.service.UploadedImagesComponent;
 import com.busanit501.travelproject.service.admin.AdminJh1Service;
 import com.busanit501.travelproject.service.member.ResponseLogin;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Log4j2
 @Controller
 @RequiredArgsConstructor
@@ -26,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdminJh1Controller {
 
   private final AdminJh1Service adminService;
+  private final UploadedImagesComponent uploadedImages;
 
   @SneakyThrows
   private void throwIfUnauthorized(MemberDTO memberDTO)  {
@@ -126,5 +131,23 @@ public class AdminJh1Controller {
   ) {
     throwIfUnauthorized(memberDTO);
     return "admin/listFreeBoard_jh1";
+  }
+
+
+
+  @Member
+  @GetMapping("/images")
+  public String images(
+    HttpServletRequest request,
+    MemberDTO memberDTO,
+    Model model
+  ) {
+    throwIfUnauthorized(memberDTO);
+
+    List<ProductImageAdminDTO> dtoList = adminService.getProductImages();
+    List<String> imageList = uploadedImages.getList();
+    model.addAttribute("imageList", imageList);
+    model.addAttribute("dtoList", dtoList);
+    return "admin/images_jh1";
   }
 }
