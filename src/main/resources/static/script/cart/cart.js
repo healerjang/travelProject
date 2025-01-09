@@ -15,12 +15,12 @@ async function delCart(productNo) {
 
 async function addCart(productNo) {
     const result = await axios.get(`/cart/add/${productNo}`)
-    return result
+    return result.data
 }
 
 async function getImage(imgPath) {
     const result = await axios.get(`/productImage/${imgPath}`)
-    return result
+    return result.data
 }
 
 async function makeReservationImmediately(productNo) {

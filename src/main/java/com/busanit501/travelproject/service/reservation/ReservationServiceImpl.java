@@ -43,14 +43,17 @@ public class ReservationServiceImpl implements ReservationService {
     private final CustomMapperJh1 customMapper;
 
     @Override
-    public Long registerReservation(ReservationDTO reservationDTO) {
-        Reservation reservation = Reservation.builder()
-                .member(memberRepository.findByMemberNo(reservationDTO.getMemberNo()))
-                .product(productJh1Repository.findProductByProductNo(reservationDTO.getProductNo()).orElseThrow())
-                .reservationOrder(reservationDTO.getReservationOrder())
-                .build();
-        Reservation result = reservationRepository.save(reservation);
-        return result.getReservationNo();
+    public Boolean registerReservation(ReservationDTO reservationDTO) {
+        if(productJh1Repository.findProductByProductNo(reservationDTO.getProductNo()).isEmpty()) {
+            Reservation reservation = Reservation.builder()
+                    .member(memberRepository.findByMemberNo(reservationDTO.getMemberNo()))
+                    .product(productJh1Repository.findProductByProductNo(reservationDTO.getProductNo()).orElseThrow())
+                    .reservationOrder(reservationDTO.getReservationOrder())
+                    .build();
+            Reservation result = reservationRepository.save(reservation);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -75,18 +78,19 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public boolean refundReservation(Long reservationNo) {
+    public boolean refundReservation(Long reservationNo,int refundPercent) {
         Reservation reservation = reservationRepository.findById(reservationNo).orElseThrow();
         Member member = reservation.getMember();
         int memberPoint = reservation.getMember().getMemberPoint();
         int productPrice = reservation.getProduct().getPrice().intValue();
+        int refundPrice = (productPrice*refundPercent/100);
         member.updateMemberData(UpdateDTO.builder()
                 .memberID(member.getMemberID())
                 .memberPassword(member.getMemberPassword())
                 .memberName(member.getMemberName())
                 .memberEmail(member.getMemberEmail())
                 .memberPhone(member.getMemberPhone())
-                .memberPoints(memberPoint + productPrice)
+                .memberPoints(memberPoint + refundPrice)
                 .build());
         memberRepository.save(member);
         reservation.changeOrder(ReservationOrder.CANCELLED);

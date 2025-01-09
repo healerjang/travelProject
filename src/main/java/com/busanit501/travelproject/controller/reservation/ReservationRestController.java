@@ -4,6 +4,7 @@ import com.busanit501.travelproject.annotation.member.Member;
 import com.busanit501.travelproject.domain.common.ReservationOrder;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.member.MemberDTO;
+import com.busanit501.travelproject.dto.reservation.RefundDTO;
 import com.busanit501.travelproject.dto.reservation.ReservationDTO;
 import com.busanit501.travelproject.dto.reservation.ReservationUserDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
@@ -44,7 +45,7 @@ public class ReservationRestController {
 
     @PostMapping("/reg")
     @Member
-    public Map<String, Long> reg(
+    public boolean reg(
             @Valid @RequestBody ReservationDTO reservationDTO, BindingResult bindingResult,
             MemberDTO memberDTO) throws BindException {
         if (bindingResult.hasErrors()) {
@@ -54,8 +55,8 @@ public class ReservationRestController {
             throw new BindException(bindingResult);
         }
         reservationDTO.setMemberNo(memberDTO.getMemberNo());
-        Long result = reservationService.registerReservation(reservationDTO);
-        return Map.of("reservationNo", result);
+        Boolean result = reservationService.registerReservation(reservationDTO);
+        return result;
     }
 
     @PutMapping("/edit")
@@ -74,9 +75,10 @@ public class ReservationRestController {
         return Map.of("reservationNo", result);
     }
 
-    @PutMapping("/refund/{reservationNo}")
-    public Map<String, Boolean> refund(@PathVariable Long reservationNo) {
-        boolean result = reservationService.refundReservation(reservationNo);
+    @PostMapping("/refund")
+    public Map<String, Boolean> refund(@RequestBody RefundDTO refundDTO) {
+        log.info(refundDTO + "들어오는 refundDTO 확인");
+        boolean result = reservationService.refundReservation(refundDTO.getReservationNo(),refundDTO.getRefundPercent());
         return Map.of("reservationNo", result);
     }
 

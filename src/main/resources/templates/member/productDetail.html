@@ -152,15 +152,17 @@
 
         function productAddcart(productNo) {
             addCart(productNo).then(data => {
-                if (data) alert("상품이 성공적으로 담겼습니다");
+                if (data.addResult == "success") alert("여행이 성공적으로 담겼습니다");
+                else if (data.addResult == "alreadyReserved") alert("이미 예약된 여행입니다.")
+                else if (data.addResult == "alreadyCarted") alert("이미 장바구니에 담긴 여행입니다.")
                 else alert("장바구니 담기에 실패했습니다.")
             })
         }
 
         function productAddReservation(productNo) {
             makeReservationImmediately(productNo).then(data => {
-                if (data) alert("상품이 성공적으로 예약되었습니다.");
-                else alert("예약에 실패했습니다.")
+                if (data) alert("여행이 성공적으로 예약되었습니다.");
+                else alert("이미 예약한 여행입니다.")
             })
         }
     </script>
