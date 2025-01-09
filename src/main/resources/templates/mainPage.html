@@ -85,7 +85,6 @@
     const reservationText = document.getElementById('reservation');
     const memberText = document.getElementById('member');
     const freeBoard = document.getElementById('freeBoard');
-    let searchTotal = false;
     const goAdminContainer = document.querySelector('.goAdminContainer');
 
     document.getElementById("logout").addEventListener('click', ()=> {
@@ -161,12 +160,10 @@
     }
 
     function addImageContainer(page, size, locationNo, startDate, endDate) {
-        isAddImage = false;
         getContent(page, size, locationNo, startDate, endDate).then((content) => {
             for (const product of content.list) {
                 addImage(product.name, product.imagePath, product.productNo)
             }
-            isAddImage = !isSearch();
         })
     }
 </script>

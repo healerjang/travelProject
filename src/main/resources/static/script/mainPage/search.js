@@ -169,6 +169,7 @@ function getDayOfWeek(year, month, day = 1) {
 }
 
 function isSearch() {
+    console.log(locationNo, startDate, endDate)
     return locationNo == null && startDate == null && endDate == null;
 }
 
@@ -243,12 +244,13 @@ function searchError(error) {
 }
 
 function getContentToScrollDown() {
-    if (!searchTotal || !isAddImage) return false
+    if (!isAddImage) return false
     addImageContainer(++page, 10, locationNo, startDate, endDate);
 }
 
 window.addEventListener('scroll', () => {
     if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight ) {
+        isSearch()
         getContentToScrollDown();
     }
 })
