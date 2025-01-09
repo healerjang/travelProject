@@ -38,4 +38,6 @@ public interface AdminJh1Service {
   void givePointTo(long memberNo, int amount);
 
   PageResponseJh1DTO<FreeBoardJh1DTO> getFreeBoardList(PageRequestJh1DTO requestDTO);
+
+  List<ProductImageAdminDTO> getProductImages();
 }

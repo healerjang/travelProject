@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/travel_admin_aside_jh1.html}">
+<head>
+  <meta charset="UTF-8">
+  <title>이미지 관리</title>
+</head>
+<body>
+<th:block layout:fragment="style">
+  <style>
+      .card img {
+          max-width: 95%;
+      }
+  </style>
+</th:block>
+<div layout:fragment="content">
+  <div class="py-3 text-center">
+    <h1>이미지 관리</h1>
+  </div>
+  <div class="container">
+    <div class="card mb-3">
+      <div class="card-header">사용 중인 이미지</div>
+      <div class="card-body">
+        <div id="ImagesInUse" class="row row-cols-3"></div>
+      </div>
+    </div>
+    <div class="card mb-3">
+      <div class="card-header">사용되지 않는 이미지</div>
+      <div class="card-body">
+        <div id="UnusedImageList" class="row row-cols-3"></div>
+      </div>
+    </div>
+    <div class="card mb-3">
+      <div class="card-header">이미지가 소실된 여행상품</div>
+      <div class="card-body">
+        <div id="ProductsMissingImage" class="row row-cols-3"></div>
+      </div>
+    </div>
+    <div class="card mb-3">
+      <div class="card-header">이미지 등록이 되지 않은 여행상품</div>
+      <div class="card-body">
+        <div id="ProductsWithoutImage" class="row row-cols-3"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<th:block layout:fragment="scripts">
+  <script th:src="@{/script/admin/admin-common.js}"></script>
+  <script th:inline="javascript">
+    const products = /*[[${dtoList}]]*/ [];
+    const images = /*[[${imageList}]]*/ [];
+
+    const productsWithoutImage = [];
+    const productsWithImage = [];
+
+    products.forEach(product =>
+      product.imagePath ? productsWithImage.push(product) : productsWithoutImage.push(product)
+    )
+
+
+    const imageSet = new Set(images);
+    const imagesInUse = new Set(productsWithImage.map(dto => dto.imagePath))
+
+    const unusedImages = imageSet.difference(imagesInUse);
+    /** @type {Set<string>} */
+    const missingImages = imagesInUse.difference(imageSet);
+
+    const productsWithImageFound = [];
+    const productsWithImageMissing = [];
+
+    productsWithImage.forEach(product =>
+      missingImages.has(product.imagePath) ?
+        productsWithImageMissing.push(product) : productsWithImageFound.push(product)
+    )
+
+    const imagesInUseList = document.getElementById("ImagesInUse");
+    for (const product of productsWithImageFound) {
+      imagesInUseList.append(
+        _el('a',
+          _el('h3', product.productName),
+          _el('div', product.imagePath, div => div.classList.add('text-body-secondary')),
+          _el('img', img => {
+            img.src = '/productImage/' + product.imagePath
+            img.alt = product.imagePath
+          }),
+          a => {
+            a.classList.add('col')
+            a.href = '/admin/product/edit/' + product.productNo
+            a.setAttribute("target", "_blank")
+          }
+        )
+      )
+    }
+
+    const unusedImageList = document.getElementById("UnusedImageList");
+    for (const unusedImage of unusedImages) {
+      unusedImageList.append(
+        _el('a',
+          _el('div', unusedImage),
+          _el('img', img => {
+            img.src = '/productImage/' + unusedImage
+            img.alt = unusedImage
+          }),
+          a => {
+            a.classList.add('col')
+            a.href = '/productImage/' + unusedImage
+            a.setAttribute("target", "_blank")
+          })
+      )
+    }
+
+    const productsMissingImage = document.getElementById("ProductsMissingImage");
+    for (const product of productsWithImageMissing) {
+      productsMissingImage.append(
+        _el('a',
+          _el('h3', product.productName),
+          _el('div', product.imagePath, div => div.classList.add('text-body-secondary')),
+          a => {
+            a.classList.add('col')
+            a.href = '/admin/product/edit/' + product.productNo
+            a.setAttribute("target", "_blank")
+          }
+        )
+      )
+    }
+
+    const productsWithoutImageList = document.getElementById("ProductsWithoutImage");
+    for (const product of productsWithoutImage) {
+      productsWithoutImageList.append(
+        _el('a',
+          _el('h3', product.productName),
+          a => {
+            a.classList.add('col')
+            a.href = '/admin/product/edit/' + product.productNo
+            a.setAttribute("target", "_blank")
+          }
+        )
+      )
+    }
+  </script>
+</th:block>
+</body>
+</html>

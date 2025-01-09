@@ -11,15 +11,6 @@
 <body>
 <style>
     .header__main {
-        /*position: absolute;*/
-        /*font-size: 2.5vw;*/
-        /*background-image: url("/images/mainIcon.png");*/
-        /*left: 5%;*/
-        /*color: #3280f3;*/
-        /*background-size: cover;*/
-        /*background-position: center center;*/
-        /*height: 100%;*/
-        /*width: 15%;*/
         width: 150px;
     }
 </style>
@@ -44,6 +35,7 @@
       <a class="list-group-item list-group-item-action bg-transparent" th:href="@{/admin/product/list}">여행상품 관리</a>
       <a class="list-group-item list-group-item-action bg-transparent" th:href="@{/admin/location/list}">여행지 관리</a>
       <a class="list-group-item list-group-item-action bg-transparent" th:href="@{/admin/freeBoard/list}">자유게시판 관리</a>
+      <a class="list-group-item list-group-item-action bg-transparent" th:href="@{/admin/images}">이미지 관리</a>
     </div>
     <th:block layout:fragment="aside-extra">
 

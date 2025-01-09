@@ -3,9 +3,11 @@ package com.busanit501.travelproject.controller.admin;
 import com.busanit501.travelproject.annotation.member.Member;
 import com.busanit501.travelproject.dto.UploadProductImageFileDTO;
 import com.busanit501.travelproject.dto.member.MemberDTO;
+import com.busanit501.travelproject.exception.member.UnauthorizedRestException;
 import com.busanit501.travelproject.service.member.ResponseLogin;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -28,11 +30,15 @@ public class AdminProductImageController {
   @Value("${com.busanit501.travelproject.upload.path}")
   private String uploadPath;
 
+
+
+  @SneakyThrows
   private void throwIfUnauthorized(MemberDTO memberDTO) {
+    if (memberDTO == null)
+      throw new UnauthorizedRestException("access denied");
     boolean admin = memberDTO.getResponseLogin() == ResponseLogin.ADMIN;
     if (!admin)
-//      throw new UnauthorizedException("access denied");
-      throw new RuntimeException("access denied");
+      throw new UnauthorizedRestException("access denied");
   }
 
   private String getFileExtension(String originalFilename) {
