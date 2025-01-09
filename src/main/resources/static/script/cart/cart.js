@@ -13,7 +13,7 @@ async function delCart(productNo) {
     return result
 }
 
-async function addCart(productNo){
+async function addCart(productNo) {
     console.log(productNo)
     const result = await axios.get(`/cart/add/${productNo}`)
     return result
@@ -22,4 +22,12 @@ async function addCart(productNo){
 async function getImage(imgPath) {
     const result = await axios.get(`/productImage/${imgPath}`)
     return result
+}
+
+async function makeReservationImmediately(productNo) {
+    const reservationDTO = {
+        productNo: `${productNo}`
+    }
+    const result = await axios.post(`/reservation/reg`, reservationDTO)
+    return result.data
 }
