@@ -4,10 +4,7 @@ import com.busanit501.travelproject.domain.FreeBoard;
 import com.busanit501.travelproject.domain.Location;
 import com.busanit501.travelproject.domain.Member;
 import com.busanit501.travelproject.domain.Product;
-import com.busanit501.travelproject.dto.FreeBoardJh1DTO;
-import com.busanit501.travelproject.dto.LocationValueJh1DTO;
-import com.busanit501.travelproject.dto.ProductJh1DTO;
-import com.busanit501.travelproject.dto.ProductUpdateJh1DTO;
+import com.busanit501.travelproject.dto.*;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.member.MemberFullDTO;
 import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
@@ -17,6 +14,7 @@ import com.busanit501.travelproject.repository.ProductJh1Repository;
 import com.busanit501.travelproject.repository.freeboard.FreeBoardRepository;
 import com.busanit501.travelproject.repository.member.MemberRepository;
 import com.busanit501.travelproject.service.CustomMapperJh1;
+import jakarta.persistence.Tuple;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -146,6 +144,18 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
       .total((int) boards.getTotalElements())
       .pageRequestDTO(requestDTO)
       .build();
+  }
+
+  @Override
+  public List<ProductImageAdminDTO> getProductImages() {
+    List<Tuple> products = productRepo.getProductsWithImages();
+    return products.stream().map(
+      tuple -> ProductImageAdminDTO.builder()
+        .productNo(tuple.get("productNo", Long.class))
+        .productName(tuple.get("productName", String.class))
+        .imagePath(tuple.get("imagePath", String.class))
+        .build()
+    ).toList();
   }
 
 }
