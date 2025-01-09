@@ -1,7 +1,9 @@
 package com.busanit501.travelproject.controller.cart;
 
+import com.busanit501.travelproject.annotation.member.Member;
 import com.busanit501.travelproject.domain.common.ReservationOrder;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
+import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.reservation.ReservationDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDTO;
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
@@ -25,7 +27,7 @@ public class CartController {
     private static final String CART_COOKIE_NAME = "cart";
 
     @GetMapping("/add/{productNo}")
-    public void addToCart(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable Long productNo) {
+    public boolean addToCart(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable Long productNo) {
         Optional<Cookie> optionalCookie = Arrays.stream(httpServletRequest.getCookies())
                 .filter(cookie -> CART_COOKIE_NAME.equals(cookie.getName()))
                 .findFirst();
@@ -34,17 +36,19 @@ public class CartController {
             newCartCookie.setPath("/");
             newCartCookie.setMaxAge(60 * 60 * 2);
             httpServletResponse.addCookie(newCartCookie);
+            return true;
         } else {
             String existValue = optionalCookie.get().getValue();
             String[] values = existValue.split("-");
             if (Arrays.asList(values).contains(productNo.toString())) {
-                return;
+                return false;
             }
             Cookie cartCookie = optionalCookie.get();
             cartCookie.setValue(existValue + "-" + productNo.toString());
             cartCookie.setPath("/");
             cartCookie.setMaxAge(60 * 60 * 2);
             httpServletResponse.addCookie(cartCookie);
+            return true;
         }
     }
 
@@ -73,11 +77,11 @@ public class CartController {
     }
 
     @GetMapping("/del/{productNo}")
-    public void deleteCart(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable Long productNo) {
+    public boolean deleteCart(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable Long productNo) {
         Optional<Cookie> optionalCookie = Arrays.stream(httpServletRequest.getCookies())
                 .filter(cookie -> CART_COOKIE_NAME.equals(cookie.getName()))
                 .findFirst();
-        if (optionalCookie.isEmpty()) return;
+        if (optionalCookie.isEmpty()) return false;
         Cookie cartCookie = optionalCookie.get();
         String existValue = cartCookie.getValue();
         String[] values = existValue.split("-");
@@ -87,31 +91,30 @@ public class CartController {
             updateCookie.setPath("/");
             updateCookie.setMaxAge(0);
             httpServletResponse.addCookie(updateCookie);
+            return true;
         } else {
             Cookie updateCookie = new Cookie(CART_COOKIE_NAME, existValue);
             updateCookie.setPath("/");
             updateCookie.setMaxAge(60 * 60 * 2);
             httpServletResponse.addCookie(updateCookie);
+            return true;
         }
     }
 
     @PostMapping("/makeReservation")
-    public Map<String, Integer> makeReservation(@CookieValue(value = "memberNo", required = false) String memberNoCookie,
-                                                HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+    @Member
+    public Map<String, Integer> makeReservation(MemberDTO memberDTO, HttpServletRequest httpServletRequest) {
         List<Long> result = new ArrayList<>();
         Optional<Cookie> optionalCookie = Arrays.stream(httpServletRequest.getCookies())
                 .filter(cookie -> CART_COOKIE_NAME.equals(cookie.getName()))
                 .findFirst();
         if (optionalCookie.isEmpty()) return Map.of("reservationNoSize", 0);
-        ;
-        Long memberNo = memberNoCookie != null ? Long.parseLong(memberNoCookie) : null;
-        if (memberNo == null) return Map.of("reservationNoSize", 0);
-        ;
+        if (memberDTO == null) return Map.of("reservationNoSize", 0);
         Cookie cartCookie = optionalCookie.get();
         List<String> productNos = Arrays.asList(cartCookie.getValue().split("-"));
         productNos.stream().map(Long::parseLong).forEach(productNo -> {
             ReservationDTO reservationDTO = ReservationDTO.builder()
-                    .memberNo(memberNo)
+                    .memberNo(memberDTO.getMemberNo())
                     .productNo(productNo)
                     .ReservationOrder(ReservationOrder.PENDING)
                     .build();

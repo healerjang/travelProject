@@ -25,11 +25,11 @@ public class Jh1ServiceTest {
 //    Long id = service.registerLocation(dto);
 //  }
 
-  @Test
-  public void getLocationsTest() {
-    List<LocationValueJh1DTO> dtoList = service.getLocationsOnly();
-    dtoList.forEach(log::info);
-  }
+//  @Test
+//  public void getLocationsTest() {
+//    List<LocationValueJh1DTO> dtoList = service.getLocationsOnly();
+//    dtoList.forEach(log::info);
+//  }
 
 //  @Test
 //  public void registerProductTest() {

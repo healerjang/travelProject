@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 보기</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+
+        @font-face {
+            font-family: 'HakgyoansimBadasseugi';
+            src: url('/font/HakgyoansimBadasseugiTTFL.ttf') format('truetype');
+        }
+        * {
+            font-family: HakgyoansimBadasseugi, sans-serif !important;
+        }
+        /* 댓글 섹션 스타일 */
+        .comment-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        .comment-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        .comment-avatar {
+            width: 50px;
+            height: 50px;
+            background-color: #ddd;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .comment-content {
+            max-width: 100%;
+        }
+        .comment-username {
+            font-weight: bold;
+            color: #ff5a5f;
+        }
+        .comment-text {
+            margin-top: 5px;
+        }
+        .comment-date {
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 5px;
+        }
+        .comment-input {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            resize: none;
+        }
+        .comment-button {
+            margin-top: 10px;
+            background-color: #ff5a5f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .comment-button:hover {
+            background-color: #e04e4e;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header" style="background-color: #ff5a5f; color: white;">
+            게시글 보기
+        </div>
+        <div class="card-body">
+            <!-- 게시글 제목 -->
+            <h5 class="card-title" th:text="${dto != null ? dto.title : '제목이 없습니다.'}"></h5>
+
+            <!-- 게시글 작성자 -->
+            <p class="card-text"><strong>작성자:</strong> <span th:text="${dto != null ? dto.memberName : '작성자가 없습니다.'}"></span></p>
+
+            <!-- 게시글 내용 -->
+            <p class="card-text" th:text="${dto != null ? dto.content : '내용이 없습니다.'}"></p>
+
+            <!-- 게시글 작성일 -->
+            <p class="card-text"><small class="text-muted" th:text="${dto != null ? #temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm:ss') : ''}"></small></p>
+
+            <!-- 수정 및 삭제 버튼 -->
+            <a th:href="@{'/free_board/update?freeBoardNo=' + ${dto.freeBoardNo}}" class="btn btn-warning" th:if="${dto != null}">수정</a>
+            <form style="display: inline;" th:action="@{'/free_board/delete?freeBoardNo=' + ${dto.freeBoardNo}}" method="post" th:if="${dto != null}">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
+            </form>
+            <a href="/free_board/list" class="btn btn-secondary">목록으로</a>
+        </div>
+    </div>
+
+    <!-- 댓글 섹션 -->
+    <div class="comment-section">
+        <h4>댓글</h4>
+        <div id="commentList" class="comment-list">
+            <!-- 댓글 목록은 비동기로 불러와서 여기에 동적으로 추가됩니다. -->
+        </div>
+
+        <!-- 댓글 작성 폼 -->
+        <div class="comment-form">
+            <textarea id="commentInput" class="comment-input" placeholder="댓글을 입력하세요"></textarea>
+            <button id="commentButton" class="comment-button">댓글 작성</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script th:inline="javascript">
+    const commentInput = document.getElementById("commentInput");
+    const freeBoardNo = [[${dto.freeBoardNo}]];
+    // 비동기 함수로 댓글 데이터를 받아오는 함수
+    async function getReplyList(freeBoardNo, page, size) {
+        const response = await axios.get(`/replies/replyList/${freeBoardNo}/${page}/${size}`);
+        // "/replies/replyList/" + freeBoardNo + "/" + page + "/" 백틱을 안쓰면 이렇게 써야함
+        return response.data;  // 서버에서 받아온 댓글 목록 데이터
+    }
+
+    // 댓글 목록을 동적으로 렌더링하는 함수
+    function renderComments(comments) {
+        const commentListContainer = document.getElementById('commentList');
+        commentListContainer.innerHTML = '';  // 기존 댓글 목록 초기화
+
+        // 댓글 목록을 순회하면서 동적으로 HTML 생성
+        comments.forEach(comment => {
+            const commentItem = document.createElement('div');
+            commentItem.classList.add('comment-item');
+
+            // 댓글 내용 구성
+            commentItem.innerHTML = `
+                <div class="comment-avatar"></div>
+                <div class="comment-content">
+                    <div class="comment-username">${comment.replier}</div>
+                    <div class="comment-text">${comment.replyText}</div>
+                    <div class="comment-date">${comment.regDate}</div>
+                </div>
+            `;
+
+            // 댓글을 댓글 목록에 추가
+            commentListContainer.appendChild(commentItem);
+        });
+    }
+
+    // 댓글 데이터를 로드하고 화면에 렌더링하는 함수
+    const memberName = [[${memberName}]];
+    async function loadComments(freeBoardNo) {
+        try {
+            const comments = await getReplyList(freeBoardNo, 1, 10); // 첫 페이지 10개 댓글 로딩
+            console.log(comments, comments.list)
+            renderComments(comments.list);  // 댓글 렌더링
+        } catch (error) {
+            console.error('댓글을 로드하는데 실패했습니다:', error);
+        }
+    }
+
+    // 댓글 작성 함수
+    async function submitComment(freeBoardNo, inputData) {
+        try {
+            // 댓글을 서버에 전송하는 코드
+            await axios.post(`/replies/write`, {
+                //백틱 쓰는 이유 : 중간에 변수 넣기 쉽게 만들기 위해서
+                freeBoardNo: freeBoardNo,
+                replyText: inputData,
+                replier: memberName
+            });
+
+            // 댓글 작성 후 목록을 다시 로드
+            loadComments(freeBoardNo);
+        } catch (error) {
+            console.error('댓글 작성에 실패했습니다:', error);
+        }
+    }
+
+    // 댓글 작성 버튼 클릭 이벤트
+    document.getElementById('commentButton').addEventListener('click', function() {
+
+        const inputData = commentInput.value.trim();
+
+        if (inputData !== "") {
+            submitComment(freeBoardNo, inputData);
+            document.getElementById('commentInput').value = '';  // 입력란 비우기
+        }
+        else {
+            alert("댓글 내용을 입력해주세요")
+        }
+    });
+
+    // 페이지가 로드되면 댓글을 불러오는 부분
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComments(freeBoardNo);
+    });
+</script>
+
+</body>
+</html>

@@ -34,11 +34,11 @@ homeContentLockBox.addEventListener('click', (e) => {
 })
 
 headerMainIcon.addEventListener('click', (e)=> {
-    window.location.href = '../mainPage?';
+    window.location.href = '/mainPage?';
 })
 
 memberTag.addEventListener('click', (e)=> {
-    window.location.href = '/myPage?';
+    window.location.href = 'myPage?';
 })
 
 shoppingCartTag.addEventListener('click', (e)=> {

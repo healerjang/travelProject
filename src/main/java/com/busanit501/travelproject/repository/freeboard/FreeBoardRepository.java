@@ -23,4 +23,5 @@ public interface FreeBoardRepository extends JpaRepository<FreeBoard, Long> , Fr
 
 
 
+
 }

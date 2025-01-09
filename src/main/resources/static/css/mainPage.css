@@ -72,14 +72,18 @@ img {
     }
 }
 
-.myPageContainer {
-    left: 38%;
-}
-
-.signContainer > div, .myPageContainer > div {
+.signContainer > div {
     margin:5% 3% 5% 3%;
     border-radius: 5px;
     padding: 3%;
+}
+
+.myPageContainer {
+    width: 30%;
+    left: 38%;
+    > div {
+        padding: 2%;
+    }
 }
 
 .signContainer > div:hover, .myPageContainer > div:hover {

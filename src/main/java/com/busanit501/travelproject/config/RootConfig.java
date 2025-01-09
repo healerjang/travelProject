@@ -1,6 +1,8 @@
 package com.busanit501.travelproject.config;
 
 import com.busanit501.travelproject.domain.Product;
+import com.busanit501.travelproject.domain.Reply;
+import com.busanit501.travelproject.dto.freeboard.ReplyDTO;
 import com.busanit501.travelproject.dto.productCgw.ProductDTO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -24,6 +26,21 @@ public class RootConfig {
             @Override
             protected void configure() {
                 map().setLocationNo(source.getLocation().getLocationNo());
+            }
+        });
+        modelMapper.addMappings(new PropertyMap<Reply, ReplyDTO>() {
+
+            @Override
+            protected void configure() {
+                map().setReplier(source.getMember().getMemberName());
+                map().setFreeBoardNo(source.getFreeBoard().getFreeBoardNo());
+            }
+        });
+        modelMapper.addMappings(new PropertyMap<ReplyDTO, Reply>() {
+
+            @Override
+            protected void configure() {
+                map().setContent(source.getReplyText());
             }
         });
         return modelMapper;

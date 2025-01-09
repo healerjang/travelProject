@@ -17,6 +17,7 @@
             <div id="register">회원가입</div>
         </div>
         <div class="myPageContainer">
+            <div id="freeBoard">자유게시판</div>
             <div id="member">마이페이지</div>
             <div id="shoppingCart">장바구니</div>
             <div id="reservation">예약확인</div>
@@ -80,6 +81,7 @@
     const shoppingCartText = document.getElementById('shoppingCart');
     const reservationText = document.getElementById('reservation');
     const memberText = document.getElementById('member');
+    const freeBoard = document.getElementById('freeBoard');
     let searchTotal = false;
 
     if (member) {
@@ -92,6 +94,9 @@
         })
         memberText.addEventListener('click', (e) => {
             window.location.href = 'member/myPage?';
+        })
+        freeBoard.addEventListener('click', (e) => {
+            window.location.href = '/free_board/list';
         })
     }
     else {
