@@ -202,7 +202,7 @@ function addImage(name, imagePath, productNo) {
     const imageBoxTitle = document.createElement('div');
     const imageBoxContainer = document.createElement('div');
     imageBox.classList.add('imageBox');
-    imageBox.style.backgroundImage = `url('../images/${imagePath}')`
+    imageBox.style.backgroundImage = `url('${imagePath}')`
     imageBoxTitle.classList.add('imageBoxTitle');
     imageBoxTitle.innerText = name;
     imageBoxContainer.classList.add('imageBoxContainer')
@@ -212,7 +212,7 @@ function addImage(name, imagePath, productNo) {
     imageContainer.appendChild(imageBoxContainer);
 
     imageBox.addEventListener('click', (e) => {
-        console.log(productNo);
+        window.location.href = `/product/detail/${productNo}`;
     })
 }
 

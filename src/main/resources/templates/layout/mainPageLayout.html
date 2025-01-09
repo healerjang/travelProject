@@ -47,16 +47,20 @@
     const memberText = document.getElementById('member');
     let searchTotal = false;
 
+    document.querySelector(".header__main").addEventListener("click", () => {
+        window.location.href = "/mainPage";
+    })
+
     if (member) {
         document.querySelector('.signContainer').style.display = 'none';
         shoppingCartText.addEventListener('click', (e) => {
-            window.location.href = '../cart?';
+            window.location.href = '/cart?';
         })
         reservationText.addEventListener('click', (e) => {
-            window.location.href = '../member/reservation?';
+            window.location.href = '/member/reservation?';
         })
         memberText.addEventListener('click', (e) => {
-            window.location.href = 'member/myPage?';
+            window.location.href = '/member/myPage?';
         })
     }
     else {

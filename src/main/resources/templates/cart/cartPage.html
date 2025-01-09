@@ -10,10 +10,10 @@
     <div class="d-flex flex-md-row flex-column mb-4 justify-content-evenly cartProduct"></div>
     <ul class="pagination cartPagination"></ul>
     <button type="button" class="btn btn-primary makeReservationBtn">예약</button>
-    <button type="button" class="btn btn-secondary" onclick="addCart(1)">1 장바구니 추가 (임시)</button>
-    <button type="button" class="btn btn-secondary" onclick="addCart(2)">2 장바구니 추가 (임시)</button>
-    <button type="button" class="btn btn-secondary" onclick="addCart(3)">3 장바구니 추가 (임시)</button>
-    <button type="button" class="btn btn-secondary" onclick="makeReservationImmediately(1,)">1 즉시 예약 (임시)</button>
+<!--    <button type="button" class="btn btn-secondary" onclick="addCart(1)">1 장바구니 추가 (임시)</button>-->
+<!--    <button type="button" class="btn btn-secondary" onclick="addCart(2)">2 장바구니 추가 (임시)</button>-->
+<!--    <button type="button" class="btn btn-secondary" onclick="addCart(3)">3 장바구니 추가 (임시)</button>-->
+<!--    <button type="button" class="btn btn-secondary" onclick="makeReservationImmediately(1,)">1 즉시 예약 (임시)</button>-->
 </main>
 
 <div layout:fragment="javascript">
@@ -104,7 +104,7 @@
 
         document.querySelector(".makeReservationBtn").addEventListener("click", function (e) {
             makeReservation().then(data => {
-                console.log(data.reservationNoSize + "개의 예약 완료")
+                alert(data.reservationNoSize + "개의 예약 완료")
             }).catch(e => {
                     console.error(e)
                 }
@@ -116,9 +116,12 @@
             const target = e.target
             if (target.tagName != 'BUTTON') return
             const productNo = target.getAttribute("data-productNo")
-            await delCart(productNo)
-            cartProduct.innerHTML = ''
-            cartPagination.innerHTML = ''
+            await delCart(productNo).then(data => {
+                if (data) alert("삭제되었습니다.")
+                else alert("삭제에 실패했습니다.")
+            }).catch(e => {
+                console.error(e)
+            })
             printCart(page)
         })
 

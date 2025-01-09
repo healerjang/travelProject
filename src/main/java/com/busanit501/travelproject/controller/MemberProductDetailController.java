@@ -1,9 +1,12 @@
 package com.busanit501.travelproject.controller;
 
+import com.busanit501.travelproject.annotation.member.Member;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.ReviewJh1DTO;
+import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.service.member.MemberProductDetailService;
 import com.busanit501.travelproject.service.member.ReviewService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,8 +23,12 @@ public class MemberProductDetailController {
     private final ReviewService reviewService;
 
     @GetMapping("/product/detail/{productNo}")
-    public String getProductDetail(@PathVariable Long productNo, Model model) {
-        // 상품 정보 조회
+    @Member
+    public String getProductDetail(@PathVariable Long productNo, Model model, MemberDTO memberDTO, HttpServletRequest request) {
+        if (memberDTO != null) {
+            model.addAttribute("member", true);
+        }
+
         ProductJh1DTO product = productDetailService.getProductById(productNo);
         if (product == null) {
             model.addAttribute("errorMessage", "해당 상품을 찾을 수 없습니다.");
