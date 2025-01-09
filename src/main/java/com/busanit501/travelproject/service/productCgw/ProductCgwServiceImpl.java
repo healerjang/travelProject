@@ -1,5 +1,6 @@
 package com.busanit501.travelproject.service.productCgw;
 
+import com.busanit501.travelproject.domain.Location;
 import com.busanit501.travelproject.domain.Product;
 import com.busanit501.travelproject.dto.productCgw.ProductDTO;
 import com.busanit501.travelproject.dto.productCgw.ProductSearchRequestDTO;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -34,7 +36,13 @@ public class ProductCgwServiceImpl implements ProductCgwService {
     @Override
     public PageResponseDTO<ProductDTO> searchProduct(ProductSearchRequestDTO productSearchRequestDTO) {
         if (productSearchRequestDTO.isData()) {
-            Page<Product> products = productCgwRepository.searchProduct(locationJh1Repository.findById(productSearchRequestDTO.getLocationNo()).orElse(null), productSearchRequestDTO.getStartDate(), productSearchRequestDTO.getEndDate(), PageRequest.of(productSearchRequestDTO.getPage() - 1, productSearchRequestDTO.getSize()));
+            Location location = null;
+            LocalDate startDate = null;
+            LocalDate endDate = null;
+            if (productSearchRequestDTO.getLocationNo() != null) location = locationJh1Repository.findById(productSearchRequestDTO.getLocationNo()).orElse(null);
+            if (productSearchRequestDTO.getStartDate() != null) startDate = productSearchRequestDTO.getStartDate();
+            if (productSearchRequestDTO.getEndDate() != null) endDate = productSearchRequestDTO.getEndDate();
+            Page<Product> products = productCgwRepository.searchProduct(location, startDate, endDate, PageRequest.of(productSearchRequestDTO.getPage() - 1, productSearchRequestDTO.getSize()));
             return PageResponseDTO.<ProductDTO>builder()
                     .pageRequestDTO(productSearchRequestDTO)
                     .list(products.getContent().stream().map(product -> {

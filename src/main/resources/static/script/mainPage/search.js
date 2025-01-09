@@ -169,7 +169,7 @@ function getDayOfWeek(year, month, day = 1) {
 }
 
 function isSearch() {
-    return locationNo != null || startDate != null || endDate != null;
+    return locationNo == null && startDate == null && endDate == null;
 }
 
 searchImageIcon.addEventListener('click', (e)=> {
@@ -249,7 +249,6 @@ function getContentToScrollDown() {
 
 window.addEventListener('scroll', () => {
     if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight ) {
-        console.log("스크롤이벤트 동작중")
         getContentToScrollDown();
     }
 })

@@ -27,8 +27,8 @@ public class ProductCgwSearchImpl extends QuerydslRepositorySupport implements P
         BooleanBuilder builder = new BooleanBuilder();
 
         if (location != null) builder.and(product.location.eq(location));
-        if (startDate != null) builder.and(product.startDate.eq(startDate));
-        if (endDate != null) builder.and(product.endDate.eq(endDate));
+        if (startDate != null) builder.and(product.startDate.goe(startDate));
+        if (endDate != null) builder.and(product.endDate.loe(endDate));
 
         query.where(builder);
 
