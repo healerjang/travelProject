@@ -101,4 +101,13 @@ public class MemberController {
         model.addAttribute("error", "delete failed");
         return "/member/myPage";
     }
+
+    @GetMapping("/logout")
+    public String logOut(HttpServletRequest request, HttpServletResponse response) {
+        Cookie hashCookie = CookieDTO.getUUIDCookie(request);
+        hashCookie.setMaxAge(0);
+        hashCookie.setPath("/");
+        response.addCookie(hashCookie);
+        return "redirect:/mainPage";
+    }
 }

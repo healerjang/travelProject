@@ -21,6 +21,7 @@
             <div id="member">마이페이지</div>
             <div id="shoppingCart">장바구니</div>
             <div id="reservation">예약확인</div>
+            <div id="logout" style="background-image: url('/images/logout.png');"></div>
         </div>
     </header>
     <div class="searchContainer">
@@ -86,6 +87,10 @@
     const freeBoard = document.getElementById('freeBoard');
     let searchTotal = false;
     const goAdminContainer = document.querySelector('.goAdminContainer');
+
+    document.getElementById("logout").addEventListener('click', ()=> {
+        window.location.href = '/member/logout';
+    })
 
     if (admin) {
         goAdminContainer.style.display = 'flex';
