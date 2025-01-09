@@ -1,4 +1,4 @@
-package com.busanit501.travelproject.dto;
+package com.busanit501.travelproject.dto.freeboard;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

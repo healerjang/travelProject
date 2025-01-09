@@ -1,6 +1,6 @@
 //package com.busanit501.travelproject.service;
 //
-//import com.busanit501.travelproject.dto.FreeBoardJh1DTO;
+//import com.busanit501.travelproject.dto.freeboard.FreeBoardJh1DTO;
 //import com.busanit501.travelproject.dto.ProductImageAdminDTO;
 //import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
 //import com.busanit501.travelproject.dto.util.PageResponseJh1DTO;

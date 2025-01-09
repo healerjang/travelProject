@@ -1,9 +1,8 @@
 package com.busanit501.travelproject.dto.member;
 
-import com.busanit501.travelproject.dto.FreeBoardJh1DTO;
+import com.busanit501.travelproject.dto.freeboard.FreeBoardJh1DTO;
 import com.busanit501.travelproject.dto.ReplyJh1DTO;
 import com.busanit501.travelproject.dto.ReviewJh1DTO;
-import com.busanit501.travelproject.dto.reservation.ReservationDTO;
 import com.busanit501.travelproject.dto.reservation.ReservationViewJh1DTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
