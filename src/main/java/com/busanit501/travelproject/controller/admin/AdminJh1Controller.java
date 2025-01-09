@@ -36,13 +36,23 @@ public class AdminJh1Controller {
       throw new UnauthorizedException("access denied");
   }
 
+  @Member
+  @GetMapping("/mainPage")
+  public String mainPage(
+    HttpServletRequest request,
+    MemberDTO memberDTO
+  ) {
+    throwIfUnauthorized(memberDTO);
+    return "admin/adminMainPage";
+  }
+
 
   @Member
   @GetMapping("/location/list")
   public String listLocation(
     HttpServletRequest request,
     MemberDTO memberDTO
-  ) throws UnauthorizedException {
+  ) {
     throwIfUnauthorized(memberDTO);
     return "admin/listLocation_jh1";
   }
