@@ -43,14 +43,17 @@ public class ReservationServiceImpl implements ReservationService {
     private final CustomMapperJh1 customMapper;
 
     @Override
-    public Long registerReservation(ReservationDTO reservationDTO) {
-        Reservation reservation = Reservation.builder()
-                .member(memberRepository.findByMemberNo(reservationDTO.getMemberNo()))
-                .product(productJh1Repository.findProductByProductNo(reservationDTO.getProductNo()).orElseThrow())
-                .reservationOrder(reservationDTO.getReservationOrder())
-                .build();
-        Reservation result = reservationRepository.save(reservation);
-        return result.getReservationNo();
+    public Boolean registerReservation(ReservationDTO reservationDTO) {
+        if(productJh1Repository.findProductByProductNo(reservationDTO.getProductNo()).isEmpty()) {
+            Reservation reservation = Reservation.builder()
+                    .member(memberRepository.findByMemberNo(reservationDTO.getMemberNo()))
+                    .product(productJh1Repository.findProductByProductNo(reservationDTO.getProductNo()).orElseThrow())
+                    .reservationOrder(reservationDTO.getReservationOrder())
+                    .build();
+            Reservation result = reservationRepository.save(reservation);
+            return true;
+        }
+        return false;
     }
 
     @Override

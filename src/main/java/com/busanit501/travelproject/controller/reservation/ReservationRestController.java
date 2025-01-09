@@ -45,7 +45,7 @@ public class ReservationRestController {
 
     @PostMapping("/reg")
     @Member
-    public Map<String, Long> reg(
+    public boolean reg(
             @Valid @RequestBody ReservationDTO reservationDTO, BindingResult bindingResult,
             MemberDTO memberDTO) throws BindException {
         if (bindingResult.hasErrors()) {
@@ -55,8 +55,8 @@ public class ReservationRestController {
             throw new BindException(bindingResult);
         }
         reservationDTO.setMemberNo(memberDTO.getMemberNo());
-        Long result = reservationService.registerReservation(reservationDTO);
-        return Map.of("reservationNo", result);
+        Boolean result = reservationService.registerReservation(reservationDTO);
+        return result;
     }
 
     @PutMapping("/edit")

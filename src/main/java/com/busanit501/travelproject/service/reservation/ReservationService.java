@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 public interface ReservationService {
-    Long registerReservation(ReservationDTO reservationDTO);
+    Boolean registerReservation(ReservationDTO reservationDTO);
     Long updateReservation(ReservationDTO reservationDTO);
     Long deleteReservation(Long reservationNo);
     boolean refundReservation(Long reservationNo, int refundPercent);
