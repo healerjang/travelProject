@@ -272,6 +272,7 @@
         function setImagePath(imagePath) {
             const imagePaths = document.getElementsByClassName(imagePath)
             for (let image of imagePaths) {
+                console.log(image)
                 image.src = '/productImage/' + imagePath
             }
         }
