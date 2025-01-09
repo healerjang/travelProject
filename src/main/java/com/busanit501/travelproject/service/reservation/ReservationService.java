@@ -18,7 +18,7 @@ public interface ReservationService {
     Long registerReservation(ReservationDTO reservationDTO);
     Long updateReservation(ReservationDTO reservationDTO);
     Long deleteReservation(Long reservationNo);
-    boolean refundReservation(Long reservationNo);
+    boolean refundReservation(Long reservationNo, int refundPercent);
     Long deleteReservationNow(Long reservationNo);
     HcbPageResponseDTO<ReservationUserDTO> getReservationUser(Long memberNo, ReservationOrder reservationOrder, HcbPageRequestDTO hcbPageRequestDTO);
     HcbPageResponseDTO<ReservationDTO> getReservationAdmin(Long productNo, HcbPageRequestDTO hcbPageRequestDTO);
