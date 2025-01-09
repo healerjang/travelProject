@@ -11,6 +11,7 @@ import com.busanit501.travelproject.repository.reservation.ReservationRepository
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -27,17 +28,29 @@ public class ProductCgwServiceImpl implements ProductCgwService {
     private final ReservationRepository reservationRepository;
     private final ModelMapper modelMapper;
 
+    @Value("${com.busanit501.travelproject.thumbnail.path}")
+    private String thumbnailPath;
+
     @Override
     public PageResponseDTO<ProductDTO> searchProduct(ProductSearchRequestDTO productSearchRequestDTO) {
         if (productSearchRequestDTO.isData()) {
             Page<Product> products = productCgwRepository.searchProduct(locationJh1Repository.findById(productSearchRequestDTO.getLocationNo()).orElse(null), productSearchRequestDTO.getStartDate(), productSearchRequestDTO.getEndDate(), PageRequest.of(productSearchRequestDTO.getPage() - 1, productSearchRequestDTO.getSize()));
             return PageResponseDTO.<ProductDTO>builder()
                     .pageRequestDTO(productSearchRequestDTO)
-                    .list(products.getContent().stream().map(product -> modelMapper.map(product, ProductDTO.class)).toList())
+                    .list(products.getContent().stream().map(product -> {
+                        ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+                        productDTO.setImagePath(product.getImagePath());
+                        return productDTO;
+                    }).toList())
                     .total(products.getTotalElements())
                     .build();
         }
-        List<ProductDTO> productDTOList = reservationRepository.bestReservationProducts().stream().map(product -> modelMapper.map(productCgwRepository.findById(product).orElseThrow(), ProductDTO.class)).toList();
+        List<ProductDTO> productDTOList = reservationRepository.bestReservationProducts().stream().map(productNo -> {
+            Product product = productCgwRepository.findById(productNo).orElseThrow(null);
+            ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+            productDTO.setImagePath(product.getImagePath());
+            return productDTO;
+        }).toList();
 
         return PageResponseDTO.<ProductDTO>builder()
                 .pageRequestDTO(new PageRequestDTO(1, 10))
