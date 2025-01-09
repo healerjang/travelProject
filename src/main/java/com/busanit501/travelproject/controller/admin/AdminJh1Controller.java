@@ -5,10 +5,12 @@ import com.busanit501.travelproject.dto.ProductJh1DTO;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.member.MemberFullDTO;
 import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
+import com.busanit501.travelproject.exception.member.UnauthorizedException;
 import com.busanit501.travelproject.service.admin.AdminJh1Service;
 import com.busanit501.travelproject.service.member.ResponseLogin;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,11 +27,13 @@ public class AdminJh1Controller {
 
   private final AdminJh1Service adminService;
 
-  private void throwIfUnauthorized(MemberDTO memberDTO) {
+  @SneakyThrows
+  private void throwIfUnauthorized(MemberDTO memberDTO)  {
+    if (memberDTO == null)
+      throw new UnauthorizedException("access denied");
     boolean admin = memberDTO.getResponseLogin() == ResponseLogin.ADMIN;
     if (!admin)
-//      throw new UnauthorizedException("access denied");
-      throw new RuntimeException("access denied");
+      throw new UnauthorizedException("access denied");
   }
 
 
@@ -38,7 +42,7 @@ public class AdminJh1Controller {
   public String listLocation(
     HttpServletRequest request,
     MemberDTO memberDTO
-  ) {
+  ) throws UnauthorizedException {
     throwIfUnauthorized(memberDTO);
     return "admin/listLocation_jh1";
   }

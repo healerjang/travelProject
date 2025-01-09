@@ -9,10 +9,13 @@ import com.busanit501.travelproject.dto.member.MemberAddPointDTO;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
 import com.busanit501.travelproject.dto.util.PageResponseJh1DTO;
+import com.busanit501.travelproject.exception.member.UnauthorizedException;
+import com.busanit501.travelproject.exception.member.UnauthorizedRestException;
 import com.busanit501.travelproject.service.admin.AdminJh1Service;
 import com.busanit501.travelproject.service.member.ResponseLogin;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,11 +30,14 @@ public class AdminJh1RestController {
 
   private final AdminJh1Service adminService;
 
+  @SneakyThrows
   private void throwIfUnauthorized(MemberDTO memberDTO) {
+    if (memberDTO == null)
+      throw new UnauthorizedRestException("access denied");
     boolean admin = memberDTO.getResponseLogin() == ResponseLogin.ADMIN;
     if (!admin)
-//      throw new UnauthorizedException("access denied");
-      throw new RuntimeException("access denied");
+      throw new UnauthorizedRestException("access denied");
+//      throw new RuntimeException("access denied");
   }
 
   @Member
