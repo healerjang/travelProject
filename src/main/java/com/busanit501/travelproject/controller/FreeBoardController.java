@@ -22,17 +22,20 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class FreeBoardController {
     private final FreeBoardService freeBoardService;
 
+    @Member
     @GetMapping("/list")
-    public String list(PageRequestDTO pageRequestDTO, Model model ) { // 서버 -> 화면으로 전달
+    public String list(PageRequestDTO pageRequestDTO, Model model, MemberDTO memberDTO, HttpServletRequest request ) { // 서버 -> 화면으로 전달
         PageResponseDTO<FreeBoardReadDTO> responseDTO = freeBoardService.listReadWithReplyCount(pageRequestDTO);
         model.addAttribute("responseDTO", responseDTO);
+        if (memberDTO != null) model.addAttribute("member", true);
 
         return "free_board/list";
     }
 
+    @Member
     @GetMapping("/register")
-    public void register() {
-
+    public void register(MemberDTO memberDTO, HttpServletRequest request, Model model) {
+        if (memberDTO != null) model.addAttribute("member", true);
     }
 
     @Member
@@ -65,14 +68,19 @@ public class FreeBoardController {
     // httpServletRequest request요청해서 @Member<< 들어있는 MemberDTO 그대로 주입하겠다 그런의미
     public void read(Long freeBoardNo, PageRequestDTO pageRequestDTO, HttpServletRequest request, MemberDTO memberDTO,
                      Model model) {
-        model.addAttribute("memberName", memberDTO.getMemberName());
+        if (memberDTO != null) {
+            model.addAttribute("member", true);
+            model.addAttribute("memberName", memberDTO.getMemberName());
+        }
         FreeBoardDTO freeBoardDTO = freeBoardService.readOne(freeBoardNo);
         model.addAttribute("dto", freeBoardDTO);
     }
 
+    @Member
     @GetMapping("/update")
-    public void update(Long freeBoardNo, PageRequestDTO pageRequestDTO,
+    public void update(Long freeBoardNo, PageRequestDTO pageRequestDTO, MemberDTO memberDTO,
                        Model model) {
+        if (memberDTO != null) {model.addAttribute("member", true);}
         FreeBoardDTO freeBoardDTO = freeBoardService.readOne(freeBoardNo);
         model.addAttribute("dto", freeBoardDTO);
     }

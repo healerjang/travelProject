@@ -88,11 +88,11 @@
     const goAdminContainer = document.querySelector('.goAdminContainer');
 
     if (admin) {
+        goAdminContainer.style.display = 'flex';
         goAdminContainer.addEventListener("click", () => {
             window.location.href = "/admin/mainPage";
         })
     }
-    else goAdminContainer.style.display = "none";
 
 
     document.querySelector(".header__main").addEventListener("click", () => {
