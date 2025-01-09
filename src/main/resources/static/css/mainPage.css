@@ -26,6 +26,7 @@ body {
     height: 100vh;
     background-color: rgb(255, 255, 255);
     font-weight: bolder;
+    position: relative;
 }
 
 header {
@@ -323,4 +324,25 @@ img {
     font-size: 2vw;
     color: white;
     text-shadow: 1px 2px black;
+}
+
+.goAdminContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    height: 12%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    box-shadow: 2px 2px 5px 2px #b8b8b8;
+    top: 20%;
+    left: 92%;
+    background-image: url("../images/adminIcon.png");
+    background-repeat: no-repeat;
+    background-size: 70%;
+    background-position: center center;
+}
+
+.goAdminContainer:hover {
+    background-color: #cdcdcd;
 }

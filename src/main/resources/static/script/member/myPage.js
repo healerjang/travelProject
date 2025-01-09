@@ -38,15 +38,15 @@ headerMainIcon.addEventListener('click', (e)=> {
 })
 
 memberTag.addEventListener('click', (e)=> {
-    window.location.href = 'myPage?';
+    window.location.href = '/myPage?';
 })
 
 shoppingCartTag.addEventListener('click', (e)=> {
-    window.location.href = 'shoppingCart?';
+    window.location.href = '/cart?';
 })
 
 reservationTag.addEventListener('click', (e)=> {
-    window.location.href = 'reservation?';
+    window.location.href = '/member/reservation?';
 })
 
 function activeHomeHeader() {

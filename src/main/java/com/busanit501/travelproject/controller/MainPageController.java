@@ -2,6 +2,7 @@ package com.busanit501.travelproject.controller;
 
 import com.busanit501.travelproject.annotation.member.Member;
 import com.busanit501.travelproject.dto.member.MemberDTO;
+import com.busanit501.travelproject.service.member.ResponseLogin;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,9 @@ public class MainPageController {
     public void mainPage(HttpServletRequest request, MemberDTO memberDTO, Model model) {
         if (memberDTO != null) {
             model.addAttribute("member", true);
+            if (memberDTO.getResponseLogin() == ResponseLogin.ADMIN) {
+                model.addAttribute("admin", true);
+            }
         }
     }
 }

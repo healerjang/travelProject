@@ -70,12 +70,14 @@
     </div>
     <div class="imageContainer">
     </div>
+    <div class="goAdminContainer"></div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </body>
 <script src="/script/mainPage/search.js" th:inline="javascript"></script>
 <script src="/script/mainPage/mainPage.js" th:inline="javascript"></script>
 <script th:inline="javascript">
     const member = [[${member}]];
+    const admin = [[${admin}]];
     const idText = document.getElementById('login');
     const registerText = document.getElementById('register');
     const shoppingCartText = document.getElementById('shoppingCart');
@@ -83,17 +85,30 @@
     const memberText = document.getElementById('member');
     const freeBoard = document.getElementById('freeBoard');
     let searchTotal = false;
+    const goAdminContainer = document.querySelector('.goAdminContainer');
+
+    if (admin) {
+        goAdminContainer.addEventListener("click", () => {
+            window.location.href = "/admin/mainPage";
+        })
+    }
+    else goAdminContainer.style.display = "none";
+
+
+    document.querySelector(".header__main").addEventListener("click", () => {
+        window.location.href = "/mainPage";
+    })
 
     if (member) {
         document.querySelector('.signContainer').style.display = 'none';
         shoppingCartText.addEventListener('click', (e) => {
-            window.location.href = 'shoppingCart?';
+            window.location.href = '/cart';
         })
         reservationText.addEventListener('click', (e) => {
-            window.location.href = 'reservation?';
+            window.location.href = '/member/reservation';
         })
         memberText.addEventListener('click', (e) => {
-            window.location.href = 'member/myPage?';
+            window.location.href = '/member/myPage';
         })
         freeBoard.addEventListener('click', (e) => {
             window.location.href = '/free_board/list';
@@ -102,10 +117,10 @@
     else {
         document.querySelector('.myPageContainer').style.display = 'none';
         idText.addEventListener('click', (e) => {
-            window.location.href = 'member/login?';
+            window.location.href = '/member/login?';
         })
         registerText.addEventListener('click', (e) => {
-            window.location.href = 'member/register?';
+            window.location.href = '/member/register?';
         })
     }
 
