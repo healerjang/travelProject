@@ -10,14 +10,12 @@ import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDT
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
 import com.busanit501.travelproject.service.member.MemberService;
 import com.busanit501.travelproject.service.reservation.ReservationService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Map;
@@ -33,12 +31,8 @@ public class ReservationRestController {
     @GetMapping("/userReservation/{reservationOrder}")
     @Member
     public HcbPageResponseDTO<ReservationUserDTO> getUserReservation(
-            @CookieValue(value = "memberNo", required = false) String memberNoCookie,
-            HttpServletRequest request, RedirectAttributes redirectAttributes,
-            @PathVariable ReservationOrder reservationOrder, HcbPageRequestDTO pageRequestDTO) throws BindException {
-        Long memberNo = memberNoCookie != null ? Long.parseLong(memberNoCookie) : null;
-        HcbPageResponseDTO<ReservationUserDTO> result = reservationService.getReservationUser(memberNo, reservationOrder, pageRequestDTO);
-        return result;
+            @PathVariable ReservationOrder reservationOrder, HcbPageRequestDTO pageRequestDTO, MemberDTO memberDTO) {
+        return reservationService.getReservationUser(memberDTO.getMemberNo(), reservationOrder, pageRequestDTO);
     }
 
     //아직 어드민 어소리티 관련 확인 필요
@@ -49,23 +43,24 @@ public class ReservationRestController {
     }
 
     @PostMapping("/reg")
+    @Member
     public Map<String, Long> reg(
             @Valid @RequestBody ReservationDTO reservationDTO, BindingResult bindingResult,
-            @CookieValue(value = "memberNo", required = false) String memberNoCookie,
-            RedirectAttributes redirectAttributes) throws BindException {
+            MemberDTO memberDTO) throws BindException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        Long memberNo = memberNoCookie != null ? Long.parseLong(memberNoCookie) : null;
-        reservationDTO.setMemberNo(memberNo);
+        if (memberDTO == null) {
+            throw new BindException(bindingResult);
+        }
+        reservationDTO.setMemberNo(memberDTO.getMemberNo());
         Long result = reservationService.registerReservation(reservationDTO);
         return Map.of("reservationNo", result);
     }
 
     @PutMapping("/edit")
     public Map<String, Long> edit(
-            @Valid @RequestBody ReservationDTO reservationDTO, BindingResult bindingResult,
-            RedirectAttributes redirectAttributes) throws BindException {
+            @Valid @RequestBody ReservationDTO reservationDTO, BindingResult bindingResult) throws BindException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
@@ -98,9 +93,9 @@ public class ReservationRestController {
     }
 
     @GetMapping("/memberPoint")
-    public Map<String, Integer> memberPoint(@CookieValue(value = "memberNo", required = false) String memberNoCookie) {
-        Long memberNo = memberNoCookie != null ? Long.parseLong(memberNoCookie) : null;
-        MemberDTO result = memberService.getMember(memberNo);
+    @Member
+    public Map<String, Integer> memberPoint(MemberDTO memberDTO) {
+        MemberDTO result = memberService.getMember(memberDTO.getMemberNo());
         int memberPoint = result.getMemberPoint();
         return Map.of("memberPoint", memberPoint);
     }
