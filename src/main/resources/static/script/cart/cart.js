@@ -10,11 +10,10 @@ async function makeReservation() {
 
 async function delCart(productNo) {
     const result = await axios.get(`/cart/del/${productNo}`)
-    return result
+    return result.data
 }
 
 async function addCart(productNo) {
-    console.log(productNo)
     const result = await axios.get(`/cart/add/${productNo}`)
     return result
 }
