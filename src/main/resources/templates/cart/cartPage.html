@@ -39,9 +39,9 @@
             if (dtoList && dtoList.length > 0) {
                 for (const dto of dtoList) {
                     str += `
-                        <div class="card" style="width: 18rem; position: relative;">
+                        <div class="card" data-productNo="${dto.productNo}" style="width: 18rem; position: relative;">
                             <button type="button" class="btn-close position-absolute top-0 end-0"
-                                    data-productNo="${dto.productNo}" aria-label="Close"></button>
+                                    aria-label="Close"></button>
                             <img class="card-img-top ${dto.imagePath}" src="" alt="Card image cap">
                                 <div class="card-body">
                                     <h5 class="card-title">${dto.name}</h5>
@@ -119,15 +119,17 @@
             e.stopPropagation()
             e.preventDefault()
             const target = e.target
-            if (target.tagName != 'BUTTON') return
-            const productNo = target.getAttribute("data-productNo")
-            await delCart(productNo).then(data => {
-                if (data) alert("삭제되었습니다.")
-                else alert("삭제에 실패했습니다.")
-            }).catch(e => {
-                console.error(e)
-            })
-            printCart(page)
+            const productNo = target.closest(".card").getAttribute("data-productNo")
+            if (target.tagName == 'BUTTON') {
+                await delCart(productNo).then(data => {
+                    if (data) alert("삭제되었습니다.")
+                    else alert("삭제에 실패했습니다.")
+                }).catch(e => {
+                    console.error(e)
+                })
+                printCart(page)
+            }
+            else window.location.href = `/product/detail/${productNo}`
         })
 
         function setImagePath(imagePath) {
