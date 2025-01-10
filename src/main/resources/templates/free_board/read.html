@@ -100,8 +100,10 @@
             <p class="card-text"><small class="text-muted" th:text="${dto != null ? #temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm:ss') : ''}"></small></p>
 
             <!-- 수정 및 삭제 버튼 -->
-            <a th:href="@{'/free_board/update?freeBoardNo=' + ${dto.freeBoardNo}}" class="btn btn-warning" th:if="${dto != null}">수정</a>
-            <form style="display: inline;" th:action="@{'/free_board/delete?freeBoardNo=' + ${dto.freeBoardNo}}" method="post" th:if="${dto != null}">
+            <a th:href="@{'/free_board/update?freeBoardNo=' + ${dto.freeBoardNo}}" class="btn btn-warning" th:if="${dto != null}"
+            th:style="${memberNo != dto.memberNo} ? 'display: none;' : ''">수정</a>
+            <form style="display: inline;" th:action="@{'/free_board/delete?freeBoardNo=' + ${dto.freeBoardNo}}" method="post" th:if="${dto != null}"
+                  th:style="${memberNo != dto.memberNo} ? 'display: none;' : ''">
                 <button type="submit" class="btn btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
             </form>
             <a href="/free_board/list" class="btn btn-secondary">목록으로</a>
