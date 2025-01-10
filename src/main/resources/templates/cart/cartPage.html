@@ -3,17 +3,33 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/mainPageLayout.html}">
-<title layout:fragment="title">장바구니</title>
+<head>
+    <title layout:fragment="title">장바구니</title>
+    <style>
+        .header__main {
+            background-image: url("/images/mainIconCartNReservation.png");
+        }
+        .card, .list-group, .list-group-item, .makeReservationBtn{
+            background-color: #55CBCD;
+            border-color: #55CBCD;
+            color: white;
+        }
+        .signContainer, .myPageContainer, .page-item, .page-link{
+            color: #55CBCD;
+            border-color: #55CBCD;
+        }
+    </style>
+</head>
 <body>
 <!--나중에 layout 으로 싹 갈아야함-->
 <main layout:fragment="content" class="m-3">
     <div class="d-flex flex-md-row flex-column mb-4 justify-content-evenly cartProduct"></div>
     <ul class="pagination cartPagination"></ul>
     <button type="button" class="btn btn-primary makeReservationBtn">예약</button>
-<!--    <button type="button" class="btn btn-secondary" onclick="addCart(1)">1 장바구니 추가 (임시)</button>-->
-<!--    <button type="button" class="btn btn-secondary" onclick="addCart(2)">2 장바구니 추가 (임시)</button>-->
-<!--    <button type="button" class="btn btn-secondary" onclick="addCart(3)">3 장바구니 추가 (임시)</button>-->
-<!--    <button type="button" class="btn btn-secondary" onclick="makeReservationImmediately(1)">1 즉시 예약 (임시)</button>-->
+    <!--    <button type="button" class="btn btn-secondary" onclick="addCart(1)">1 장바구니 추가 (임시)</button>-->
+    <!--    <button type="button" class="btn btn-secondary" onclick="addCart(2)">2 장바구니 추가 (임시)</button>-->
+    <!--    <button type="button" class="btn btn-secondary" onclick="addCart(3)">3 장바구니 추가 (임시)</button>-->
+    <!--    <button type="button" class="btn btn-secondary" onclick="makeReservationImmediately(1)">1 즉시 예약 (임시)</button>-->
 </main>
 
 <div layout:fragment="javascript">
@@ -128,14 +144,13 @@
                     console.error(e)
                 })
                 printCart(page)
-            }
-            else window.location.href = `/product/detail/${productNo}`
+            } else window.location.href = `/product/detail/${productNo}`
         })
 
         function setImagePath(imagePath) {
             const imagePaths = document.getElementsByClassName(imagePath)
             for (let image of imagePaths) {
-            image.src = '/thumbnail/' + imagePath
+                image.src = '/thumbnail/' + imagePath
             }
         }
     </script>
