@@ -15,6 +15,7 @@ const saveButton = personalInformationUpdateActive.querySelector(".saveButton");
 let activeUpdateKeyword = null;
 let activeUpdatePage = false;
 let updateCheck = false;
+let activeCallId = 0;
 const updateKeyWordDict = new Map([
     ["아이디", "id"],
     ["이름", "name"],
@@ -23,7 +24,7 @@ const updateKeyWordDict = new Map([
 ]);
 
 for (const updateRouter of updateRouters) {
-    updateRouter.addEventListener('click', (e)=> {
+    updateRouter.addEventListener('click', (e) => {
         updateRouterClick(updateRouter);
     })
 }
@@ -35,8 +36,12 @@ cancelButton.addEventListener('click', (e) => {
     activeNormal()
 })
 
-updateInput.addEventListener('focus', (e) => {
-    if (activeUpdatePage) duplicateCheckToKeyword(updateKeyWordDict.get(activeUpdateKeyword));
+updateInput.addEventListener('input', (e) => {
+    if (activeUpdatePage) {
+        activeCallId++;
+        const currentCallId = activeCallId;
+        duplicateCheckToKeyword(updateKeyWordDict.get(activeUpdateKeyword), currentCallId);
+    }
 })
 
 function hideUpdateGuides() {
@@ -71,16 +76,17 @@ function activeNormal() {
     activeUpdatePage = false;
 }
 
-saveButton.addEventListener('click', (e)=> {
+saveButton.addEventListener('click', (e) => {
     const keyword = updateKeyWordDict.get(activeUpdateKeyword);
     if (updateCheck) {
         const trimmedInput = updateInput.innerText.trim();
-        updateMember(keyword, trimmedInput).then(success=> {
+        updateMember(keyword, trimmedInput).then(success => {
             if (success) {
                 document.getElementById(`${keyword}View`).innerText = trimmedInput;
                 activeNormal();
+            } else {
+                alert("사용자의 데이터가 이미 수정되었거나 없는 사용자입니다.")
             }
-            else {alert("사용자의 데이터가 이미 수정되었거나 없는 사용자입니다.")}
         })
     }
 })
@@ -89,24 +95,24 @@ function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function duplicateCheckToKeyword(keyword) {
+async function duplicateCheckToKeyword(keyword, id) {
+    hideUpdateGuides();
     updateDuplicateLoading.style.display = "block";
-    while (activeUpdatePage) {
-        const inputData = updateInput.innerText;
-        await delay(1000)
-        if (inputData !== "") {
-            const response = await axios.get(`/member/update/${keyword}/${encodeURIComponent(inputData)}`);
-            console.log(response);
-            const check = response.data;
 
+    await delay(1000)
+
+    const inputData = updateInput.innerText;
+    if (inputData !== "") {
+        const response = await axios.get(`/member/update/${keyword}/${encodeURIComponent(inputData)}`);
+        const check = response.data;
+        if (activeCallId === id) {
             if (check) {
                 updateDuplicateLoading.style.display = "none";
                 updateDuplicateCheck.style.display = "block";
                 updateDuplicateGuide.style.display = "block";
                 updateDuplicateGuide.innerText = `해당 ${keyword}는 사용할 수 있습니다.`
                 updateCheck = true;
-            }
-            else {
+            } else {
                 updateDuplicateLoading.style.display = "none";
                 updateDuplicateCross.style.display = "block";
                 updateDuplicateGuide.style.display = "block";
@@ -115,7 +121,6 @@ async function duplicateCheckToKeyword(keyword) {
             }
         }
     }
-    hideUpdateGuides();
 }
 
 async function updateMember(keyword, inputData) {

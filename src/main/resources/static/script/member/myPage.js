@@ -38,7 +38,7 @@ headerMainIcon.addEventListener('click', (e)=> {
 })
 
 memberTag.addEventListener('click', (e)=> {
-    window.location.href = '/myPage?';
+    window.location.href = '/member/myPage?';
 })
 
 shoppingCartTag.addEventListener('click', (e)=> {

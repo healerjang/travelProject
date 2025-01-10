@@ -2,6 +2,7 @@ package com.busanit501.travelproject.service;
 
 import com.busanit501.travelproject.domain.*;
 import com.busanit501.travelproject.dto.*;
+import com.busanit501.travelproject.dto.freeboard.FreeBoardJh1DTO;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.member.MemberFullDTO;
 import com.busanit501.travelproject.dto.reservation.ReservationViewJh1DTO;

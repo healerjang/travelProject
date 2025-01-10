@@ -108,7 +108,7 @@ public class ReservationByOrderRepositoryImpl extends QuerydslRepositorySupport 
         List<Long> result = query.select(reservation.product.productNo)
                 .groupBy(reservation.product.productNo)
                 .orderBy(reservation.product.productNo.count().desc())
-                .limit(10).fetch();
+                .limit(9).fetch();
         log.info(result + "레포 확인");
         return result;
     }

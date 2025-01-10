@@ -39,7 +39,7 @@
       </div>
     </div>
     <div class="card mb-3">
-      <div class="card-header">이미지 등록이 되지 않은 여행상품</div>
+      <div class="card-header">이미지를 등록하지 않은 여행상품</div>
       <div class="card-body">
         <div id="ProductsWithoutImage" class="row row-cols-3"></div>
       </div>
@@ -78,17 +78,26 @@
     const imagesInUseList = document.getElementById("ImagesInUse");
     for (const product of productsWithImageFound) {
       imagesInUseList.append(
-        _el('a',
-          _el('h3', product.productName),
+        _el('div',
+          _el('a', _el('h3', product.productName),
+            a => {
+              a.href = '/admin/product/edit/' + product.productNo
+              a.setAttribute("target", "_blank")
+            }
+          ),
+
           _el('div', product.imagePath, div => div.classList.add('text-body-secondary')),
-          _el('img', img => {
-            img.src = '/productImage/' + product.imagePath
-            img.alt = product.imagePath
-          }),
-          a => {
-            a.classList.add('col')
-            a.href = '/admin/product/edit/' + product.productNo
-            a.setAttribute("target", "_blank")
+          _el('a',
+            _el('img', img => {
+              img.src = '/thumbnail/' + product.imagePath
+              img.alt = product.imagePath
+            }),
+            a => {
+              a.href = '/productImage/' + product.imagePath
+              a.setAttribute("target", "_blank")
+            }),
+          el => {
+            el.classList.add('col')
           }
         )
       )
@@ -100,7 +109,7 @@
         _el('a',
           _el('div', unusedImage),
           _el('img', img => {
-            img.src = '/productImage/' + unusedImage
+            img.src = '/thumbnail/' + unusedImage
             img.alt = unusedImage
           }),
           a => {
@@ -130,7 +139,7 @@
     for (const product of productsWithoutImage) {
       productsWithoutImageList.append(
         _el('a',
-          _el('h3', product.productName),
+          _el('h4', product.productName),
           a => {
             a.classList.add('col')
             a.href = '/admin/product/edit/' + product.productNo

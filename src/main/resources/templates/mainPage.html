@@ -15,12 +15,14 @@
         <div class="signContainer">
             <div id="login">로그인</div>
             <div id="register">회원가입</div>
+            <div id="freeBoardSignUp">자유게시판</div>
         </div>
         <div class="myPageContainer">
             <div id="freeBoard">자유게시판</div>
             <div id="member">마이페이지</div>
             <div id="shoppingCart">장바구니</div>
             <div id="reservation">예약확인</div>
+            <div id="logout" style="background-image: url('/images/logout.png');"></div>
         </div>
     </header>
     <div class="searchContainer">
@@ -84,8 +86,12 @@
     const reservationText = document.getElementById('reservation');
     const memberText = document.getElementById('member');
     const freeBoard = document.getElementById('freeBoard');
-    let searchTotal = false;
     const goAdminContainer = document.querySelector('.goAdminContainer');
+    const freeBoardSignText = document.getElementById('freeBoardSignUp');
+
+    document.getElementById("logout").addEventListener('click', ()=> {
+        window.location.href = '/member/logout';
+    })
 
     if (admin) {
         goAdminContainer.style.display = 'flex';
@@ -122,6 +128,9 @@
         registerText.addEventListener('click', (e) => {
             window.location.href = '/member/register?';
         })
+        freeBoardSignText.addEventListener('click', (e) => {
+            window.location.href = '/free_board/list';
+        })
     }
 
     function addCountryImageClickListener(country) {
@@ -151,17 +160,15 @@
             for (const product of content.list) {
                 addImage(product.name, product.imagePath, product.productNo)
             }
-            isAddImage = true;
+            isAddImage = !isSearch();
         })
     }
 
     function addImageContainer(page, size, locationNo, startDate, endDate) {
-        isAddImage = false;
         getContent(page, size, locationNo, startDate, endDate).then((content) => {
             for (const product of content.list) {
                 addImage(product.name, product.imagePath, product.productNo)
             }
-            isAddImage = true;
         })
     }
 </script>

@@ -14,8 +14,6 @@ let dateTypeYearNow = now.getFullYear();
 let dateTypeMonthNow = now.getMonth() + 1;
 const selectStart = { current: null };
 const selectEnd = { current: null };
-let startContainSetting = false;
-let endContainSetting = false;
 const searchImageIcon = document.querySelector('.searchIconBox').querySelector('img');
 const imageContainer = document.querySelector('.imageContainer');
 let startDate = null;
@@ -23,6 +21,36 @@ let endDate = null;
 let locationNo = null;
 let isAddImage = false;
 let page = 1;
+let startDateStart = 0;
+let endDateStart = 0;
+
+clickPreAndNextDate(searchStartContainer, startDateStart, selectStart)
+clickPreAndNextDate(searchEndContainer, endDateStart, selectEnd)
+
+function clickPreAndNextDate(searchDateContainer, dateStart, selectDate) {
+    const previousIcon = searchDateContainer.querySelector(".monthTextContainerLeftArrow");
+    const nextIcon = searchDateContainer.querySelector(".monthTextContainerRightArrow");
+
+
+    previousIcon.addEventListener('click', (e)=> {
+        if (dateStart > 0) {
+            dateStart --
+            insertAddDateNum(dateStart, searchDateContainer, selectDate)
+        }
+    })
+    nextIcon.addEventListener('click', (e)=> {
+        dateStart ++
+        insertAddDateNum(dateStart, searchDateContainer, selectDate)
+    })
+}
+
+function insertAddDateNum(dateStart, searchDateContainer, selectDate) {
+    let inputMonth = (dateTypeMonthNow + dateStart) % 12;
+    inputMonth = inputMonth === 0 ? 12 : inputMonth;
+    let inputYear = Math.floor((dateTypeMonthNow + dateStart) / 12) + dateTypeYearNow
+    inputYear = inputMonth === 12 ? --inputYear : inputYear;
+    addDateNum(searchDateContainer, inputYear, inputMonth, selectDate);
+}
 
 document.addEventListener('click', (e)=> {
     if (!e.target.closest('.searchContainer')) {
@@ -81,19 +109,13 @@ searchStart.addEventListener('click', (e) => {
     if (viewSearch != null) viewSearch.style.display = 'none';
     searchStartContainer.style.display = 'flex';
     viewSearch = searchStartContainer;
-    if (!startContainSetting) {
-        addDateNum(searchStartContainer, dateTypeYearNow, dateTypeMonthNow, selectStart);
-        startContainSetting = true;
-    }
+    addDateNum(searchStartContainer, dateTypeYearNow, dateTypeMonthNow, selectStart);
 })
 searchEnd.addEventListener('click', (e) => {
     if (viewSearch != null) viewSearch.style.display = 'none';
     searchEndContainer.style.display = 'flex';
     viewSearch = searchEndContainer;
-    if (!endContainSetting) {
-        addDateNum(searchEndContainer, dateTypeYearNow, dateTypeMonthNow, selectEnd);
-        endContainSetting = true;
-    }
+    addDateNum(searchEndContainer, dateTypeYearNow, dateTypeMonthNow, selectEnd);
 })
 
 function addDateNum(searchDateContainer, dateTypeYear, dateTypeMonth, selectDate) {
@@ -147,7 +169,8 @@ function getDayOfWeek(year, month, day = 1) {
 }
 
 function isSearch() {
-    return locationNo != null || startDate != null || endDate != null;
+    console.log(locationNo, startDate, endDate)
+    return locationNo == null && startDate == null && endDate == null;
 }
 
 searchImageIcon.addEventListener('click', (e)=> {
@@ -221,13 +244,13 @@ function searchError(error) {
 }
 
 function getContentToScrollDown() {
-    if (!searchTotal || !isAddImage) return false
+    if (!isAddImage) return false
     addImageContainer(++page, 10, locationNo, startDate, endDate);
 }
 
 window.addEventListener('scroll', () => {
     if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight ) {
-        console.log("스크롤이벤트 동작중")
+        isSearch()
         getContentToScrollDown();
     }
 })

@@ -3,6 +3,7 @@ package com.busanit501.travelproject.controller;
 import com.busanit501.travelproject.annotation.member.Member;
 import com.busanit501.travelproject.dto.freeboard.*;
 import com.busanit501.travelproject.dto.member.MemberDTO;
+import com.busanit501.travelproject.exception.member.UnauthorizedException;
 import com.busanit501.travelproject.service.freeboard.FreeBoardService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -24,18 +25,22 @@ public class FreeBoardController {
 
     @Member
     @GetMapping("/list")
-    public String list(PageRequestDTO pageRequestDTO, Model model, MemberDTO memberDTO, HttpServletRequest request ) { // 서버 -> 화면으로 전달
+    public String list(PageRequestDTO pageRequestDTO, Model model, MemberDTO memberDTO, HttpServletRequest request ){ // 서버 -> 화면으로 전달
         PageResponseDTO<FreeBoardReadDTO> responseDTO = freeBoardService.listReadWithReplyCount(pageRequestDTO);
+        Long memberNo = memberDTO != null ? memberDTO.getMemberNo() : 0;
         model.addAttribute("responseDTO", responseDTO);
-        if (memberDTO != null) model.addAttribute("member", true);
-
+        if (memberDTO != null) {
+            model.addAttribute("member", true);
+        }
+        model.addAttribute("memberNo", memberNo);
         return "free_board/list";
     }
 
     @Member
     @GetMapping("/register")
-    public void register(MemberDTO memberDTO, HttpServletRequest request, Model model) {
+    public void register(MemberDTO memberDTO, HttpServletRequest request, Model model) throws UnauthorizedException {
         if (memberDTO != null) model.addAttribute("member", true);
+        else throw new UnauthorizedException("return");
     }
 
     @Member
@@ -45,13 +50,14 @@ public class FreeBoardController {
             MemberDTO memberDTO,
             @Valid FreeBoardDTO freeBoardDTO,
                                BindingResult bindingResult,
-                               RedirectAttributes redirectAttributes) {
+                               RedirectAttributes redirectAttributes) throws UnauthorizedException {
 
         if (bindingResult.hasErrors()) {
 
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/free_board/list";
         }
+        if (memberDTO == null) throw new UnauthorizedException("return");
         freeBoardDTO.setMemberNo(memberDTO.getMemberNo());
 
         Long freeBoardNo = freeBoardService.register(freeBoardDTO);
@@ -68,6 +74,9 @@ public class FreeBoardController {
     // httpServletRequest request요청해서 @Member<< 들어있는 MemberDTO 그대로 주입하겠다 그런의미
     public void read(Long freeBoardNo, PageRequestDTO pageRequestDTO, HttpServletRequest request, MemberDTO memberDTO,
                      Model model) {
+        Long memberNo = memberDTO != null ? memberDTO.getMemberNo() : 0;
+        model.addAttribute("memberNo", memberNo);
+
         if (memberDTO != null) {
             model.addAttribute("member", true);
             model.addAttribute("memberName", memberDTO.getMemberName());
@@ -85,12 +94,17 @@ public class FreeBoardController {
         model.addAttribute("dto", freeBoardDTO);
     }
 
+    @Member
     @PostMapping("/update")
     public String updatePost(@Valid FreeBoardDTO freeBoardDTO,
                              BindingResult bindingResult,
                              PageRequestDTO pageRequestDTO,
+                             MemberDTO memberDTO,
+                             HttpServletRequest request,
                              String keyword2,String page2, String type2,
-                             RedirectAttributes redirectAttributes) {
+                             RedirectAttributes redirectAttributes) throws UnauthorizedException {
+
+        if (memberDTO == null || memberDTO.getMemberNo() != freeBoardDTO.getMemberNo()) throw new UnauthorizedException("return");
 
         if (bindingResult.hasErrors()) {
             log.info("has errors : 유효성 에러가 발생함.");
@@ -108,8 +122,11 @@ public class FreeBoardController {
 
     }
 
+    @Member
     @PostMapping("/delete")
-    public String delete(Long freeBoardNo, RedirectAttributes redirectAttributes) {
+    public String delete(Long freeBoardNo, RedirectAttributes redirectAttributes, MemberDTO memberDTO, HttpServletRequest request) throws UnauthorizedException {
+        if (memberDTO == null || memberDTO.getMemberNo() != freeBoardService.readOne(freeBoardNo).getMemberNo()) throw new UnauthorizedException("return");
+
         freeBoardService.delete(freeBoardNo);
 
         redirectAttributes.addFlashAttribute("result", freeBoardNo);
