@@ -15,6 +15,7 @@
         <div class="signContainer">
             <div id="login">로그인</div>
             <div id="register">회원가입</div>
+            <div id="freeBoardSignUp">자유게시판</div>
         </div>
         <div class="myPageContainer">
             <div id="freeBoard">자유게시판</div>
@@ -86,6 +87,7 @@
     const memberText = document.getElementById('member');
     const freeBoard = document.getElementById('freeBoard');
     const goAdminContainer = document.querySelector('.goAdminContainer');
+    const freeBoardSignText = document.getElementById('freeBoardSignUp');
 
     document.getElementById("logout").addEventListener('click', ()=> {
         window.location.href = '/member/logout';
@@ -125,6 +127,9 @@
         })
         registerText.addEventListener('click', (e) => {
             window.location.href = '/member/register?';
+        })
+        freeBoardSignText.addEventListener('click', (e) => {
+            window.location.href = '/free_board/list';
         })
     }
 
