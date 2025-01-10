@@ -60,7 +60,7 @@
         )
       }
       document.querySelector('#PaginationHere').appendChild(
-        createPagination(data.start, data.end, page, '/admin/freeBoard/list', size)
+        createPagination(data.start, data.end, page, data.prev, data.next)
       );
     })()
   </script>

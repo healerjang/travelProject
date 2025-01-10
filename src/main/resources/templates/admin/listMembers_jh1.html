@@ -13,6 +13,29 @@
     <h1>회원관리</h1>
   </div>
   <div class="container">
+    <div class="card">
+      <div class="card-body">
+        <form action="/admin/member/list" method="get">
+          <div class="btn-group" role="group">
+            <input id="notSearching" type="radio" name="searchFor" value="" class="btn-check" autocomplete="off" th:checked="${requestDTO.isNotSearching()}">
+            <label class="btn btn-outline-secondary" for="notSearching">없음</label>
+            <input id="searchForId" type="radio" name="searchFor" value="id" class="btn-check" autocomplete="off" th:checked="${requestDTO.isSearchingFor('id')}">
+            <label class="btn btn-outline-primary" for="searchForId">ID</label>
+            <input id="searchForName" type="radio" name="searchFor" value="name" class="btn-check" autocomplete="off" th:checked="${requestDTO.isSearchingFor('name')}">
+            <label class="btn btn-outline-primary" for="searchForName">이름</label>
+            <input id="searchForEmail" type="radio" name="searchFor" value="email" class="btn-check" autocomplete="off" th:checked="${requestDTO.isSearchingFor('email')}">
+            <label class="btn btn-outline-primary" for="searchForEmail">E-mail</label>
+            <input id="searchForPhone" type="radio" name="searchFor" value="phone" class="btn-check" autocomplete="off" th:checked="${requestDTO.isSearchingFor('phone')}">
+            <label class="btn btn-outline-primary" for="searchForPhone">전화번호</label>
+          </div>
+          <div class="input-group">
+            <label for="searchText" class="input-group-text">키워드</label>
+            <input id="searchText" type="text" class="form-control" name="search" th:value="${requestDTO.search}">
+            <input class="btn btn-outline-primary" type="submit" value="검색">
+          </div>
+        </form>
+      </div>
+    </div>
     <table class="table">
       <thead>
       <tr>
@@ -47,14 +70,14 @@
     }
 
     (async () => {
-      const response = await axios.get('/api/admin/member/list' + `?page=${page}&size=${size}`);
+      const response = await axios.get('/api/admin/member/list' + usePage());
       const {data} = response;
       const tbody = document.querySelector('table.table').tBodies[0]
       for (const member of data.dtoList) {
         tbody.appendChild(createMemberItem(member.memberNo, member.memberName, member.memberEmail, member.memberPhone, member.memberPoint));
       }
       document.querySelector('#PaginationHere').appendChild(
-        createPagination(data.start, data.end, page, '/admin/member/list', size)
+        createPagination(data.start, data.end, page, data.prev, data.next)
       );
     })()
   </script>

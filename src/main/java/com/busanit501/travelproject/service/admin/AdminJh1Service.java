@@ -32,6 +32,7 @@ public interface AdminJh1Service {
 
   PageResponseJh1DTO<ProductJh1DTO> listProducts(PageRequestJh1DTO requestDTO);
 
+  @Transactional
   PageResponseJh1DTO<MemberDTO> listMembers(PageRequestJh1DTO requestDTO);
 
   MemberFullDTO getMemberFullSupport(long memberNo);
