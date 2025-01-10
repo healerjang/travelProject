@@ -5,8 +5,6 @@ import com.busanit501.travelproject.domain.Product;
 import com.busanit501.travelproject.domain.Reservation;
 import com.busanit501.travelproject.domain.common.ReservationOrder;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
-import com.busanit501.travelproject.dto.member.MemberDTO;
-import com.busanit501.travelproject.dto.member.MemberFullDTO;
 import com.busanit501.travelproject.dto.member.UpdateDTO;
 import com.busanit501.travelproject.dto.reservation.ReservationDTO;
 import com.busanit501.travelproject.dto.reservation.ReservationUserDTO;
@@ -17,19 +15,13 @@ import com.busanit501.travelproject.repository.member.MemberRepository;
 import com.busanit501.travelproject.repository.reservation.ReservationRepository;
 import com.busanit501.travelproject.service.CustomMapperJh1;
 import com.busanit501.travelproject.service.admin.AdminJh1Service;
-import com.busanit501.travelproject.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 
 @Service

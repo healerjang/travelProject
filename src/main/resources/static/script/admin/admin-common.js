@@ -61,3 +61,27 @@ function _el (tagName, ...args) {
   }
   return el;
 }
+
+/**
+ * @param {string[]} value
+ */
+function _isEmptyUSPValue (value) {
+  return value.length === 0 || value.every(s => !s)
+}
+
+/**
+ *
+ * @param {number} pg
+ */
+function usePage(pg = undefined) {
+  const usp = new URLSearchParams(window.location.search)
+  for (const key of new Set(usp.keys())) {
+    if (_isEmptyUSPValue(usp.getAll(key))) usp.delete(key)
+  }
+  if (pg) {
+    usp.delete('page')
+    usp.append('page', pg.toString())
+  }
+  if (usp.size > 0) return '?' + usp.toString();
+  return ''
+}

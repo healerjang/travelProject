@@ -13,6 +13,25 @@
       <h1>여행상품 관리</h1>
     </div>
     <div class="container">
+      <div class="card">
+        <div class="card-body">
+          <form action="/admin/product/list" method="get">
+            <div class="btn-group" role="group">
+              <input id="searchForName" type="checkbox" name="searchFor" value="name" class="btn-check" autocomplete="off" th:checked="${requestDTO.isSearchingFor('name')}">
+              <label class="btn btn-outline-primary" for="searchForName">상품 이름</label>
+              <input id="searchForDescription" type="checkbox" name="searchFor" value="description" class="btn-check" autocomplete="off" th:checked="${requestDTO.isSearchingFor('description')}">
+              <label class="btn btn-outline-primary" for="searchForDescription">상품 설명</label>
+              <input id="searchForLocation" type="checkbox" name="searchFor" value="location" class="btn-check" autocomplete="off" th:checked="${requestDTO.isSearchingFor('location')}">
+              <label class="btn btn-outline-primary" for="searchForLocation">여행지</label>
+            </div>
+            <div class="input-group">
+              <label for="searchText" class="input-group-text">키워드</label>
+              <input id="searchText" type="text" class="form-control" name="search" th:value="${requestDTO.search}">
+              <input class="btn btn-outline-primary" type="submit" value="검색">
+            </div>
+          </form>
+        </div>
+      </div>
       <table class="table table-hover mb-3">
         <thead>
           <tr class="text-center">
@@ -53,10 +72,10 @@
       }
 
       (async () => {
-        const response = await axios.get('/api/admin/product/list'+`?page=${page}&size=${size}`);
+        const response = await axios.get('/api/admin/product/list' + window.location.search);
         const data = response.data;
         document.getElementById("PaginationHere")
-          .append(createPagination(data.start, data.end, data.page, '/admin/product/list', data.size));
+          .append(createPagination(data.start, data.end, data.page, data.prev, data.next));
         const dtoList = data.dtoList
         for (const product of dtoList) {
           tbody.appendChild(productEl(product))

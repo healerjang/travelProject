@@ -14,14 +14,17 @@ import com.busanit501.travelproject.repository.LocationJh1Repository;
 import com.busanit501.travelproject.repository.ProductJh1Repository;
 import com.busanit501.travelproject.repository.freeboard.FreeBoardRepository;
 import com.busanit501.travelproject.repository.freeboard.ReplyRepository;
+import com.busanit501.travelproject.repository.member.MemberJh1Repository;
 import com.busanit501.travelproject.repository.member.MemberRepository;
 import com.busanit501.travelproject.service.CustomMapperJh1;
 import jakarta.persistence.Tuple;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,19 +35,20 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AdminJh1ServiceImpl implements AdminJh1Service {
 
+  private static final Logger log = LogManager.getLogger(AdminJh1ServiceImpl.class);
   private final CustomMapperJh1 customMapper;
 
   private final LocationJh1Repository locationRepo;
   private final ProductJh1Repository productRepo;
   private final MemberRepository memberRepo;
+  private final MemberJh1Repository memberSearchRepo;
   private final FreeBoardRepository freeBoardRepo;
   private final ReplyRepository replyRepo;
 
   @Override
   public List<LocationValueJh1DTO> getLocationsOnly() {
     List<Location> locations = locationRepo.findAll();
-    List<LocationValueJh1DTO> dtoList = locations.stream().map(customMapper::locationToDTO).toList();
-    return dtoList;
+    return locations.stream().map(customMapper::locationToDTO).toList();
   }
 
   @Override
@@ -106,7 +110,7 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
 
   @Override
   public PageResponseJh1DTO<ProductJh1DTO> listProducts(PageRequestJh1DTO requestDTO) {
-    Page<Product> products = productRepo.findAll(PageRequest.of(requestDTO.getPage() - 1, requestDTO.getSize(), Sort.by("startDate")));
+    Page<Product> products = productRepo.searchProducts(requestDTO.getPageable("startDate"), requestDTO.getSearchFor(), requestDTO.getSearch());
     return PageResponseJh1DTO.<ProductJh1DTO>builder()
       .dtoList(products.stream().map(customMapper::productToCompactDTO).toList())
       .total((int) products.getTotalElements())
@@ -114,10 +118,19 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
       .build();
   }
 
-
   @Override
+  @Transactional
   public PageResponseJh1DTO<MemberDTO> listMembers(PageRequestJh1DTO requestDTO) {
-    Page<Member> members = memberRepo.findAll(PageRequest.of(requestDTO.getPage() - 1, requestDTO.getSize()));
+    Pageable pageable = requestDTO.getPageable();
+    String search = requestDTO.getSearch();
+    Page<Member> members;
+    if (search != null) {
+      if (requestDTO.isSearchingFor("id")) members = memberSearchRepo.idOf(pageable, search);
+      else if (requestDTO.isSearchingFor("name")) members = memberSearchRepo.nameOf(pageable, search);
+      else if (requestDTO.isSearchingFor("email")) members = memberSearchRepo.emailOf(pageable, search);
+      else if (requestDTO.isSearchingFor("phone")) members = memberSearchRepo.phoneOf(pageable, search);
+      else members = memberSearchRepo.findAll(pageable);
+    } else members = memberSearchRepo.findAll(pageable);
     return PageResponseJh1DTO.<MemberDTO>builder()
       .dtoList(members.stream().map(customMapper::memberToDTO).toList())
       .total((int) members.getTotalElements())
