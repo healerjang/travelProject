@@ -61,7 +61,7 @@ img {
 .signContainer, .myPageContainer {
     display: flex;
     position: relative;
-    left: 42%;
+    left: 38%;
     font-size: 1.1vw;
     width: 20%;
     height: 100%;
