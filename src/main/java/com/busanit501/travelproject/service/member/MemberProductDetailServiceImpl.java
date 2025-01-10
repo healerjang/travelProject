@@ -1,39 +1,19 @@
 package com.busanit501.travelproject.service.member;
 
-import com.busanit501.travelproject.domain.Product;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
-import com.busanit501.travelproject.repository.ProductJh1Repository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.busanit501.travelproject.service.admin.AdminJh1Service;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class MemberProductDetailServiceImpl implements MemberProductDetailService {
 
-    private final ProductJh1Repository productRepository;
-
-    @Autowired
-    public MemberProductDetailServiceImpl(ProductJh1Repository productRepository) {
-        this.productRepository = productRepository;
-    }
+    private final AdminJh1Service adminJh1Service;
 
     @Override
     public ProductJh1DTO getProductDetail(Long productNo) {
-        Product product = productRepository.findById(productNo)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid productNo: " + productNo));
-
-        return ProductJh1DTO.builder()
-                .productNo(product.getProductNo())
-                .name(product.getName())
-                .description(product.getDescription())
-                .price(product.getPrice())
-                .locationNo(product.getLocation().getLocationNo())
-                .startDate(product.getStartDate())
-                .endDate(product.getEndDate())
-                .capacity(product.getCapacity())
-                .imagePath(product.getImagePath())
-//                .reservations(product.getReservations().stream().map(res -> res.getReservationNo()).collect(Collectors.toList()))
-//                .reviews(product.getReviews().stream().map(rev -> rev.getReviewNo()).collect(Collectors.toList()))
-                .build();
+        return adminJh1Service.getProductFull(productNo);
     }
 
     @Override

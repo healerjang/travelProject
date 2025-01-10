@@ -54,7 +54,7 @@
     <div class="container mt-5">
         <!-- 상품 이미지 섹션 -->
         <div class="text-center mb-4">
-            <img class="product-img" th:src="${product.imagePath ?: '/images/default.jpg'}" alt="상품 이미지">
+            <img class="product-img" src="" alt="상품 이미지">
         </div>
 
         <!-- 상품 정보 (이미지 하단으로 이동) -->
@@ -115,7 +115,9 @@
     <!-- JavaScript -->
     <script src="/script/cart/cart.js"></script>
     <script>
-
+        const imagePath = '[[${product.imagePath}]]'
+        console.log(`/productImage/${imagePath}`)
+        document.querySelector(".product-img").src = `/productImage${imagePath}`
         const productNo = [[${product.productNo}]];
         console.log(productNo);
         document.getElementById("reservationButton").addEventListener("click", function (e) {
