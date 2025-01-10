@@ -44,7 +44,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Boolean registerReservation(ReservationDTO reservationDTO) {
-        if(productJh1Repository.findProductByProductNo(reservationDTO.getProductNo()).isEmpty()) {
+        if(reservationRepository.checkReservation(reservationDTO.getMemberNo(),reservationDTO.getProductNo()).isEmpty()) {
             Reservation reservation = Reservation.builder()
                     .member(memberRepository.findByMemberNo(reservationDTO.getMemberNo()))
                     .product(productJh1Repository.findProductByProductNo(reservationDTO.getProductNo()).orElseThrow())
@@ -158,5 +158,10 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.changeOrder(ReservationOrder.COMPLETED);
         reservationRepository.save(reservation);
         return true;
+    }
+
+    @Override
+    public Boolean checkReservation(Long memberNo, Long productNo) {
+        return reservationRepository.checkReservation(memberNo, productNo).isPresent();
     }
 }
