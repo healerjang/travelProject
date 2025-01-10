@@ -29,8 +29,9 @@ public class CartController {
     private static final String CART_COOKIE_NAME = "cart";
 
     @GetMapping("/add/{productNo}") // 결과는 addResult 에 success, alreadyReserved, alreadyCarted 세개
-    public Map<String, String> addToCart(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable Long productNo) {
-        if (productJh1Repository.findProductByProductNo(productNo).isPresent()) return Map.of("addResult", "alreadyReserved");
+    @Member
+    public Map<String, String> addToCart(MemberDTO memberDTO, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable Long productNo) {
+        if (reservationService.checkReservation(memberDTO.getMemberNo(), productNo)) return Map.of("addResult", "alreadyReserved");
         Optional<Cookie> optionalCookie = Arrays.stream(httpServletRequest.getCookies())
                 .filter(cookie -> CART_COOKIE_NAME.equals(cookie.getName()))
                 .findFirst();
@@ -116,7 +117,7 @@ public class CartController {
         Cookie cartCookie = optionalCookie.get();
         List<Long> productNoList = Arrays.asList(cartCookie.getValue().split("-")).stream().map(Long::parseLong).toList();
         for (Long productNo : productNoList) {
-            if (productJh1Repository.findProductByProductNo(productNo).isPresent()) return Map.of("reservationNoSize", 0);
+            if (reservationService.checkReservation(memberDTO.getMemberNo(), productNo)) return Map.of("reservationNoSize", 0);
         }
         for (Long productNo : productNoList) {
             ReservationDTO reservationDTO = ReservationDTO.builder()
