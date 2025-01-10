@@ -61,7 +61,7 @@ public class ReservationRestController {
             throw new BindException(bindingResult);
         }
         String cart = cartCookie == null ? "" : cartCookie;
-        boolean cartCheck = Arrays.stream(cart.split("-")).map(Long::parseLong).anyMatch(productNo -> productNo.equals(reservationDTO.getProductNo()));
+        boolean cartCheck = Arrays.stream(cart.split("-")).anyMatch(productNo -> productNo.equals(String.valueOf(reservationDTO.getProductNo())));
         if (cartCheck) return Map.of("result", "alreadyCarted");
         reservationDTO.setMemberNo(memberDTO.getMemberNo());
         Boolean result = reservationService.registerReservation(reservationDTO);
