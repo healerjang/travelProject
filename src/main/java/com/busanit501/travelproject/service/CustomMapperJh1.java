@@ -54,7 +54,8 @@ public class CustomMapperJh1 {
       .build();
   }
 
-  public FreeBoardJh1DTO boardToDTO(FreeBoard fb) {
+  /** 댓글 목록을 제외하고 FreeBoardDTO로 변환 */
+  public FreeBoardJh1DTO boardToCompactDTO(FreeBoard fb) {
     return FreeBoardJh1DTO.builder()
       .freeBoardNo(fb.getFreeBoardNo())
       .title(fb.getTitle())
@@ -64,6 +65,22 @@ public class CustomMapperJh1 {
       .memberNo(fb.getMember().getMemberNo())
       .memberName(fb.getMember().getMemberName())
       .build();
+  }
+
+  /** FreeBoardDTO에 댓글 목록까지 주입 */
+  public FreeBoardJh1DTO boardToFullDTO(FreeBoard fb) {
+    FreeBoardJh1DTO dto = boardToCompactDTO(fb);
+    dto.setReplies(fb.getReplies().stream().map(
+      reply -> ReplyJh1DTO.builder()
+        .replyNo(reply.getReplyNo())
+        .replyText(reply.getReplyText())
+        .memberNo(reply.getMember().getMemberNo())
+        .memberName(reply.getMember().getMemberName())
+        .regDate(reply.getRegDate())
+        .modDate(reply.getModDate())
+        .build()
+    ).toList());
+    return dto;
   }
 
   public ProductJh1DTO productToCompactDTO(Product product) {
@@ -120,13 +137,16 @@ public class CustomMapperJh1 {
 
     List<ReviewJh1DTO> reviewList = member.getReviews().stream().map(this::reviewToDTO).toList();
 
-    List<FreeBoardJh1DTO> freeBoardList = member.getFreeBoards().stream().map(this::boardToDTO).toList();
+    List<FreeBoardJh1DTO> freeBoardList = member.getFreeBoards().stream().map(this::boardToCompactDTO).toList();
 
     List<ReplyJh1DTO> replyList = member.getReplies().stream().map(
       re -> ReplyJh1DTO.builder()
         .replyNo(re.getReplyNo())
-        .content(re.getContent())
-        .memberNo(member.getMemberNo())
+        .replyText(re.getContent())
+        .freeBoardNo(re.getFreeBoard().getFreeBoardNo())
+        .freeBoardTitle(re.getFreeBoard().getTitle())
+        .regDate(re.getRegDate())
+        .modDate(re.getModDate())
         .build()
     ).toList();
 

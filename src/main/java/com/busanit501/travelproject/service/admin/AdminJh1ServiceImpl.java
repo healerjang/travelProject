@@ -13,6 +13,7 @@ import com.busanit501.travelproject.dto.util.PageResponseJh1DTO;
 import com.busanit501.travelproject.repository.LocationJh1Repository;
 import com.busanit501.travelproject.repository.ProductJh1Repository;
 import com.busanit501.travelproject.repository.freeboard.FreeBoardRepository;
+import com.busanit501.travelproject.repository.freeboard.ReplyRepository;
 import com.busanit501.travelproject.repository.member.MemberRepository;
 import com.busanit501.travelproject.service.CustomMapperJh1;
 import jakarta.persistence.Tuple;
@@ -37,6 +38,7 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
   private final ProductJh1Repository productRepo;
   private final MemberRepository memberRepo;
   private final FreeBoardRepository freeBoardRepo;
+  private final ReplyRepository replyRepo;
 
   @Override
   public List<LocationValueJh1DTO> getLocationsOnly() {
@@ -141,10 +143,28 @@ public class AdminJh1ServiceImpl implements AdminJh1Service {
   public PageResponseJh1DTO<FreeBoardJh1DTO> getFreeBoardList(PageRequestJh1DTO requestDTO) {
     Page<FreeBoard> boards = freeBoardRepo.findAll(PageRequest.of(requestDTO.getPage() - 1, requestDTO.getSize()));
     return PageResponseJh1DTO.<FreeBoardJh1DTO>builder()
-      .dtoList(boards.stream().map(customMapper::boardToDTO).toList())
+      .dtoList(boards.stream().map(customMapper::boardToCompactDTO).toList())
       .total((int) boards.getTotalElements())
       .pageRequestDTO(requestDTO)
       .build();
+  }
+
+  @Transactional
+  @Override
+  public FreeBoardJh1DTO getFreeBoard(Long freeBoardNo) {
+    FreeBoard freeBoard = freeBoardRepo.findById(freeBoardNo).orElseThrow();
+    return customMapper.boardToFullDTO(freeBoard);
+  }
+
+  @Transactional
+  @Override
+  public void deleteFreeBoard(Long freeBoardNo) {
+    freeBoardRepo.deleteById(freeBoardNo);
+  }
+
+  @Override
+  public void deleteReply(Long replyNo) {
+    replyRepo.deleteById(replyNo);
   }
 
   @Override

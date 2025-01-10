@@ -147,4 +147,28 @@ public class AdminJh1RestController {
     PageResponseJh1DTO<FreeBoardJh1DTO> freeBoardList = adminService.getFreeBoardList(requestDTO);
     return ResponseEntity.ok().body(freeBoardList);
   }
+
+  @Member
+  @DeleteMapping("/freeBoard/{boardNo}")
+  public ResponseEntity<Map<String, Object>> deleteFreeBoard(
+    HttpServletRequest request,
+    MemberDTO memberDTO,
+    @PathVariable("boardNo") Long boardNo
+  ) {
+    throwIfUnauthorized(memberDTO);
+    adminService.deleteFreeBoard(boardNo);
+    return ResponseEntity.ok().body(Map.of("success", true));
+  }
+
+  @Member
+  @DeleteMapping("/reply/{replyNo}")
+  public ResponseEntity<Map<String, Object>> deleteReply(
+    HttpServletRequest request,
+    MemberDTO memberDTO,
+    @PathVariable("replyNo") Long replyNo
+  ) {
+    throwIfUnauthorized(memberDTO);
+    adminService.deleteReply(replyNo);
+    return ResponseEntity.ok().body(Map.of("success", true));
+  }
 }

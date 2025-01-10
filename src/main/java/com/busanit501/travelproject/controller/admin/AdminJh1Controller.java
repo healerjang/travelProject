@@ -3,6 +3,7 @@ package com.busanit501.travelproject.controller.admin;
 import com.busanit501.travelproject.annotation.member.Member;
 import com.busanit501.travelproject.dto.ProductImageAdminDTO;
 import com.busanit501.travelproject.dto.ProductJh1DTO;
+import com.busanit501.travelproject.dto.freeboard.FreeBoardJh1DTO;
 import com.busanit501.travelproject.dto.member.MemberDTO;
 import com.busanit501.travelproject.dto.member.MemberFullDTO;
 import com.busanit501.travelproject.dto.util.PageRequestJh1DTO;
@@ -131,6 +132,20 @@ public class AdminJh1Controller {
   ) {
     throwIfUnauthorized(memberDTO);
     return "admin/listFreeBoard_jh1";
+  }
+
+  @Member
+  @GetMapping("/freeBoard/view/{boardNo}")
+  public String listFreeBoard(
+    HttpServletRequest request,
+    MemberDTO memberDTO,
+    @PathVariable Long boardNo,
+    Model model
+  ) {
+    FreeBoardJh1DTO boardDTO = adminService.getFreeBoard(boardNo);
+    model.addAttribute("boardDTO", boardDTO);
+    throwIfUnauthorized(memberDTO);
+    return "admin/viewFreeBoard_jh1";
   }
 
 

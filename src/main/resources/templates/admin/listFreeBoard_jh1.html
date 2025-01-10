@@ -39,8 +39,11 @@
     function createBoardItem(boardNo, title, content, memberNo, writer, regDate) {
       return _el('tr',
         _el('td', boardNo),
-        // _el('td', _el('a', title, a => a.href = '/admin/freeBoard/view/' + boardNo)),
-        _el('td', title),
+        _el('td',
+          _el('a', title, a => {
+            a.href = '/admin/freeBoard/view/' + boardNo
+          }),
+        ),
         _el('td', content),
         _el('td', _el('a', writer, a => a.href = '/admin/member/view/' + memberNo)),
         _el('td', regDate)
