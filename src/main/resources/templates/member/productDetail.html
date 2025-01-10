@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/mainPageLayout.html}">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/mainPageLayout.html}">
 <head>
     <meta charset="UTF-8">
-    <link th:href="@{/css/customize/bootstrap.css}" rel="stylesheet" />
+    <link th:href="@{/css/customize/bootstrap.css}" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <title layout:title-pattern="$CONTENT_TITLE :: $LAYOUT_TITLE">Travel</title>
     <style>
@@ -28,7 +29,7 @@
             border: 1px solid #ddd;
             padding: 20px;
             border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .price {
@@ -72,8 +73,8 @@
                 <form id="reviewForm">
                     <textarea id="reviewContent" class="form-control mb-2" placeholder="리뷰를 작성해주세요."></textarea>
                     <input type="number" id="rating" class="form-control mb-2" min="1" max="5" placeholder="평점 (1-5)">
-                    <input type="hidden" id="productNo" th:value="${product.productNo}" />
-                    <input type="hidden" id="memberNo" th:value="${session.memberNo}" />
+                    <input type="hidden" id="productNo" th:value="${product.productNo}"/>
+                    <input type="hidden" id="memberNo" th:value="${session.memberNo}"/>
                     <button type="button" class="btn btn-primary w-100" onclick="submitReview()">리뷰 등록</button>
                 </form>
 
@@ -103,9 +104,11 @@
                     <p class="price">총 금액: <span id="total_price">₩ [[${product.price}]]</span></p>
                 </form>
                 <button class="btn btn-primary w-100 mb-2"
-                        id="reservationButton">예약하기</button>
+                        id="reservationButton">예약하기
+                </button>
                 <button class="btn btn-secondary w-100 addCartButton"
-                        id="cartButton">장바구니에 추가</button>
+                        id="cartButton">장바구니에 추가
+                </button>
             </div>
         </div>
     </div>
@@ -139,7 +142,7 @@
 
             fetch('/review/add', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(review),
             })
                 .then(response => response.json())
@@ -173,8 +176,23 @@
                 return;
             }
             makeReservationImmediately(productNo).then(data => {
-                if (data) alert("여행이 성공적으로 예약되었습니다.");
-                else alert("이미 예약한 여행입니다.")
+                if (data.result == "alreadyCarted") {
+                    if (confirm("이미 카트에 담긴 여행입니다. \n 카트에서 제거하고 바로 예약하시겠습니까?")) {
+                        delCart(productNo)
+                        makeReservationImmediately(productNo).then(data => {
+                                if (data.result == "alreadyReserved") alert("이미 예약한 여행입니다.")
+                                else if (data.result == "success") {
+                                    alert("여행이 성공적으로 예약되었습니다.")
+                                    window.location.href = "/member/reservation"
+                                }
+                            }
+                        )
+                    } else alert("예약에 실패했습니다.")
+                } else if (data.result == "alreadyReserved") alert("이미 예약한 여행입니다.")
+                else if (data.result == "success") {
+                    alert("여행이 성공적으로 예약되었습니다.")
+                    window.location.href = "/member/reservation"
+                }
             })
         }
     </script>

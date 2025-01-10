@@ -13,7 +13,7 @@
 <!--    <button type="button" class="btn btn-secondary" onclick="addCart(1)">1 장바구니 추가 (임시)</button>-->
 <!--    <button type="button" class="btn btn-secondary" onclick="addCart(2)">2 장바구니 추가 (임시)</button>-->
 <!--    <button type="button" class="btn btn-secondary" onclick="addCart(3)">3 장바구니 추가 (임시)</button>-->
-    <button type="button" class="btn btn-secondary" onclick="makeReservationImmediately(1)">1 즉시 예약 (임시)</button>
+<!--    <button type="button" class="btn btn-secondary" onclick="makeReservationImmediately(1)">1 즉시 예약 (임시)</button>-->
 </main>
 
 <div layout:fragment="javascript">
@@ -104,7 +104,12 @@
 
         document.querySelector(".makeReservationBtn").addEventListener("click", function (e) {
             makeReservation().then(data => {
-                alert(data.reservationNoSize + "개의 예약 완료")
+                if (data.reservationNoSize == 0) alert("예약 가능한 여행이 없습니다.")
+                else {
+                    alert(data.reservationNoSize + "개의 예약 완료")
+                    window.location.href = "/member/reservation"
+                }
+
             }).catch(e => {
                     console.error(e)
                 }
