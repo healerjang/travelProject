@@ -21,6 +21,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     @Query(value = "DELETE FROM reservation WHERE reservation.reservation_status = 'CANCELLED' AND reservation.mod_date <= :howManyTimePassed", nativeQuery = true)
     void delayedDelete(LocalDateTime howManyTimePassed);
 
-    @Query(value = "SELECT FROM reservation WHERE reservation.member_no = :memberNo and reservation.product_no = :productNo", nativeQuery = true)
+    @Query(value = "SELECT * FROM reservation WHERE reservation.member_no = :memberNo and reservation.product_no = :productNo", nativeQuery = true)
     Optional<Reservation> checkReservation(Long memberNo, Long productNo);
 }
