@@ -11,6 +11,7 @@ import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageRequestDT
 import com.busanit501.travelproject.dto.util.reservationPageDTO.HcbPageResponseDTO;
 import com.busanit501.travelproject.service.member.MemberService;
 import com.busanit501.travelproject.service.reservation.ReservationService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -18,6 +19,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -45,8 +47,10 @@ public class ReservationRestController {
 
     @PostMapping("/reg")
     @Member
-    public boolean reg(
+    public Map<String, String> reg(
             @Valid @RequestBody ReservationDTO reservationDTO, BindingResult bindingResult,
+            @CookieValue(value = "cart", required = false) String cartCookie,
+            HttpServletResponse httpServletResponse,
             MemberDTO memberDTO) throws BindException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
@@ -54,9 +58,13 @@ public class ReservationRestController {
         if (memberDTO == null) {
             throw new BindException(bindingResult);
         }
+        String cart = cartCookie == null ? "" : cartCookie;
+        boolean cartCheck = Arrays.stream(cart.split("-")).anyMatch(productNo -> productNo.equals(String.valueOf(reservationDTO.getProductNo())));
+        if (cartCheck) return Map.of("result", "alreadyCarted");
         reservationDTO.setMemberNo(memberDTO.getMemberNo());
         Boolean result = reservationService.registerReservation(reservationDTO);
-        return result;
+        if (result) return Map.of("result", "success");
+        else return Map.of("result", "alreadyReserved");
     }
 
     @PutMapping("/edit")
@@ -78,7 +86,7 @@ public class ReservationRestController {
     @PostMapping("/refund")
     public Map<String, Boolean> refund(@RequestBody RefundDTO refundDTO) {
         log.info(refundDTO + "들어오는 refundDTO 확인");
-        boolean result = reservationService.refundReservation(refundDTO.getReservationNo(),refundDTO.getRefundPercent());
+        boolean result = reservationService.refundReservation(refundDTO.getReservationNo(), refundDTO.getRefundPercent());
         return Map.of("reservationNo", result);
     }
 

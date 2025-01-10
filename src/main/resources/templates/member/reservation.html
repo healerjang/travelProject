@@ -6,6 +6,10 @@
 <head>
     <title layout:fragment="title">예약 확인</title>
     <style>
+        .header__main {
+            background-image: url("/images/mainIconCartNReservation.png");
+        }
+
         .custom-col {
             width: 100%;
         }
@@ -20,13 +24,36 @@
             background-color: #ffc107;
             border-color: #ffc107;
         }
+
         .btn-check:checked + .btn-cancelled {
             background-color: #dc3545;
             border-color: #dc3545;
         }
+
         .btn-check:checked + .btn-completed {
             background-color: #28a745;
             border-color: #28a745;
+        }
+
+        .card, .list-group, .list-group-item, .makeReservationBtn {
+            background-color: #55CBCD;
+            border-color: #55CBCD;
+            color: white;
+        }
+
+        .signContainer, .myPageContainer, .page-item, .page-link, .btn-group ~ label, .btn-outline-primary, .accordion-button, .accordion-item {
+            color: #55CBCD;
+            border-color: #55CBCD;
+        }
+
+        .accordion-button:focus, #accordionExample {
+            --bs-accordion-active-color: white;
+            --bs-accordion-active-bg: #55CBCD;
+            --bs-accordion-btn-focus-box-shadow: 0, 0, 0, 0;
+        }
+
+        .input-group-text, .form-control, .form-label, .form-select, .form-floating > .form-select ~ label, .form-floating > .form-control:not(:placeholder-shown) ~ label {
+            color: #55CBCD;
         }
     </style>
 </head>
@@ -241,7 +268,7 @@
             e.stopPropagation()
             e.preventDefault()
             const reservationNo = target.getAttribute("data-reservationNo")
-            if(confirm("해당 예약을 결제하시겠습니까?")) {
+            if (confirm("해당 예약을 결제하시겠습니까?")) {
                 feeReservation(reservationNo).then(data => {
                         if (data.paymentCompCheck) alert("예약되었습니다.")
                         else alert("잔여포인트가 부족합니다.")
@@ -256,7 +283,7 @@
             const target = e.target
             if (!target.classList.contains('reservationDelBtn')) return
             const reservationNo = target.getAttribute("data-reservationNo")
-            if(confirm("해당 예약을 취소하시겠습니까?")) {
+            if (confirm("해당 예약을 취소하시겠습니까?")) {
                 deleteReservation(reservationNo).then(data =>
                     printReservation(reservationOrder, page, size)
                 ).catch(e => console.error(e))
@@ -267,24 +294,34 @@
             const target = e.target
             if (!target.classList.contains('reservationRefBtn')) return
             const reservationNo = target.getAttribute("data-reservationNo")
-            const diffDateFormula = Math.floor((new Date(target.getAttribute("data-startDate")) - new Date())/(1000*60*60*24))
+            const diffDateFormula = Math.floor((new Date(target.getAttribute("data-startDate")) - new Date()) / (1000 * 60 * 60 * 24))
             const diffDate = diffDateFormula < 0 ? 0 : diffDateFormula
             let refundPercent
             switch (diffDate) {
-                default : refundPercent = 100; break
+                default :
+                    refundPercent = 100;
+                    break
                 case 9:
-                case 8: refundPercent = 95;break
+                case 8:
+                    refundPercent = 95;
+                    break
                 case 7:
                 case 6:
                 case 5:
                 case 4:
                 case 3:
-                case 2: refundPercent = 90;break
-                case 1: refundPercent = 80;break
-                case 0: refundPercent = 50;break
+                case 2:
+                    refundPercent = 90;
+                    break
+                case 1:
+                    refundPercent = 80;
+                    break
+                case 0:
+                    refundPercent = 50;
+                    break
             }
-            if(confirm(`규정에 따라 ${refundPercent}%의 포인트가 환불됩니다. \n 해당 예약을 환불하시겠습니까?`)) {
-                refundReservation(reservationNo,refundPercent).then(data => {
+            if (confirm(`규정에 따라 ${refundPercent}%의 포인트가 환불됩니다. \n 해당 예약을 환불하시겠습니까?`)) {
+                refundReservation(reservationNo, refundPercent).then(data => {
                     if (data) alert("환불되었습니다.")
                     else alert("")
                     printReservation(reservationOrder, page, size)

@@ -31,7 +31,8 @@ public class CartController {
     @GetMapping("/add/{productNo}") // 결과는 addResult 에 success, alreadyReserved, alreadyCarted 세개
     @Member
     public Map<String, String> addToCart(MemberDTO memberDTO, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable Long productNo) {
-        if (reservationService.checkReservation(memberDTO.getMemberNo(), productNo)) return Map.of("addResult", "alreadyReserved");
+        if (reservationService.checkReservation(memberDTO.getMemberNo(), productNo))
+            return Map.of("addResult", "alreadyReserved");
         Optional<Cookie> optionalCookie = Arrays.stream(httpServletRequest.getCookies())
                 .filter(cookie -> CART_COOKIE_NAME.equals(cookie.getName()))
                 .findFirst();
@@ -90,20 +91,14 @@ public class CartController {
         String existValue = cartCookie.getValue();
         String[] values = existValue.split("-");
         existValue = Arrays.stream(values).filter(value -> !value.equals(productNo.toString())).collect(Collectors.joining("-"));
-        if (existValue.isEmpty()) {
-            Cookie updateCookie = new Cookie(CART_COOKIE_NAME, existValue);
-            updateCookie.setPath("/");
-            updateCookie.setMaxAge(0);
-            httpServletResponse.addCookie(updateCookie);
-            return true;
-        } else {
-            Cookie updateCookie = new Cookie(CART_COOKIE_NAME, existValue);
-            updateCookie.setPath("/");
-            updateCookie.setMaxAge(60 * 60 * 2);
-            httpServletResponse.addCookie(updateCookie);
-            return true;
-        }
+        Cookie updateCookie = new Cookie(CART_COOKIE_NAME, existValue);
+        updateCookie.setPath("/");
+        if (existValue.isEmpty()) updateCookie.setMaxAge(0);
+        else updateCookie.setMaxAge(60 * 60 * 2);
+        httpServletResponse.addCookie(updateCookie);
+        return true;
     }
+
 
     @PostMapping("/makeReservation")
     @Member
@@ -117,7 +112,8 @@ public class CartController {
         Cookie cartCookie = optionalCookie.get();
         List<Long> productNoList = Arrays.asList(cartCookie.getValue().split("-")).stream().map(Long::parseLong).toList();
         for (Long productNo : productNoList) {
-            if (reservationService.checkReservation(memberDTO.getMemberNo(), productNo)) return Map.of("reservationNoSize", 0);
+            if (reservationService.checkReservation(memberDTO.getMemberNo(), productNo))
+                return Map.of("reservationNoSize", 0);
         }
         for (Long productNo : productNoList) {
             ReservationDTO reservationDTO = ReservationDTO.builder()
