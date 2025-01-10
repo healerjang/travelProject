@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en"
+      layout:decorate="~{layout/travel_admin_aside_jh1.html}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>회원정보</title>
+</head>
+<body>
+<th:block layout:fragment="style">
+  <style>
+    .card:target .card-header {
+        color: #000 !important;
+        background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important;
+    }
+  </style>
+</th:block>
+<div layout:fragment="content">
+  <div id="MemberDetail" class="text-center">
+    <h1>게시글 관리</h1>
+  </div>
+  <div class="container">
+    <div class="card mb-3">
+      <div class="card-header">게시글 정보</div>
+      <div class="list-group list-group-flush">
+        <div class="list-group-item display-3 text-center" th:text="${boardDTO.title}"></div>
+        <div class="list-group-item">
+          <strong>작성자</strong>
+          <a th:href="@{'/admin/member/view/' + ${boardDTO.memberNo} }" th:text="${boardDTO.memberName}"></a>
+        </div>
+        <div class="list-group-item">
+          <strong>작성일</strong>
+          <span th:text="${#temporals.format(boardDTO.regDate, 'yyyy''년'' MM''월'' dd''일'' HH:mm' )}"></span>
+        </div>
+        <div class="list-group-item">
+          <button id="DeleteThisBoardButton" th:data-board-no="${boardDTO.freeBoardNo}" class="btn btn-outline-danger">게시글 삭제</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-header">게시글 내용</div>
+      <div class="card-body" th:text="${boardDTO.content}"></div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-header">댓글</div>
+      <div id="CommentList" class="list-group list-group-flush">
+        <div th:each="reply : ${boardDTO.replies}" class="list-group-item">
+          <div class="d-flex justify-content-between">
+            <div>
+              <a class="fw-bold" th:href="@{'/admin/member/view/' + ${reply.memberNo}}" th:text="${reply.memberName}" />님의 댓글
+            </div>
+            <div class="d-flex">
+              <div class="text-body-secondary" th:text="${#temporals.format(reply.regDate, 'yyyy''년'' MM''월'' dd''일'' HH:mm' )}"></div>
+              <button th:data-reply-no="${reply.replyNo}" class="btn btn-sm btn-outline-danger">삭제</button>
+            </div>
+          </div>
+          <div class="p-1" th:text="${reply.replyText}"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<th:block layout:fragment="scripts">
+  <script th:inline="javascript">
+    document.getElementById("DeleteThisBoardButton").addEventListener("click", (e) => {
+      const boardNo =  e.target.dataset.boardNo;
+      if (window.confirm("이 게시글을 삭제할까요?")) {
+        axios.delete("/api/admin/freeBoard/" + boardNo).then((res) => {
+          const data = res.data;
+          if (data.success) {
+            window.location.replace('/admin/freeBoard/list')
+          }
+        }).catch((err) => {
+          window.alert(err)
+          console.error(err)
+        })
+      }
+    })
+
+    document.getElementById("CommentList").addEventListener("click", (e) => {
+      const target = e.target;
+      if (target.tagName.toLowerCase() === "button" && target.classList.contains("btn-outline-danger")) {
+        const replyNo = target.dataset.replyNo;
+        if (window.confirm("이 댓글을 삭제할까요?")) {
+          axios.delete("/api/admin/reply/" + replyNo).then((res) => {
+            const data = res.data;
+            if (data.success) {
+              window.location.reload()
+            }
+          }).catch((err) => {
+            window.alert(err)
+            console.error(err)
+          })
+        }
+      }
+    })
+  </script>
+</th:block>
+</body>
+</html>

@@ -40,5 +40,13 @@ public interface AdminJh1Service {
 
   PageResponseJh1DTO<FreeBoardJh1DTO> getFreeBoardList(PageRequestJh1DTO requestDTO);
 
+  @Transactional
+  FreeBoardJh1DTO getFreeBoard(Long freeBoardNo);
+
+  @Transactional
+  void deleteFreeBoard(Long freeBoardNo);
+
+  void deleteReply(Long replyNo);
+
   List<ProductImageAdminDTO> getProductImages();
 }
