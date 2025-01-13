@@ -180,6 +180,7 @@
                     </div>
 
                     <!-- Buttons -->
+                    <input type="hidden" class="form-control" id="memberNo" name="memberNo" th:value="${dto.memberNo}">
                     <div class="d-flex justify-content-between mt-4">
                         <button type="submit" class="btn btn-primary ">수정하기</button>
                         <button type="button" class="btn btn-danger" th:if="${dto.memberNo != null && memberNo == dto.memberNo}" data-bs-toggle="modal" data-bs-target=".deleteModal">삭제하기</button>

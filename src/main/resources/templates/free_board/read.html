@@ -103,7 +103,7 @@
             <a th:href="@{'/free_board/update?freeBoardNo=' + ${dto.freeBoardNo}}" class="btn btn-warning" th:if="${dto != null}"
             th:style="${memberNo != dto.memberNo} ? 'display: none;' : ''">수정</a>
             <form style="display: inline;" th:action="@{'/free_board/delete?freeBoardNo=' + ${dto.freeBoardNo}}" method="post" th:if="${dto != null}"
-                  th:style="${memberNo != dto.memberNo} ? 'display: none;' : ''">
+                  th:style="${memberNo != dto.memberNo} ? 'display: none;' : 'display: inline;'">
                 <button type="submit" class="btn btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
             </form>
             <a href="/free_board/list" class="btn btn-secondary">목록으로</a>

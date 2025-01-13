@@ -91,6 +91,7 @@ public class FreeBoardController {
                        Model model) {
         if (memberDTO != null) {model.addAttribute("member", true);}
         FreeBoardDTO freeBoardDTO = freeBoardService.readOne(freeBoardNo);
+        log.info("freeBoardController freeBoardDTO {}", freeBoardDTO);
         model.addAttribute("dto", freeBoardDTO);
     }
 
@@ -103,6 +104,8 @@ public class FreeBoardController {
                              HttpServletRequest request,
                              String keyword2,String page2, String type2,
                              RedirectAttributes redirectAttributes) throws UnauthorizedException {
+
+        log.info("freeBoardController memberDTO : {}, freeBoardDTO {}", memberDTO, freeBoardDTO);
 
         if (memberDTO == null || memberDTO.getMemberNo() != freeBoardDTO.getMemberNo()) throw new UnauthorizedException("return");
 
